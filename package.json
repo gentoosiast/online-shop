@@ -16,6 +16,9 @@
   },
   "keywords": [],
   "author": "Sergey Koksharov <gentoosiastic@gmail.com>",
+  "contributors": [
+    {"name":"Anastasia Sim","email":"sinastya@yandex.ru"}
+  ],
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^18.0.26",
