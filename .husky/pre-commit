@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+#branch="$(git rev-parse --abbrev-ref HEAD)"
+branch=$(git branch | grep '*' | sed 's/* //')
+
+if [ "$branch" = "main" ]; then
+  echo "You can't commit directly to main branch. Please create your own branch and use PR"
+  exit 1
+fi
+
+#npm test
+# npm run prettier && npm run eslint
+npx lint-staged

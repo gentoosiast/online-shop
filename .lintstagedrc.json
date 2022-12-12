@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json.schemastore.org/lintstagedrc.schema.json",
+  "*.css": "npm run stylelint",
+  "*.ts": "npm run eslint",
+  "*.tsx": "npm run eslint"
+}

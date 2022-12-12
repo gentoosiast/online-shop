@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "esnext",
+    "allowJs": false,
+    "jsx": "react",
+    "sourceMap": true
+  },
+  "files": ["src/index.tsx", "module.d.ts"]
+}
