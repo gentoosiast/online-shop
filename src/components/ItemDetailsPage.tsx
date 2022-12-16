@@ -12,7 +12,7 @@ interface IItemProps {
 export function ItemDetails ({item}: IItemProps) {
   const [addToCard, setAddToCard] = useState(false)
   const [enlargeImg, setEnlargeImg] = useState(item.images[0])
-  const btnBgClassName = addToCard ? 'bg-red-400' : 'bg-blue-400';
+  const btnBgClassName = addToCard ? 'bg-red-100' : 'bg-blue-100';
   const btnClasses = ['py-2 px-4 border', btnBgClassName]
 
   const images = item.images.map((elem, i) => <
@@ -33,7 +33,7 @@ export function ItemDetails ({item}: IItemProps) {
       </div>
       <div className="border p-5 rounded flex flex-col items-center m-auto">
         <div className="font-bold text-xl">{item.title}</div>
-        <div className="flex flex-row">
+        <div className="flex flex-row gap-5">
           <div className="photos flex gap-2 items-center">
             <div className="all-pics flex flex-col gap-1">
               { images }
@@ -68,7 +68,7 @@ export function ItemDetails ({item}: IItemProps) {
               <p>{item.category}</p>
             </div>
           </div>
-          <div className="addtocard flex flex-col justify-center">
+          <div className="addtocard flex flex-col justify-center gap-5">
             <p className="font-bold text-xl">${item.price}</p>
             <button
               className={btnClasses.join(' ')}
@@ -77,7 +77,7 @@ export function ItemDetails ({item}: IItemProps) {
                 {addToCard ? 'remove from card' : 'add to card'}
             </button>
             <button
-              className='py-2 px-4 border bg-blue-400'
+              className='py-2 px-4 border bg-blue-100'
               >
                 Buy now
             </button>
