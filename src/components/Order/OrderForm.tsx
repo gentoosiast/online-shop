@@ -308,17 +308,19 @@ export const OrderForm = () => {
               onChange={handleChange} onBlur={handleBlur} onKeyDown={handleKeydownOnlyNumbers} />
           </div>
         </div>
-        <div className="form-field">
           {formState.global.errors['cardExpiration'] &&
-            <p className='form-alert form-alert-error' role='alert'>{formState.global.errors['cardExpiration'] }</p>}
-        </div>
-        <div className="form-field">
+            <div className="form-field">
+              <p className='form-alert form-alert-error' role='alert'>{formState.global.errors['cardExpiration'] }</p>
+            </div>}
           {formState.global.errors['cardCVV'] &&
-            <p className='form-alert form-alert-error' role='alert'>{formState.global.errors['cardCVV'] }</p>}
-        </div>
+            <div className="form-field">
+              <p className='form-alert form-alert-error' role='alert'>{formState.global.errors['cardCVV'] }</p>
+            </div>}
       </fieldset>
-      { isFormSubmitted &&
-        <p className="form-alert form-alert-success" role="alert">Order Successful. Thank you so much for your order</p>}
+      {isFormSubmitted &&
+        <div className="form-field">
+          <p className="form-alert form-alert-success" role="alert">Order Successful. Thank you so much for your order</p>
+        </div>}
       <button className='submit-button' type="submit" disabled={!isFormValid()}>Order</button>
     </form>
   );
