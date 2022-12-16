@@ -251,7 +251,7 @@ export const OrderForm = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   return (
-    <form className='order-form' autoComplete='off'>
+    <form className='order-form' autoComplete='off' onSubmit={handleSubmit}>
       <fieldset className='form-fieldset'>
         <legend className='form-legend'>Personal Details</legend>
         <div className='form-field'>
@@ -319,7 +319,7 @@ export const OrderForm = () => {
       </fieldset>
       { isFormSubmitted &&
         <p className="form-alert form-alert-success" role="alert">Order Successful. Thank you so much for your order</p>}
-      <button className='submit-button' type="submit" onSubmit={handleSubmit} disabled={!isFormValid()}>Order</button>
+      <button className='submit-button' type="submit" disabled={!isFormValid()}>Order</button>
     </form>
   );
 };
