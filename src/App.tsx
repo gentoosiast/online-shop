@@ -5,6 +5,30 @@ import { Footer } from './components/footer'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IItem } from './types/IItem'; // TODO: temporary hack
 import { AllCards } from "./components/ItemsFetch";
+import { ItemDetails } from "./components/ItemDetailsPage"
+
+
+
+const itemsss = [{
+  id: 1,
+  title: "iPhone 9",
+  description: "An apple mobile which is nothing like apple",
+  price: 549,
+  discountPercentage: 12.96,
+  rating: 4.69,
+  stock: 94,
+  brand: "Apple",
+  category: "smartphones",
+  thumbnail: "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
+  images: [
+  "https://i.dummyjson.com/data/products/1/1.jpg",
+  "https://i.dummyjson.com/data/products/1/2.jpg",
+  "https://i.dummyjson.com/data/products/1/3.jpg",
+  "https://i.dummyjson.com/data/products/1/4.jpg",
+  "https://i.dummyjson.com/data/products/1/thumbnail.jpg"
+  ]
+},]
+
 
 export function App() {
   return (
@@ -15,6 +39,7 @@ export function App() {
       </div>
       <OrderForm />
       <AllCards url ={'https://dummyjson.com/products?limit=10'}/>
+      <ItemDetails item = {itemsss[0]}/>
       <Footer/>
     </>
   );
