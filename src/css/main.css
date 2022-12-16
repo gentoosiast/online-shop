@@ -71,4 +71,11 @@
     @apply w-full mt-10 px-20 py-5 flex justify-between items-center bg-slate-100
   }
 
+  .item-card {
+    @apply border p-5 rounded flex flex-col items-center w-48
+  }
+  .item-card:hover {
+    transform: translate(-5px);
+    box-shadow: 0px 10px 20px;
+  }
 }

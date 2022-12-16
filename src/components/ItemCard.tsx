@@ -13,7 +13,7 @@ export function ItemCard ({item}: IItemsProps) {
   const btnClasses = ['py-2 px-4 border', btnBgClassName]
 
   return (
-    <div className="border p-5 rounded flex flex-col items-center w-48"
+    <div className="item-card"
     >
       <p className="font-bold">{item.title}</p>
       <img src = {item.images[0]} className="w-28" alt={item.title}/>

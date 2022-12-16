@@ -21,7 +21,7 @@ export function AllCards({url}: IAllCardsProps) {
   }, [])
 
   return (
-    <div className="flex row-auto flex-wrap">
+    <div className="flex row-auto flex-wrap gap-5">
       {items.map(item => <ItemCard item={item} key={item.id}/>)}
     </div>
   );
