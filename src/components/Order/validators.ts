@@ -1,5 +1,5 @@
 const checkWordsLength = (value: string, numWords: number, wordLength: number) => {
-  const words = value.trim().split(' ');
+  const words = value.trim().split(' ').filter((word) => word !== '');
 
   return words.length >= numWords && words.every((word) => word.length >= wordLength);
 }
@@ -41,9 +41,20 @@ export const validators = {
   },
 
   cardExpiration: (value: string) => {
-    if (!(value.length === 4 && value.slice(0, 2) <= '12')) {
-      return 'Credit card expiration date should consist of 4 digits; month should be less than 12';
+
+    if (!(value.length === 4 && /^(0[1-9]|1[0-2])\d{2}$/.test(value))) {
+      return 'Credit card expiration date should consist of 4 digits; month should be between 01-12';
     }
+
+    const month = parseInt(value.slice(0, 2), 10) - 1; // the month used by Date() is 0-indexed
+    const year = 2000 + parseInt(value.slice(2));
+    const cardDate = new Date(year, month, 1);
+    const currentDate = new Date();
+
+    if (currentDate > cardDate) {
+      return 'Your credit card is already past its expiration date';
+    }
+
     return null;
   },
 
