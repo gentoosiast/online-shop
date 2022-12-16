@@ -40,7 +40,7 @@ export const FilterPage = () => {
           }/>
         </div>
       </div>
-      <AllCards url = {'https://dummyjson.com/products?limit=10'}/>
+      <AllCards url = {'https://dummyjson.com/products?limit=10'} isSizeSmall = {smallSizeGrid}/>
     </div>
   )
 }
