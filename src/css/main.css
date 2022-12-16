@@ -3,8 +3,20 @@
 @tailwind utilities;
 
 @layer components {
+  .order-form {
+    @apply max-w-2xl m-auto;
+  }
+
+  .form-fieldset {
+    @apply mb-5;
+  }
+
+  .form-legend {
+    @apply text-sm text-gray-500 mb-2;
+  }
+
   .form-field {
-    @apply flex flex-col gap-1;
+    @apply flex flex-col gap-1 mb-2;
   }
 
   .form-label {
@@ -12,7 +24,7 @@
   }
 
   .form-input {
-    @apply border-gray-400 border-2 p-1;
+    @apply border-gray-400 border-2 p-1 rounded outline-none;
   }
 
   .form-input_invalid {
@@ -24,6 +36,26 @@
   }
 
   .form-alert {
-    @apply bg-red-400 text-gray-100;
+    @apply text-gray-100 p-1 text-center;
+  }
+
+  .form-alert-error {
+    @apply bg-red-400;
+  }
+
+  .form-alert-success {
+    @apply bg-green-700;
+  }
+
+  .form-card-row {
+    @apply flex justify-center items-center gap-2;
+  }
+
+  .form-card-image {
+    @apply w-[156px] h-[128px] bg-no-repeat;
+  }
+
+  .submit-button {
+    @apply text-center p-2 bg-green-600 w-full text-gray-50 disabled:bg-slate-400;
   }
 }
