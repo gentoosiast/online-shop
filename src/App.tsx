@@ -4,8 +4,8 @@ import { Footer } from './components/footer'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IItem } from './types/IItem'; // TODO: temporary hack
-import { AllCards } from "./components/ItemsFetch";
 import { ItemDetails } from "./components/ItemDetailsPage"
+import { FilterPage } from "./components/FilterPage"
 
 
 
@@ -38,7 +38,8 @@ export function App() {
         Welcome aboard, best teammate on the planet Earth 🤗
       </div>
       <OrderForm />
-      <AllCards url ={'https://dummyjson.com/products?limit=10'}/>
+      {/* <AllCards url ={'https://dummyjson.com/products?limit=10'}/> */}
+      <FilterPage/>
       <ItemDetails item = {itemsss[0]}/>
       <Footer/>
     </>
