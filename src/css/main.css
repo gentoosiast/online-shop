@@ -24,7 +24,7 @@
   }
 
   .form-input {
-    @apply border-gray-400 border-2 p-1;
+    @apply border-gray-400 border-2 p-1 rounded outline-none;
   }
 
   .form-input_invalid {
