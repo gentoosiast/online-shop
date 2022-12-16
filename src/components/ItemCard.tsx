@@ -2,21 +2,21 @@ import { IItem } from "../types/IItem";
 import React, {useState} from 'react';
 import { ReactDOM } from "react";
 
-interface ProductProps {
+interface IItemsProps {
   item: IItem
 }
 
-export function ItemCard ({item}: ProductProps) {
+export function ItemCard ({item}: IItemsProps) {
   const [addToCard, setAddToCard] = useState(false)
 
   const btnBgClassName = addToCard ? 'bg-red-400' : 'bg-blue-400';
   const btnClasses = ['py-2 px-4 border', btnBgClassName]
 
   return (
-    <div className="border p-5 rounded flex flex-col items-center"
+    <div className="border p-5 rounded flex flex-col items-center w-48"
     >
       <p className="font-bold">{item.title}</p>
-      <img src = {item.images[0]} className="w-50" alt={item.title}/>
+      <img src = {item.images[0]} className="w-28" alt={item.title}/>
       <div className="bg-blue-100">
         <p>Category: {item.category}</p>
         <p>Brand: {item.brand}</p>

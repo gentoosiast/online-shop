@@ -12,7 +12,7 @@ export interface IItem {
   images: string []
 }
 
-export interface AllItems {
+export interface IItemsDto {
   products: IItem []
   total: number
   skip: number
