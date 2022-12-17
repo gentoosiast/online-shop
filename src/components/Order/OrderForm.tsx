@@ -20,11 +20,11 @@ export const OrderForm = () => {
     validator: (value: string) => string | null;
   }
 
-  enum CreditProviderImage {
-    Default = cardDefaultImg,
-    VISA = cardVISAImg,
-    MasterCard = cardMasterCardImg,
-    AmericanExpress = cardAmExImg
+  const CreditProviderImage: Record<string, string> = {
+    "Default": cardDefaultImg,
+    "VISA": cardVISAImg,
+    "MasterCard": cardMasterCardImg,
+    "AmericanExpress": cardAmExImg,
   }
 
   type IFormInputNames = keyof Omit<IFormData, "global">;
@@ -32,7 +32,7 @@ export const OrderForm = () => {
 
   interface IFormGlobal {
     errors: Partial<IErrors>;
-    cardImage: CreditProviderImage;
+    cardImage: keyof typeof CreditProviderImage;
   }
 
   interface IFormData {
