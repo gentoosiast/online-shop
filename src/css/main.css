@@ -58,4 +58,12 @@
   .submit-button {
     @apply text-center p-2 bg-green-600 w-full text-gray-50 disabled:bg-slate-400;
   }
+
+  .feather {
+    @apply w-[24px] h-[24px] stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round] fill-none;
+  }
+
+  .cart-icon {
+    @apply stroke-slate-600 hover:stroke-green-700;
+  }
 }
