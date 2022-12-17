@@ -52,5 +52,8 @@
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.11.1",
     "webpack-pwa-manifest": "^4.3.0"
+  },
+  "dependencies": {
+    "feather-icons": "^4.29.0"
   }
 }
