@@ -58,4 +58,9 @@
   .submit-button {
     @apply text-center p-2 bg-green-600 w-full text-gray-50 disabled:bg-slate-400;
   }
+
+  .footer {
+    @apply w-full mt-10 px-20 py-5 flex justify-between items-center bg-slate-100
+  }
+
 }

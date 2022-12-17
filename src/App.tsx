@@ -1,5 +1,6 @@
 import React from "react";
 import { OrderForm } from './components/Order/OrderForm';
+import { Footer } from './components/footer'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IItem } from './types/IItem'; // TODO: temporary hack
@@ -11,6 +12,7 @@ export function App() {
         Welcome aboard, best teammate on the planet Earth 🤗
       </div>
       <OrderForm />
+      <Footer/>
     </>
   );
 }
