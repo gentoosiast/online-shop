@@ -11,3 +11,10 @@ export interface IItem {
   thumbnail: string,
   images: string []
 }
+
+export interface IItemsDto {
+  products: IItem []
+  total: number
+  skip: number
+  limit: number
+}

@@ -1,49 +1,32 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import React, { useEffect, useState } from 'react';
 import { IItem } from '../types/IItem';
 import styles from '../css/sidebar.module.css';
-// import Nouislider from "nouislider";
-import Nouislider from "nouislider-react";
-// import "nouislider/dist/nouislider.css";
+import { IDataParams } from './FilterPage';
+// import Nouislider from "nouislider-react";
 // import "nouislider-react/node_modules/nouislider/distribute/nouislider.css";
 
 
-const Slider = () => (
-  <Nouislider
-  range={{ min: 0, max: 100 }}
-  start={[0, 100]}
-  step={10}
-  // padding ={6}
-  // margin = {2}
-  connect
-  />
-);
+// const Slider = () => (
+//   <Nouislider
+//   range={{ min: 0, max: 100 }}
+//   start={[0, 100]}
+//   step={10}
+//   // padding ={6}
+//   // margin = {2}
+//   connect
+//   />
+// );
 
-export const Sidebar = () => {
-//temporary lines start - to get items
-    const [items, setItems] = useState<IItem[]>([])
-    const [err, setErr] = useState(false)
-    const fetchItems = () => {
-      fetch('https://dummyjson.com/products?limit=30')
-      .then((res: Response) =>res.json())
-      .then((json) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-        setItems(json.products)
-      })
-      .catch(error => {
-        setErr(true)
-      })
-    }
+interface ISidebarProps {
+  items: IItem []
+  onCheck: (type: string, el: string)=> void;
+  params: IDataParams
+}
 
-    useEffect(() => {
-      fetchItems()
-    }, [])
-//temporary lines end
+export const Sidebar = ({items, onCheck, params}: ISidebarProps) => {
 
-const category = [...new Set(items.map(el=> el.category))]
-const brand = [...new Set(items.map(el=> el.brand))]
-const prices = [Math.min(...items.map(el=> el.price)), Math.max(...items.map(el=> el.price))]
-const stock = [Math.min(...items.map(el=> el.stock)), Math.max(...items.map(el=> el.stock))]
+const pricesMinMax = [Math.min(...items.map(el=> el.price)), Math.max(...items.map(el=> el.price))]
+const stockMinMax = [Math.min(...items.map(el=> el.stock)), Math.max(...items.map(el=> el.stock))]
 const calcAmt = (arg1: number, arg2: string) => {
   if (arg1 == 1) {
     return items.filter(el=> el.category == arg2).length
@@ -51,49 +34,55 @@ const calcAmt = (arg1: number, arg2: string) => {
   return items.filter(el=> el.brand == arg2).length
 }
 
+const handleClick = (type: string, el:string) => {
+  onCheck(type, el);
+}
+
   return (
     <div className='w-fit'>
       <div className={styles.box}>
         <h3 className={styles.h3}>Category</h3>
-        <div className={styles.items}>
-          {category.map((el, i) =>
-          <div key={i} className={styles.item}>
-            <input type='checkbox' id={i.toString()} className={styles.checkbox}></input>
-            <label htmlFor={i.toString()}>{el}</label>
-            <span>{calcAmt(1, el)}/{calcAmt(1, el)}</span>
+        <fieldset className={styles.items}>
+          {params.categories.map((el, i) =>
+          <div key={i} className={styles.item} onClick={()=>handleClick('categories', el)}>
+            <input type='checkbox' id={'1'+i.toString()} className={styles.checkbox} onClick={(e)=>e.stopPropagation()}></input>
+            <label htmlFor={'1'+i.toString()}>{el}</label>
+            <span>({calcAmt(1, el)})</span>
             </div>
           )}
-        </div>
+        </fieldset>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Brand</h3>
-        <div  className={styles.items}>
-          {brand.map((el, i) =>
-            <div key={i} className={styles.item}>
-            <input type='checkbox' id={i.toString()} className={styles.checkbox}></input>
-            <label htmlFor={i.toString()}>{el}</label>
-            <span>{calcAmt(2, el)}/{calcAmt(2, el)}</span>
+        <fieldset  className={styles.items}>
+          {params.brands.map((el, i) =>
+            <div key={i} className={styles.item} onClick={()=>handleClick('brands', el)}>
+            <input type='checkbox' id={'2'+i.toString()} className={styles.checkbox} onClick={(e)=>e.stopPropagation()}></input>
+            <label htmlFor={'2'+i.toString()}>{el}</label>
+            <span>({calcAmt(2, el)})</span>
             </div>
           )}
-        </div>
+        </fieldset>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Price</h3>
         <div className={styles.minMax}>
-          {prices.map((el, i) => <span key={i}>${el}</span>)}
+          {pricesMinMax.map((el, i) => <input type='number' placeholder = {`${el}`} key={i} className='form-input w-44'
+          ></input>)}
         </div>
-        <div id='slider'>
+        {/* <div id='slider'>
             <Slider></Slider>
-        </div>
+        </div> */}
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Stock</h3>
         <div className={styles.minMax}>
-          {stock.map((el, i) => <span key={i}>{el}</span>)}
+          {stockMinMax.map((el, i) => <input type='number' placeholder = {`${el}`} key={i} className='form-input w-44'
+          ></input>)}
         </div>
-        <div id='slider'>
+        {/* <div id='slider'>
             <Slider></Slider>
-        </div>
+        </div> */}
       </div>
     </div>
   )
