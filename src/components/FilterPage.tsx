@@ -62,7 +62,13 @@ export const FilterPage = ({url}: { url: string }) => {
   const onFilterClick = (filterType: string, filterBox: string) => {
     if (filterType === 'categories') {
       if (isFilteredByCategory) {
-        if (filteredCategories.includes(filterBox)) setFilteredCategories(prev => [...prev].filter(el => el !== filterBox))
+        if (filteredCategories.includes(filterBox)) {
+          if (filteredCategories.length === 1) {
+            setIsFilteredByCategory(false);
+            setFilteredCategories(initialParams.categories)
+          }
+          else setFilteredCategories(prev => [...prev].filter(el => el !== filterBox))
+        }
         else setFilteredCategories(prev => [...prev, filterBox])
       } else {
         setIsFilteredByCategory(true);
@@ -72,7 +78,13 @@ export const FilterPage = ({url}: { url: string }) => {
 
     if (filterType === 'brands') {
       if (isFilteredByBrand) {
-        if (filteredBrands.includes(filterBox)) setFilteredBrands(prev => [...prev].filter(el => el !== filterBox))
+        if (filteredBrands.includes(filterBox)) {
+          if (filteredBrands.length === 1) {
+            setIsFilteredByBrand(false);
+            setFilteredBrands(initialParams.brands)
+          }
+          else setFilteredBrands(prev => [...prev].filter(el => el !== filterBox))
+        }
         else setFilteredBrands(prev => [...prev, filterBox])
       } else {
         setIsFilteredByBrand(true);
