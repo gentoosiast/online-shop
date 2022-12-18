@@ -2,8 +2,22 @@
 import React, { useEffect, useState } from 'react';
 import { IItem } from '../types/IItem';
 import styles from '../css/sidebar.module.css';
+// import Nouislider from "nouislider";
 import Nouislider from "nouislider-react";
-import "nouislider/distribute/nouislider.css";
+// import "nouislider/dist/nouislider.css";
+// import "nouislider-react/node_modules/nouislider/distribute/nouislider.css";
+
+
+const Slider = () => (
+  <Nouislider
+  range={{ min: 0, max: 100 }}
+  start={[0, 100]}
+  step={10}
+  // padding ={6}
+  // margin = {2}
+  connect
+  />
+);
 
 export const Sidebar = () => {
 //temporary lines start - to get items
@@ -67,13 +81,18 @@ const calcAmt = (arg1: number, arg2: string) => {
         <h3 className={styles.h3}>Price</h3>
         <div className={styles.minMax}>
           {prices.map((el, i) => <span key={i}>${el}</span>)}
-          <div id='slider'></div>
+        </div>
+        <div id='slider'>
+            <Slider></Slider>
         </div>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Stock</h3>
         <div className={styles.minMax}>
           {stock.map((el, i) => <span key={i}>{el}</span>)}
+        </div>
+        <div id='slider'>
+            <Slider></Slider>
         </div>
       </div>
     </div>
