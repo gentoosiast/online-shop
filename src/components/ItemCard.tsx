@@ -1,46 +1,70 @@
-import { IItem } from "../types/IItem";
 import React, {useState} from 'react';
-import { ReactDOM } from "react";
+import { IItem } from "../types/IItem";
+import { ItemCardSize } from '../types/ItemCardSize';
 
-interface IItemsProps {
+interface IItemsCardProps {
   item: IItem
-  isSizeSmall: boolean
+  size: ItemCardSize;
 }
 
-export function ItemCard ({item, isSizeSmall}: IItemsProps) {
-  const [addToCard, setAddToCard] = useState(false)
-
-  const btnBgClassName = addToCard ? 'bg-red-400' : 'bg-blue-400';
-  const btnClasses = ['py-2 px-4 border', btnBgClassName]
-
-  const cardClassName = isSizeSmall ? 'item-card w-1/6' : 'item-card w-1/4';
+export function ItemCard ({item, size}: IItemsCardProps) {
+  const [inCart, setInCart] = useState(false)
 
   return (
-    <div className = {cardClassName}
-    >
-      <p className="font-bold">{item.title}</p>
-      <img src = {item.images[0]} className="" alt={item.title}/>
-      {!isSizeSmall &&<div className= "bg-blue-100">
-        <p>Category: {item.category}</p>
-        <p>Brand: {item.brand}</p>
-        <p>Price: {item.price}</p>
-        <p>Discount: {item.discountPercentage}%</p>
-        <p>Rating: {item.rating}</p>
-        <p>Stock: {item.stock}</p>
-      </div>}
+    <>
+      {size === "Small" &&
+          <div className={`flex flex-col gap-2 item-card w-1/6`}
+          >
+            <p className="font-bold h-14">{item.title}</p>
+            <img src={item.images[0]} className="max-h-40" alt={item.title}/>
 
-      <button
-        className={btnClasses.join(' ')}
-        onClick={() => setAddToCard(prev => !prev)}
-        >
-          {addToCard ? 'remove from card' : 'add to card'}
-      </button>
+            <div className="flex flex-col gap-2">
+              <button
+                className={`button ${inCart ? 'button-delete': 'button-add'}`}
+                onClick={() => setInCart(prev => !prev)}
+                >
+                  {inCart ? 'remove from cart' : 'add to cart'}
+              </button>
 
-      <button
-        className='py-2 px-4 border bg-blue-400'
+              <button
+                className='button button-details'
+                >
+                  details
+              </button>
+            </div>
+          </div>
+      }
+
+      {size === "Large" &&
+        <div className={`flex flex-col gap-2 item-card w-1/4`}
         >
-          Details
-      </button>
-    </div>
+          <p className="font-bold h-14">{item.title}</p>
+          <img src={item.images[0]} className="max-h-40" alt={item.title}/>
+          <div>
+            <p><span className="font-bold">Category:</span> {item.category}</p>
+            <p><span className="font-bold">Brand:</span> {item.brand}</p>
+            <p><span className="font-bold">Price:</span> {item.price}</p>
+            <p><span className="font-bold">Discount:</span> {item.discountPercentage}%</p>
+            <p><span className="font-bold">Rating:</span> {item.rating}</p>
+            <p><span className="font-bold">Stock:</span> {item.stock}</p>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <button
+              className={`button ${inCart ? 'button-delete': 'button-add'}`}
+              onClick={() => setInCart(prev => !prev)}
+              >
+                {inCart ? 'remove from cart' : 'add to cart'}
+            </button>
+
+            <button
+              className='button button-details'
+              >
+                details
+            </button>
+          </div>
+        </div>
+      }
+    </>
   )
 }

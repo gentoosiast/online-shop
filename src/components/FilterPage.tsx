@@ -1,46 +1,73 @@
 import React, { useEffect, useState } from "react";
-import { AllCards } from "../components/ItemsFetch";
-import gridIcon from "../assets/grid.svg"
-import listIcon from "../assets/list.svg"
+import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import { fetchData } from '../fetchData';
+import { IItem, IItemsDto } from '../types/IItem';
+import { ItemCardSize } from '../types/ItemCardSize';
+import { ItemCard } from "./ItemCard";
 
+export const FilterPage = ({url}: { url: string }) => {
+  const [items, setItems] = useState<IItem[]>([]);
+  const [fetchError, setFetchError] = useState('');
+  const [totalItems, setTotalItems] = useState(0);
+  const [cardSize, setCardSize] = useState<ItemCardSize>("Small");
 
-export const FilterPage = () => {
-  const [totalItems, setTotalItems] = useState(10);
-  const [smallSizeGrid, setsmallSizeGrid] = useState(true)
+  const fetchItems = (url: string) => {
+    fetchData<IItemsDto>(url)
+    .then((data) => {
+      setItems(data.products);
+      setTotalItems(data.products.length);
+    })
+    .catch((error: string) => {
+      setFetchError(error);
+    });
+  }
 
-  const baseGridClassName = 'h-8 cursor-pointer'
-  const activeGridClassName = 'border border-2 border-red-500'
-  const smallGridClassName = smallSizeGrid ? activeGridClassName : 'border-none';
-  const bigGridClassName = smallSizeGrid ? 'border-none' : activeGridClassName;
+  useEffect(() => {
+    fetchItems(url);
+  }, []);
 
   return (
-    <div>
-      <div className="flex justify-between">
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-center items-center gap-10">
         <div>
           <select>
-            <option value = "priceUp">Sort by price (ascending)</option>
-            <option value = "priceDown">Sort by price (descending)</option>
-            <option value = "ratingUp">Sort by rating (ascending)</option>
-            <option value = "ratingDown">Sort by rating (descending)</option>
-            <option value = "discountUp">Sort by discount (ascending)</option>
-            <option value = "discountDown">Sort by discount (descending)</option>
+            <option value="priceUp">Sort by price (ascending)</option>
+            <option value="priceDown">Sort by price (descending)</option>
+            <option value="ratingUp">Sort by rating (ascending)</option>
+            <option value="ratingDown">Sort by rating (descending)</option>
+            <option value="discountUp">Sort by discount (ascending)</option>
+            <option value="discountDown">Sort by discount (descending)</option>
           </select>
         </div>
-        <div>Found: {totalItems}</div>
+        { Boolean(totalItems) &&
+          <div>Found: {totalItems} items</div>
+        }
         <input className="form-input" type='text' placeholder="I'm looking for..."></input>
-        <div className="flex">
-          <img src={listIcon} className={[baseGridClassName, smallGridClassName].join(' ')}
-          onClick={() => {
-            if (!smallSizeGrid) setsmallSizeGrid(prev => !prev)}
-          }
-          />
-          <img src={gridIcon} className={[baseGridClassName, bigGridClassName].join(' ')}
-          onClick={() => {
-            if (smallSizeGrid) setsmallSizeGrid(prev => !prev)}
-          }/>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              setCardSize("Small");
+            }
+          }>
+            <svg className={`feather list-icon border-2 ${cardSize === "Small" ? 'border-slate-700': 'border-transparent'}`}>
+              <use href={`${featherSprite}#list`} />
+            </svg>
+          </button>
+          <button
+            onClick={() => {
+              setCardSize("Large");
+            }
+          }>
+            <svg className={`feather grid-icon border-2 ${cardSize === "Large" ? 'border-slate-700' : 'border-transparent'}`}>
+              <use href={`${featherSprite}#grid`} />
+            </svg>
+          </button>
         </div>
       </div>
-      <AllCards url = {'https://dummyjson.com/products?limit=10'} isSizeSmall = {smallSizeGrid}/>
+      <div className="flex flex-wrap justify-center gap-5">
+        {items.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
+        {Boolean(fetchError) && <div className="p-20 text-center font-bold text-2xl">{fetchError}</div>}
+      </div>
     </div>
-  )
+    )
 }
