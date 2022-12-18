@@ -1,0 +1,19 @@
+.box {
+  @apply text-xl border rounded p-5
+}
+.h3 {
+  @apply font-bold text-xl p-2
+}
+.items {
+  @apply h-44 overflow-y-auto p-2
+}
+.item {
+  @apply flex items-center gap-3
+}
+.checkbox {
+  @apply scale-150
+}
+
+.minMax {
+  @apply flex justify-between
+}
