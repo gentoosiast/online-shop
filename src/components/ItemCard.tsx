@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Link } from 'react-router-dom';
 import { IItem } from "../types/IItem";
 import { ItemCardSize } from '../types/ItemCardSize';
 
@@ -9,6 +10,9 @@ interface IItemsCardProps {
 
 export function ItemCard ({item, size}: IItemsCardProps) {
   const [inCart, setInCart] = useState(false)
+  // const handleDetailsClick = (e) => {
+
+  // };
 
   return (
     <>
@@ -26,11 +30,11 @@ export function ItemCard ({item, size}: IItemsCardProps) {
                   {inCart ? 'remove from cart' : 'add to cart'}
               </button>
 
-              <button
-                className='button button-details'
-                >
-                  details
-              </button>
+            <Link
+              to={`/item/${item.id}`}className='button button-details' aria-label='Item Details'
+              >
+                details
+            </Link>
             </div>
           </div>
       }
@@ -57,11 +61,11 @@ export function ItemCard ({item, size}: IItemsCardProps) {
                 {inCart ? 'remove from cart' : 'add to cart'}
             </button>
 
-            <button
-              className='button button-details'
+            <Link
+              className='button button-details' aria-label='Item Details' to={`/item/${item.id}`}
               >
                 details
-            </button>
+            </Link>
           </div>
         </div>
       }

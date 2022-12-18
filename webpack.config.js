@@ -5,6 +5,7 @@ const CSSMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
+const { NetlifyPlugin } = require('netlify-webpack-plugin');
 const StylelintPlugin = require("stylelint-webpack-plugin");
 const WebpackPWAManifestPlugin = require("webpack-pwa-manifest");
 
@@ -19,11 +20,17 @@ module.exports = {
     filename: "[name].[contenthash].js",
     assetModuleFilename: "./assets/[name].[contenthash][ext][query]",
     path: path.resolve(__dirname, "dist"),
+    publicPath: '/',
   },
   devServer: {
     open: true,
     port: 5333,
     hot: false,
+    historyApiFallback: {
+      rewrites: [
+        { from: /./, to: '/index.html' }, // all requests to index.html
+      ],
+    },
     client: {
       overlay: true,
       progress: true,
@@ -59,6 +66,7 @@ module.exports = {
       filename: "[name].[contenthash].css",
     }),
     new StylelintPlugin(),
+    new NetlifyPlugin({})
   ],
   module: {
     rules: [
