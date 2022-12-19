@@ -98,4 +98,28 @@
   .button-details {
     @apply text-gray-50 bg-zinc-500 hover:bg-zinc-400 border-zinc-600 hover:border-zinc-500;
   }
+
+  .slider-container {
+    @apply w-72 flex flex-col m-auto;
+  }
+
+  .slider {
+    @apply flex items-center rounded-sm h-6 bg-transparent;
+  }
+
+  .slider-track {
+    @apply h-1 rounded-sm border bg-gradient-to-br from-gray-400 to-gray-300 border-gray-300;
+  }
+
+  .slider-track-1 {
+    @apply bg-gradient-to-br from-pink-700 to-pink-300;
+  }
+
+  .slider-thumb {
+    @apply w-4 h-4 rounded-full bg-gradient-radial from-gray-100 to-gray-50 border border-gray-400 outline-none;
+  }
+
+  .slider-text {
+    @apply flex justify-between text-sm;
+  }
 }

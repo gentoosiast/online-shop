@@ -4,11 +4,13 @@ import { Footer } from './components/footer'
 import { OrderForm } from './components/Order/OrderForm';
 import { ItemDetails } from "./components/ItemDetailsPage"
 import { FilterPage } from "./components/FilterPage"
+import { Slider } from './components/Slider';
 
 export function App() {
   return (
     <>
       <Header />
+      <Slider />
       <div className="max-w-xs m-auto text-center text-emerald-700">
         Welcome aboard, best teammate on the planet Earth 🤗
       </div>
