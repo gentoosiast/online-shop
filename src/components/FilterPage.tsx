@@ -19,7 +19,7 @@ export const FilterPage = ({url}: { url: string }) => {
   const [fetchError, setFetchError] = useState('');
   const [totalItems, setTotalItems] = useState(0);
   const [initialParams, setInitialParams] = useState<IDataParams>({categories: [''], brands: [''], prices: [0], stock: [0]})
-  // const [filteredParams, setFilteredParams] = useState<IDataParams>()
+  const [filteredParams, setFilteredParams] = useState<IDataParams>({categories: [''], brands: [''], prices: [0], stock: [0]})
   const [isFilteredByCategory, setIsFilteredByCategory] = useState(false);
   const [isFilteredByBrand, setIsFilteredByBrand] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([])
@@ -42,12 +42,12 @@ export const FilterPage = ({url}: { url: string }) => {
       setFilteredBrands([...new Set(data.products.map(el=> el.brand))])
       setFilteredPrices([...data.products.map(el=> el.price)])
       setFilteredStock([...data.products.map(el=> el.stock)])
-      // setFilteredParams({
-      //   categories: [...new Set(data.products.map(el=> el.category))],
-      //   brands: [...new Set(data.products.map(el=> el.brand))],
-      //   prices: [...data.products.map(el=> el.price)],
-      //   stock: [...data.products.map(el=> el.stock)],
-      // })
+      setFilteredParams({
+        categories: [...new Set(data.products.map(el=> el.category))],
+        brands: [...new Set(data.products.map(el=> el.brand))],
+        prices: [...data.products.map(el=> el.price)],
+        stock: [...data.products.map(el=> el.stock)],
+      })
       setTotalItems(data.products.length);
     })
     .catch((error: string) => {
@@ -65,14 +65,22 @@ export const FilterPage = ({url}: { url: string }) => {
         if (filteredCategories.includes(filterBox)) {
           if (filteredCategories.length === 1) {
             setIsFilteredByCategory(false);
-            setFilteredCategories(initialParams.categories)
+            setFilteredCategories(initialParams.categories);
+            // setFilteredParams(prev => ({ ...prev, categories: initialParams.categories}))
           }
-          else setFilteredCategories(prev => [...prev].filter(el => el !== filterBox))
+          else {
+            setFilteredCategories(prev => [...prev].filter(el => el !== filterBox))
+            // setFilteredParams(prev => ({ ...prev, categories: [...prev.categories.filter(el => el !== filterBox)]}))
+          }
         }
-        else setFilteredCategories(prev => [...prev, filterBox])
+        else {
+          setFilteredCategories(prev => [...prev, filterBox])
+          // setFilteredParams(prev => ({ ...prev, categories: [...prev.categories, filterBox]}))
+        }
       } else {
         setIsFilteredByCategory(true);
         setFilteredCategories([filterBox])
+        // setFilteredParams(prev => ({ ...prev, categories: [filterBox]}))
       }
     }
 

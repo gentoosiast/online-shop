@@ -17,3 +17,28 @@
 .minMax {
   @apply flex justify-between
 }
+
+.sliderContainer {
+  @apply w-72 flex flex-col m-auto;
+}
+
+.slider {
+  @apply flex items-center rounded-sm h-6 bg-transparent;
+}
+
+.sliderTrack {
+  @apply h-1 rounded-sm border bg-gradient-to-br from-gray-400 to-gray-300 border-gray-300;
+}
+
+.sliderTrack1 {
+  @apply bg-gradient-to-br from-pink-700 to-pink-300;
+}
+
+.sliderThumb {
+  @apply w-4 h-4 rounded-full from-gray-100 to-gray-50 border border-gray-400 outline-none
+  /* @apply w-4 h-4 rounded-full bg-gradient-radial from-gray-100 to-gray-50 border border-gray-400 outline-none; */
+}
+
+.sliderText {
+  @apply flex justify-between text-sm;
+}

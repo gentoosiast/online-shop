@@ -2,20 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IItem } from '../types/IItem';
 import styles from '../css/sidebar.module.css';
 import { IDataParams } from './FilterPage';
-// import Nouislider from "nouislider-react";
-// import "nouislider-react/node_modules/nouislider/distribute/nouislider.css";
-
-
-// const Slider = () => (
-//   <Nouislider
-//   range={{ min: 0, max: 100 }}
-//   start={[0, 100]}
-//   step={10}
-//   // padding ={6}
-//   // margin = {2}
-//   connect
-//   />
-// );
+import { Slider } from "./Slider"
 
 interface ISidebarProps {
   items: IItem []
@@ -70,9 +57,9 @@ const handleClick = (type: string, el:string) => {
           {pricesMinMax.map((el, i) => <input type='number' placeholder = {`${el}`} key={i} className='form-input w-44'
           ></input>)}
         </div>
-        {/* <div id='slider'>
-            <Slider></Slider>
-        </div> */}
+        <div id='slider'>
+            <Slider min = {pricesMinMax[0]} max = {pricesMinMax[1]}></Slider>
+        </div>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Stock</h3>
@@ -80,9 +67,9 @@ const handleClick = (type: string, el:string) => {
           {stockMinMax.map((el, i) => <input type='number' placeholder = {`${el}`} key={i} className='form-input w-44'
           ></input>)}
         </div>
-        {/* <div id='slider'>
-            <Slider></Slider>
-        </div> */}
+        <div id='slider'>
+            {/* <Slider></Slider> */}
+        </div>
       </div>
     </div>
   )
