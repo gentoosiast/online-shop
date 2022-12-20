@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeObservable, observable, action, computed, autorun } from 'mobx';
 import { IItem } from '../types/IItem';
 import { CartItems, TPromo, TPromocodes } from '../types/cart';
 
@@ -13,7 +13,8 @@ class CartStore {
       items: observable,
       promos: observable,
       addItem: action,
-      removeItem: action,
+      removeOneItem: action,
+      removeAllItems: action,
       addPromo: action,
       clear: action,
       totalItems: computed,
@@ -23,19 +24,37 @@ class CartStore {
     });
   }
 
+
+  isInCart = (item: IItem) => {
+    const elemToSeak = Array.from(this.items).find(el => el[0].id === item.id);
+    if (elemToSeak !== undefined) return true
+    return false
+  }
+
+  getItemCopy = (item: IItem) => {
+    const elemToSeak = Array.from(this.items).find(el => el[0].id === item.id);
+    if (elemToSeak !== undefined) return elemToSeak[0]
+    return Array.from(this.items)[0][0]; // кукаю-то глупость вписала, потому что не знаю, как дать понять ТС, что там нет undefined
+  }
+
   addItem = (item: IItem) => {
-    if (this.items.has(item)) {
+    if (this.isInCart(item)) {
       // https://stackoverflow.com/questions/70723319/object-is-possibly-undefined-using-es6-map-get-right-after-map-set
-      const curQty = this.items.get(item) ?? 0;
+      const curQty = this.items.get(this.getItemCopy(item)) ?? 0;
       this.items.set(item, curQty + 1);
     } else {
       this.items.set(item, 1);
     }
   }
 
-  removeItem = (item: IItem) => {
-    if (this.items.has(item)) {
-      const curQty = this.items.get(item) ?? 0;
+  removeAllItems = (item: IItem) => {
+    if (this.isInCart(item)) {
+      this.items.delete(this.getItemCopy(item))
+    }
+  }
+  removeOneItem = (item: IItem) => {
+    if (this.isInCart(item)) {
+      const curQty = this.items.get(this.getItemCopy(item)) ?? 0
       curQty === 1 ? this.items.delete(item) : this.items.set(item, curQty - 1);
     }
   }
@@ -53,7 +72,8 @@ class CartStore {
   }
 
   get totalItems() {
-    return this.items.size;
+    // return this.items.size;
+    return Array.from(this.items).reduce((acc, entry) => acc + entry[1], 0);
   }
 
   get totalPrice() {
@@ -69,6 +89,13 @@ class CartStore {
   get promoList() {
     return (Array.from(this.promos)).map((el) => Object.keys(el)).flat();
   }
+
 }
 
 export const cartStore = new CartStore();
+
+// autorun (() => {
+//   for (const [key, value] of cartStore.items) {
+//     console.log(key, value);
+//   }
+// })

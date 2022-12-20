@@ -89,15 +89,15 @@ export const ItemDetails = observer(({ id }: IItemProps) => {
                 <p className="font-bold text-5xl">${item.price}</p>
                 <div className="flex flex-col gap-2">
                   <button
-                    className={`button ${cartStore.items.has(item) ? 'button-delete' : 'button-add'}`}
+                    className={`button ${cartStore.isInCart(item) ? 'button-delete' : 'button-add'}`}
                     onClick={() => {
-                      if (cartStore.items.has(item)) {
-                        cartStore.removeItem(item);
+                      if (cartStore.isInCart(item)) {
+                        cartStore.removeAllItems(item);
                       } else {
                         cartStore.addItem(item);
                       }
                     }}>
-                    {cartStore.items.has(item) ? 'remove from cart' : 'add to cart'}
+                    {cartStore.isInCart(item) ? 'remove from cart' : 'add to cart'}
                   </button>
                   <button
                     className='button button-buy'>
