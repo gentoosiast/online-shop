@@ -17,7 +17,10 @@
   "keywords": [],
   "author": "Sergey Koksharov <gentoosiastic@gmail.com>",
   "contributors": [
-    {"name":"Anastasia Sim","email":"sinastya@yandex.ru"}
+    {
+      "name": "Anastasia Sim",
+      "email": "sinastya@yandex.ru"
+    }
   ],
   "license": "ISC",
   "devDependencies": {
@@ -54,6 +57,8 @@
     "webpack-pwa-manifest": "^4.3.0"
   },
   "dependencies": {
-    "feather-icons": "^4.29.0"
+    "feather-icons": "^4.29.0",
+    "mobx": "^6.7.0",
+    "mobx-react-lite": "^3.4.0"
   }
 }

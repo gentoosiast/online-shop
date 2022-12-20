@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { cartStore } from '../storage/cart.store';
 import { IItem } from "../types/IItem";
 import { fetchData } from '../fetchData';
 
@@ -6,7 +8,7 @@ interface IItemProps {
   id: number;
 }
 
-export function ItemDetails ({ id }: IItemProps) {
+export const ItemDetails = observer(({ id }: IItemProps) => {
   const endpoint = `https://dummyjson.com/products/${id}`;
   const [item, setItem] = useState<IItem|null>(null);
   const [fetchError, setFetchError] = useState('');
@@ -24,7 +26,6 @@ export function ItemDetails ({ id }: IItemProps) {
     fetchItem(endpoint);
   }, []);
 
-  const [inCart, setInCart] = useState(false);
   const [mainImgIdx, setMainImgIdx] = useState(0);
   return (
     <div className="border p-5 rounded flex flex-col items-center m-auto">
@@ -88,10 +89,15 @@ export function ItemDetails ({ id }: IItemProps) {
                 <p className="font-bold text-5xl">${item.price}</p>
                 <div className="flex flex-col gap-2">
                   <button
-                    className={`button ${inCart ? 'button-delete' : 'button-add'}`}
-                    onClick={() => setInCart(prev => !prev)}
-                    >
-                      {inCart ? 'remove from cart' : 'add to cart'}
+                    className={`button ${cartStore.items.has(item) ? 'button-delete' : 'button-add'}`}
+                    onClick={() => {
+                      if (cartStore.items.has(item)) {
+                        cartStore.removeItem(item);
+                      } else {
+                        cartStore.addItem(item);
+                      }
+                    }}>
+                    {cartStore.items.has(item) ? 'remove from cart' : 'add to cart'}
                   </button>
                   <button
                     className='button button-buy'>
@@ -105,4 +111,4 @@ export function ItemDetails ({ id }: IItemProps) {
       }
     </div>
   )
-}
+});

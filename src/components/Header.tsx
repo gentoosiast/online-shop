@@ -1,8 +1,10 @@
 import React from "react";
+import { observer } from 'mobx-react-lite';
+import { cartStore } from '../storage/cart.store';
 import logoImg from '../assets/logo.png';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
 
-export function Header() {
+export const Header = observer(() => {
   return (
     <header className="flex flex-row p-5 bg-blue-200 rounded-t-3xl">
       <div className="basis-1/4 flex items-center">
@@ -16,9 +18,9 @@ export function Header() {
             <use href={`${featherSprite}#shopping-bag`} />
           </svg>
         </button>
-        <p>7 items</p>
-        <p>$0</p>
+        <p className="cart-items">{cartStore.totalItems} item(s)</p>
+        <p className="cart-price">${cartStore.totalPrice}</p>
       </div>
    </header>
   )
-}
+});
