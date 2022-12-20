@@ -2,6 +2,8 @@ import { makeObservable, observable, action, computed } from 'mobx';
 import { IItem } from '../types/IItem';
 import { CartItems, TPromo, TPromocodes } from '../types/cart';
 
+const availablePromos: TPromo[] = [['NOWAR', 15], ['RSSCHOOL', 5], ['NEWYEAR', 10]];
+
 class CartStore {
   items: CartItems = new Map();
   promos: TPromocodes = new Set();
@@ -39,7 +41,9 @@ class CartStore {
   }
 
   addPromo = (promo: TPromo) => {
-    this.promos.add(promo);
+    if (availablePromos.includes(promo)) {
+      this.promos.add(promo);
+    }
   }
 
   removePromo = (promo: TPromo) => {
