@@ -20,6 +20,7 @@ class CartStore {
       totalItems: computed,
       totalPrice: computed,
       finalPrice: computed, // after all promocodes has been applied
+      promoList: computed,
     });
   }
 
@@ -66,6 +67,10 @@ class CartStore {
     const percentDiscount = Array.from(this.promos).reduce((acc, entry) => acc + entry[1], 0);
 
     return Math.round(this.totalPrice - this.totalPrice / 100 * percentDiscount);
+  }
+
+  get promoList() {
+    return (Array.from(this.promos)).map((el) => Object.keys(el)).flat();
   }
 }
 
