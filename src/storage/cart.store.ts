@@ -49,6 +49,7 @@ class CartStore {
 
   clear = () => {
     this.items.clear();
+    this.promos.clear();
   }
 
   get totalItems() {
