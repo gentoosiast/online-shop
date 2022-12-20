@@ -15,7 +15,6 @@ class CartStore {
       addItem: action,
       removeItem: action,
       addPromo: action,
-      removePromo: action,
       clear: action,
       totalItems: computed,
       totalPrice: computed,
@@ -41,14 +40,11 @@ class CartStore {
     }
   }
 
-  addPromo = (promo: TPromo) => {
-    if (availablePromos.includes(promo)) {
+  addPromo = (promoName: string) => {
+    const promo = availablePromos.find((promo) => promo[0] === promoName);
+    if (promo) {
       this.promos.add(promo);
     }
-  }
-
-  removePromo = (promo: TPromo) => {
-    this.promos.delete(promo);
   }
 
   clear = () => {
