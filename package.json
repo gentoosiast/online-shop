@@ -59,6 +59,7 @@
   "dependencies": {
     "feather-icons": "^4.29.0",
     "mobx": "^6.7.0",
-    "mobx-react-lite": "^3.4.0"
+    "mobx-react-lite": "^3.4.0",
+    "react-paginate": "^8.1.4"
   }
 }

@@ -60,9 +60,10 @@ class CartStore {
   }
 
   addPromo = (promoName: string) => {
-    const promo = availablePromos.find((promo) => promo[0] === promoName);
-    if (promo) {
-      this.promos.add(promo);
+    const promoAvailable = availablePromos.find((promo) => promo[0] === promoName);
+    const isPromoInList = (this.promoList.indexOf(promoName)>=0) ? true : false;
+    if (promoAvailable && !isPromoInList) {
+      this.promos.add(promoAvailable);
     }
   }
 
@@ -72,7 +73,6 @@ class CartStore {
   }
 
   get totalItems() {
-    // return this.items.size;
     return Array.from(this.items).reduce((acc, entry) => acc + entry[1], 0);
   }
 
@@ -82,12 +82,11 @@ class CartStore {
 
   get finalPrice() {
     const percentDiscount = Array.from(this.promos).reduce((acc, entry) => acc + entry[1], 0);
-
-    return Math.round(this.totalPrice - this.totalPrice / 100 * percentDiscount);
+    return Math.round((100 - percentDiscount)/100 * this.totalPrice);
   }
 
   get promoList() {
-    return (Array.from(this.promos)).map((el) => Object.keys(el)).flat();
+    return Array.from(this.promos).map(el => el[0]);
   }
 
 }
@@ -95,7 +94,7 @@ class CartStore {
 export const cartStore = new CartStore();
 
 // autorun (() => {
-//   for (const [key, value] of cartStore.items) {
-//     console.log(key, value);
-//   }
+  // for (const [key, value] of cartStore.promos) {
+  //   console.log(key, value);
+  // }
 // })
