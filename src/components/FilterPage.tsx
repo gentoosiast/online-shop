@@ -1,51 +1,104 @@
-import React, { useEffect, useState } from "react";
-import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import React, { useState } from "react";
+import { Form, useSearchParams, useLoaderData } from "react-router-dom";
+import { useQuery, QueryClient } from '@tanstack/react-query';
 import { fetchData } from '../fetchData';
-import { IItem, IItemsDto } from '../types/IItem';
+import { IItemsDto } from '../types/IItem';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { ItemCard } from "./ItemCard";
+import { SortOption } from "../types/SortOption";
+import featherSprite from 'feather-icons/dist/feather-sprite.svg';
 
-export const FilterPage = ({url}: { url: string }) => {
-  const [items, setItems] = useState<IItem[]>([]);
-  const [fetchError, setFetchError] = useState('');
-  const [totalItems, setTotalItems] = useState(0);
-  const [cardSize, setCardSize] = useState<ItemCardSize>("Small");
+const isItemCardSize = (value: string): value is ItemCardSize => {
+  return value === 'Small' || value === 'Large';
+}
 
-  const fetchItems = (url: string) => {
-    fetchData<IItemsDto>(url)
-    .then((data) => {
-      setItems(data.products);
-      setTotalItems(data.products.length);
-    })
-    .catch((error: string) => {
-      setFetchError(error);
-    });
+const isSortOption = (value: string): value is SortOption => {
+  const options = ["price-ASC", "price-DESC", "rating-ASC", "rating-DESC", "discount-ASC", "discount-DESC"];
+
+  return options.includes(value);
+}
+
+const fetchItems = async () => {
+  const endpoint = 'https://dummyjson.com/products?limit=25';
+  try {
+    const data = await fetchData<IItemsDto>(endpoint);
+    return data;
+  } catch(e) {
+    throw new Error(e instanceof Error ? e.message : "fetchItems: Some unknown error occured");
   }
+}
 
-  useEffect(() => {
-    fetchItems(url);
-  }, []);
+const itemsQuery = () => ({
+  queryKey: ['items'],
+  queryFn: async () => fetchItems(),
+  refetchOnWindowFocus: false
+});
+
+export const loader =
+  (queryClient: QueryClient) =>
+  async (): Promise<IItemsDto> => {
+    const query = itemsQuery();
+    return (
+      queryClient.getQueryData(query.queryKey) ??
+      (await queryClient.fetchQuery(query))
+    )
+}
+
+export const FilterPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialData = useLoaderData() as Awaited<
+    ReturnType<ReturnType<typeof loader>>
+  >
+  const { data: {products: items}, isLoading, isFetching } = useQuery({
+    ...itemsQuery(),
+    initialData,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const cardSearchParam = searchParams.get('card') ?? '';
+  const initialCardSize = isItemCardSize(cardSearchParam) ? cardSearchParam : 'Small';
+  const [cardSize, setCardSize] = useState<ItemCardSize>(initialCardSize);
+
+  const sortSearchParam = searchParams.get('sort') ?? '';
+  const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : 'price-ASC';
+
+  if (isLoading || isFetching) {
+    return (
+      <div className="preloader">Loading</div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-center items-center gap-10">
         <div>
-          <select>
-            <option value="priceUp">Sort by price (ascending)</option>
-            <option value="priceDown">Sort by price (descending)</option>
-            <option value="ratingUp">Sort by rating (ascending)</option>
-            <option value="ratingDown">Sort by rating (descending)</option>
-            <option value="discountUp">Sort by discount (ascending)</option>
-            <option value="discountDown">Sort by discount (descending)</option>
+          <select name="sort" defaultValue={initialSortOption} onChange={(event) => {
+            searchParams.set('sort', event.target.value);
+            setSearchParams(searchParams);
+          }}>
+            <option value="price-ASC">Sort by price (ascending)</option>
+            <option value="price-DESC">Sort by price (descending)</option>
+            <option value="rating-ASC">Sort by rating (ascending)</option>
+            <option value="rating-DESC">Sort by rating (descending)</option>
+            <option value="discount-ASC">Sort by discount (ascending)</option>
+            <option value="discount-DESC">Sort by discount (descending)</option>
           </select>
         </div>
-        { Boolean(totalItems) &&
-          <div>Found: {totalItems} items</div>
-        }
-        <input className="form-input" type='text' placeholder="I'm looking for..."></input>
+        <div>Found: {items.length} items</div>
+        <Form id="search-form" role="search" autoComplete="off">
+          <input id="q" className="form-input" name="q" type='search' placeholder="I'm looking for..."
+            defaultValue={searchParams.get('q') ?? ''} aria-label="Search items"
+            onChange={(event) => {
+              event.preventDefault();
+              searchParams.set('q', event.target.value);
+              setSearchParams(searchParams);
+            }} />
+        </Form>
         <div className="flex gap-2">
           <button
             onClick={() => {
+              searchParams.set('card', 'Small');
+              setSearchParams(searchParams);
               setCardSize("Small");
             }
           }>
@@ -55,6 +108,8 @@ export const FilterPage = ({url}: { url: string }) => {
           </button>
           <button
             onClick={() => {
+              searchParams.set('card', 'Large');
+              setSearchParams(searchParams);
               setCardSize("Large");
             }
           }>
@@ -66,7 +121,6 @@ export const FilterPage = ({url}: { url: string }) => {
       </div>
       <div className="flex flex-wrap justify-center gap-5">
         {items.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
-        {Boolean(fetchError) && <div className="p-20 text-center font-bold text-2xl">{fetchError}</div>}
       </div>
     </div>
     )

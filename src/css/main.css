@@ -80,7 +80,7 @@
   }
 
   .button {
-    @apply px-4 py-2 w-48 border rounded transition-colors duration-300;
+    @apply px-4 py-2 w-48 border rounded transition-colors duration-300 text-center;
   }
 
   .button-add {

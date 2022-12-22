@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React from 'react';
 import githubLogo from '../assets/github-light-bg.svg'
 import rsLogo from '../assets/rslogo-light-bg.svg'
 

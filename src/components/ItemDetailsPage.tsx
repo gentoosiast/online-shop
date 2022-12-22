@@ -1,38 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { LoaderFunctionArgs, Link, useLoaderData, useParams } from "react-router-dom";
+import { useQuery, QueryClient } from '@tanstack/react-query';
 import { IItem } from "../types/IItem";
 import { fetchData } from '../fetchData';
 
-interface IItemProps {
-  id: number;
+const fetchItem = async (id: string) => {
+  const endpoint = `https://dummyjson.com/products/${id}`;
+  try {
+    const data = await fetchData<IItem>(endpoint);
+    return data;
+  } catch(e) {
+    throw new Error(e instanceof Error ? e.message : "fetchItem: Some error occured");
+  }
 }
 
-export function ItemDetails ({ id }: IItemProps) {
-  const endpoint = `https://dummyjson.com/products/${id}`;
-  const [item, setItem] = useState<IItem|null>(null);
-  const [fetchError, setFetchError] = useState('');
-  const fetchItem = (url: string) => {
-    fetchData<IItem>(url)
-    .then((data) => {
-      setItem(data);
-    })
-    .catch((error: string) => {
-      setFetchError(error);
-    });
+const itemQuery = (id: string) => ({
+  queryKey: ['item', id],
+  queryFn: async () => fetchItem(id),
+  refetchOnWindowFocus: false,
+});
+
+
+export const loader =
+  (queryClient: QueryClient) =>
+  async ({ params }: LoaderFunctionArgs): Promise<IItem> => {
+    const query = itemQuery(params.itemId ?? '1');
+    return (
+      queryClient.getQueryData(query.queryKey) ??
+      (await queryClient.fetchQuery(query))
+    )
   }
 
-  useEffect(() => {
-    fetchItem(endpoint);
-  }, []);
+export function ItemDetails() {
+  const params = useParams();
+    const initialData = useLoaderData() as Awaited<
+    ReturnType<ReturnType<typeof loader>>
+  >
+  const { data: item } = useQuery({
+    ...itemQuery(params.itemId ?? '1'),
+    initialData,
+    staleTime: 1000 * 60 * 5,
+  });
 
   const [inCart, setInCart] = useState(false);
   const [mainImgIdx, setMainImgIdx] = useState(0);
   return (
     <div className="border p-5 rounded flex flex-col items-center m-auto">
-      {Boolean(fetchError) && <div className="p-20 text-center font-bold text-2xl">{fetchError}</div>}
       {item &&
         <>
           <div className="p-5 flex justify-evenly items-center gap-1">
-            <span>store</span>
+            <Link to="/"><span>store</span></Link>
             <span className="breadcrumb">/</span>
             <span>{item.category}</span>
             <span className="breadcrumb">/</span>
