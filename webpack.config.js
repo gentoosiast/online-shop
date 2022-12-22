@@ -66,7 +66,15 @@ module.exports = {
       filename: "[name].[contenthash].css",
     }),
     new StylelintPlugin(),
-    new NetlifyPlugin({})
+    new NetlifyPlugin({
+      redirects: [
+        {
+          from: "/*",
+          to: "/index.html",
+          status: 200
+        }
+      ]
+    })
   ],
   module: {
     rules: [
