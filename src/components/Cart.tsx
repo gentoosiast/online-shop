@@ -2,7 +2,8 @@ import React, { useState } from "react"
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import '../css/main.css';
-import { PaginatedItems } from "./Pagination"
+import { PaginatedItems } from "./Pagination";
+import { OrderForm } from "./Order/OrderForm";
 import styles from '../css/cart.module.css';
 
 export const Cart = observer(() => {

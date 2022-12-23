@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import { IItem } from "../types/IItem";
@@ -32,11 +33,11 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
                   {cartStore.isInCart(item) ? 'remove from cart' : 'add to cart'}
               </button>
 
-              <button
-                className='button button-details'
-                >
-                  details
-              </button>
+            <Link
+              to={`/item/${item.id}`}className='button button-details' aria-label='Item Details'
+              >
+                details
+            </Link>
             </div>
           </div>
       }
@@ -69,11 +70,11 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
                 {cartStore.items.has(item) ? 'remove from cart' : 'add to cart'}
             </button>
 
-            <button
-              className='button button-details'
+            <Link
+              className='button button-details' aria-label='Item Details' to={`/item/${item.id}`}
               >
                 details
-            </button>
+            </Link>
           </div>
         </div>
       }
