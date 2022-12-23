@@ -15,7 +15,10 @@ class CartStore {
       addItem: action,
       removeOneItem: action,
       removeAllItems: action,
+      isPromoOK: action,
+      showPromo: action,
       addPromo: action,
+      removePromo: action,
       clear: action,
       totalItems: computed,
       totalPrice: computed,
@@ -37,11 +40,20 @@ class CartStore {
     return Array.from(this.items)[0][0]; // кукаю-то глупость вписала, потому что не знаю, как дать понять ТС, что там нет undefined
   }
 
+  isEnoughInStock = (item: IItem) => {
+    const elemToSeak = Array.from(this.items).find(el => el[0].id === item.id);
+    if (elemToSeak !== undefined) {
+      const curQty = this.items.get(this.getItemCopy(item)) ?? 0;
+      return (elemToSeak[0].stock>curQty) ? true : false
+    }
+    return false;
+  }
+
   addItem = (item: IItem) => {
     if (this.isInCart(item)) {
       // https://stackoverflow.com/questions/70723319/object-is-possibly-undefined-using-es6-map-get-right-after-map-set
       const curQty = this.items.get(this.getItemCopy(item)) ?? 0;
-      this.items.set(item, curQty + 1);
+      if (this.isEnoughInStock(item)) this.items.set(item, curQty + 1);
     } else {
       this.items.set(item, 1);
     }
@@ -59,12 +71,23 @@ class CartStore {
     }
   }
 
-  addPromo = (promoName: string) => {
+  isPromoOK = (promoName: string) => {
     const promoAvailable = availablePromos.find((promo) => promo[0] === promoName);
     const isPromoInList = (this.promoList.indexOf(promoName)>=0) ? true : false;
-    if (promoAvailable && !isPromoInList) {
-      this.promos.add(promoAvailable);
-    }
+    return (promoAvailable && !isPromoInList) ? true : false;
+  }
+
+  showPromo = (promoName: string) => {
+    return (this.isPromoOK(promoName)) ? availablePromos.filter(el=>el[0]===promoName)[0] : ['', 0];
+  }
+
+  addPromo = (promoName: string) => {
+    const promoAvailable = availablePromos.find((promo) => promo[0] === promoName);
+    if (promoAvailable) this.promos.add(promoAvailable)
+  }
+
+  removePromo = (promoName: TPromo) => {
+    this.promos.delete(promoName)
   }
 
   clear = () => {
@@ -93,8 +116,8 @@ class CartStore {
 
 export const cartStore = new CartStore();
 
-// autorun (() => {
-  // for (const [key, value] of cartStore.promos) {
-  //   console.log(key, value);
-  // }
-// })
+autorun (() => {
+  for (const [key, value] of cartStore.items) {
+    console.log(key, value);
+  }
+})

@@ -21,3 +21,19 @@
 .Pagination__disabled__link {
   @apply text-gray-600
 }
+
+.button_round {
+  @apply border border-black rounded-full h-12 w-12
+}
+
+.button_round__inactive {
+  @apply  border border-gray-500 rounded-full h-12 w-12
+}
+
+.totalPrice {
+  @apply font-bold
+}
+
+.totalPriceCrossed {
+  @apply font-bold line-through
+}

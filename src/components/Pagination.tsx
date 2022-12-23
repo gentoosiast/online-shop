@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { cartStore } from '../storage/cart.store';
 import { IItem } from '../types/IItem';
@@ -8,14 +7,15 @@ import styles from '../css/cart.module.css';
 
 interface IItemsToShowProps {
   currentItems: [IItem, number][]
+  itemOffset: number
 }
 
-function ItemsToShow({ currentItems }: IItemsToShowProps) {
+function ItemsToShow({ currentItems, itemOffset }: IItemsToShowProps) {
   return (
     <>
       {currentItems &&
-        currentItems.map(el =>
-        <ItemCardCart key={el[0].id} item={el[0]} amt={el[1]}></ItemCardCart>
+        currentItems.map((el, i) =>
+        <ItemCardCart key={el[0].id} number={i+1+itemOffset} item={el[0]} amt={el[1]}></ItemCardCart>
         )}
     </>
   )}
@@ -31,8 +31,9 @@ export function PaginatedItems ({itemsPerPage}: IPaginatedItemsProps) {
 
   const endOffset = itemOffset + itemsPerPageInput;
   const currentItems = items.slice(itemOffset, endOffset);
+  if (currentItems.length === 0) setItemOffset(prev => prev-itemsPerPageInput)
   const pageCount = Math.ceil(items.length / itemsPerPageInput);
-  const pageOffset = itemOffset/itemsPerPageInput
+  const pageOffset = itemOffset/itemsPerPageInput;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
     if (+e.target.value > 0) setItemsPerPageInput(+e.target.value);
@@ -51,7 +52,7 @@ export function PaginatedItems ({itemsPerPage}: IPaginatedItemsProps) {
           value={itemsPerPageInput} onChange={handleInputChange}
           ></input>
         </div>
-      <ItemsToShow currentItems={currentItems} />
+      <ItemsToShow currentItems={currentItems} itemOffset={itemOffset}/>
       <ReactPaginate
         breakLabel="..."
         nextLabel="next >"
@@ -70,6 +71,7 @@ export function PaginatedItems ({itemsPerPage}: IPaginatedItemsProps) {
         disabledClassName = {styles.Pagination__disabled}
         disabledLinkClassName = {styles.Pagination__disabled__link}
         forcePage={pageOffset}
+        // renderOnZeroPageCount = {undefined}
       />
     </>
   );

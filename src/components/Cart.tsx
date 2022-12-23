@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react"
-import { ItemCardCart } from "./ItemCardCart"
+import React, { useState } from "react"
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
-import ReactPaginate from 'react-paginate';
 import '../css/main.css';
 import { PaginatedItems } from "./Pagination"
+import styles from '../css/cart.module.css';
 
 export const Cart = observer(() => {
   const [promoInput,setPromoInput] = useState('');
 
   const handlePromoChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
-    setPromoInput(e.target.value);
-    cartStore.addPromo(e.target.value.trim())
+    setPromoInput(e.target.value.trim());
   }
 
   return (
@@ -29,13 +27,36 @@ export const Cart = observer(() => {
         </div>
         <div  className='border p-4 flex flex-col justify-center gap-3 pt-7'>
             <p className = 'font-bold h-18'>Summary</p>
-            <div>Total price: ${cartStore.totalPrice}</div>
+            <div className={ (cartStore.totalPrice == cartStore.finalPrice) ? styles.totalPrice : styles.totalPriceCrossed}
+            >Total price: ${cartStore.totalPrice}</div>
+            {(cartStore.totalPrice !== cartStore.finalPrice) &&
+              <div className={styles.totalPrice}>Total price: ${cartStore.finalPrice}</div>
+              }
             <div>Items: {cartStore.totalItems}</div>
+            {(cartStore.totalPrice !== cartStore.finalPrice) &&
+              <div className=''>
+                <p className="font-bold">Applied promo codes</p>
+                <div className="flex flex-col gap-3">
+                  {Array.from(cartStore.promos).map((el, i)=> <div key={i} className="flex justify-between items-center">
+                    <p>{`${el.join(' - ')}%`}</p>
+                    <button className='button button-buy'
+                    onClick={()=>cartStore.removePromo(el)}>remove promo</button>
+                    </div>)}
+                </div>
+              </div>
+              }
             <div>available promos: NOWAR (15%), NEWYEAR (10%), RSSCHOOL (5%)</div>
             <input type='text'className="form-input" id='promo-input' placeholder="enter promocode"
             value={promoInput} onChange={handlePromoChange}
             ></input>
-            <label htmlFor="promo-input">Final price: ${cartStore.finalPrice}</label>
+            {cartStore.isPromoOK(promoInput) &&
+            <div className="border p-3 flex justify-between">
+              <p>{`${cartStore.showPromo(promoInput).join(' - ')}%`}</p>
+              <button className='button button-buy'
+              onClick={()=>cartStore.addPromo(promoInput)}
+              >apply promo</button>
+            </div>}
+            {/* <label htmlFor="promo-input">Final price: ${cartStore.finalPrice}</label> */}
             <div>
               <button className='button button-buy'
               >Order now
