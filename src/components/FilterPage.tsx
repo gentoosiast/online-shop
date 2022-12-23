@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, useSearchParams, useLoaderData } from "react-router-dom";
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { fetchData } from '../fetchData';
-import { IItemsDto } from '../types/IItem';
+import { IItem, IItemsDto } from '../types/IItem';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { ItemCard } from "./ItemCard";
 import { SortOption } from "../types/SortOption";
@@ -82,80 +82,56 @@ export const FilterPage = () => {
       <div className="preloader">Loading</div>
     );
   }
-  // const [tmp, setTmp] = useState(0)
-  // setTmp(items.length)
-  // const [initialParams, setInitialParams] = useState<IFilters>({categories: [''], brands: [''], prices: [0], stock: [0]})
-  // const [filteredParams, setFilteredParams] = useState<IFilters>({categories: [''], brands: [''], prices: [0], stock: [0]})
-  // const [isFiltered, setIsFiltered] = useState<IFilterApplied>({categories: false, brands: false, prices:false, stock: false});
 
-  // setInitialParams({
-  //   categories: [...new Set(items.map(el=> el.category))],
-  //   brands: [...new Set(items.map(el=> el.brand))],
-  //   prices: [...items.map(el=> el.price)],
-  //   stock: [...items.map(el=> el.stock)],
-  // })
-  // setFilteredParams({
-  //   categories: [...new Set(items.map(el=> el.category))],
-  //   brands: [...new Set(items.map(el=> el.brand))],
-  //   prices: [...items.map(el=> el.price)],
-  //   stock: [...items.map(el=> el.stock)],
-  // })
+  const initialFilters = {
+    categories: [...new Set(items.map(el=> el.category))],
+    brands: [...new Set(items.map(el=> el.brand))],
+    prices: [...items.map(el=> el.price)],
+    stock: [...items.map(el=> el.stock)],
+  }
 
+  const [customFilters, setCustomFilters] = useState<IFilters>(initialFilters)
+  const [isFiltered, setIsFiltered] = useState<IFilterApplied>({categories: false, brands: false, prices:false, stock: false});
 
-  // const onFilterClick = (filterType: string, filterBox: string) => {
-  //   if (filterType === 'categories') {
-  //     // if (isFilteredByCategory) {
-  //     if (isFiltered.categories) {
-  //       // if (filteredCategories.includes(filterBox)) {
-  //       if (filteredParams.categories.includes(filterBox)) {
-  //         // if (filteredCategories.length === 1) {
-  //         if (filteredParams.categories.length === 1) {
-  //           // setIsFilteredByCategory(false);
-  //           setIsFiltered(prev => ({...prev, categories: false}))
-  //           // setFilteredCategories(initialParams.categories);
-  //           setFilteredParams(prev => ({ ...prev, categories: initialParams.categories}))
-  //         }
-  //         else {
-  //           // setFilteredCategories(prev => [...prev].filter(el => el !== filterBox))
-  //           setFilteredParams(prev => ({ ...prev, categories: [...prev.categories.filter(el => el !== filterBox)]}))
-  //         }
-  //       }
-  //       else {
-  //         // setFilteredCategories(prev => [...prev, filterBox])
-  //         setFilteredParams(prev => ({ ...prev, categories: [...prev.categories, filterBox]}))
-  //       }
-  //     } else {
-  //       // setIsFilteredByCategory(true);
-  //       setIsFiltered(prev => ({...prev, categories: true}))
-  //       // setFilteredCategories([filterBox])
-  //       setFilteredParams(prev => ({ ...prev, categories: [filterBox]}))
-  //     }
-  //   }
+  const onFilterClick = (filterType: keyof IFilters, filterBox: string) => {
+    if ( (filterType === 'categories') || (filterType ==='brands')) {
+      if (isFiltered[filterType]) {
+        // если эта категория фильтровалась
+        if (customFilters[filterType].includes(filterBox)) {
+          // есть кликнутый фильтр уже checked
+          if (customFilters[filterType].length === 1) {
+            // если это единственный фильтр в массиве, то возвращаем все фильтры и флаг false
+            setIsFiltered(prev => ({...prev, [filterType]: false}))
+            setCustomFilters(prev => ({ ...prev, [filterType]: initialFilters[filterType]}))
+          }
+          else {
+            // если не единственный фильтр, то просто удаляем из массива
+            setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}))
+          }
+        }
+        else {
+          // если фильтр не checked, то добавляем
+          setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}))
+        }
+      } else {
+        //если еще не фильтровалась эта категория, то ставим флаг на true и перезаписываем соответствующий массив
+        setIsFiltered(prev => ({...prev, [filterType]: true}))
+        setCustomFilters(prev => ({ ...prev, [filterType]: [filterBox]}))
+      }
+    }
+  }
 
-  //   // if (filterType === 'brands') {
-  //   //   if (isFilteredByBrand) {
-  //   //     if (filteredBrands.includes(filterBox)) {
-  //   //       if (filteredBrands.length === 1) {
-  //   //         setIsFilteredByBrand(false);
-  //   //         setFilteredBrands(initialParams.brands)
-  //   //       }
-  //   //       else setFilteredBrands(prev => [...prev].filter(el => el !== filterBox))
-  //   //     }
-  //   //     else setFilteredBrands(prev => [...prev, filterBox])
-  //   //   } else {
-  //   //     setIsFilteredByBrand(true);
-  //   //     setFilteredBrands([filterBox])
-  //   //   }
-  //   // }
-  // }
-
-  // const itemsToRender = [...items].filter(elem => (filteredCategories.some(el => el === elem.category)))
-  // const itemsToRender = [...items].filter(elem => (filteredParams.categories.some(el => el === elem.category)))
-  // .filter(elem => filteredBrands.some(el => el === elem.brand))
+  const onReset = () => {
+    setCustomFilters(initialFilters)
+    setIsFiltered({categories: false, brands: false, prices:false, stock: false})
+  }
+  const itemsToRender = [...items].filter(elem => (customFilters.categories.some(el => el === elem.category)))
+  .filter(elem => customFilters.brands.some(el => el === elem.brand))
 
   return (
-    <div>
-      {/* <Sidebar items={items} onCheck={(type, el)=>onFilterClick(type, el)} filters={initialParams}/> */}
+    <div className='flex'>
+      <Sidebar items={items} onCheck={(type, el)=>onFilterClick(type, el)}
+      filters={initialFilters} itemsToRender={itemsToRender} onReset={()=>onReset()}/>
       <div className="flex flex-col gap-2">
         <div className="flex justify-center items-center gap-10">
           <div>
@@ -207,7 +183,7 @@ export const FilterPage = () => {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-5">
-          {items.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
+          {itemsToRender.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
         </div>
       </div>
     </div>

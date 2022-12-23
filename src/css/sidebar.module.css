@@ -10,9 +10,12 @@
 .item {
   @apply flex items-center gap-3
 }
-.checkbox {
+/* .checkbox {
   @apply scale-150
-}
+} */
+/* .label {
+  @apply
+} */
 
 .minMax {
   @apply flex justify-between
@@ -42,3 +45,5 @@
 .sliderText {
   @apply flex justify-between text-sm;
 }
+
+
