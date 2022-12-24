@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { LoaderFunctionArgs, Link, useLoaderData, useParams } from "react-router-dom";
 import { useQuery, QueryClient } from '@tanstack/react-query';
+import { observer } from 'mobx-react-lite';
+import { cartStore } from '../storage/cart.store';
 import { IItem } from "../types/IItem";
 import { fetchData } from '../fetchData';
 
@@ -20,7 +22,6 @@ const itemQuery = (id: string) => ({
   refetchOnWindowFocus: false,
 });
 
-
 export const loader =
   (queryClient: QueryClient) =>
   async ({ params }: LoaderFunctionArgs): Promise<IItem> => {
@@ -31,7 +32,7 @@ export const loader =
     )
   }
 
-export function ItemDetails() {
+export const ItemDetails = observer(() => {
   const params = useParams();
     const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof loader>>
@@ -42,7 +43,6 @@ export function ItemDetails() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const [inCart, setInCart] = useState(false);
   const [mainImgIdx, setMainImgIdx] = useState(0);
   return (
     <div className="border p-5 rounded flex flex-col items-center m-auto">
@@ -105,10 +105,15 @@ export function ItemDetails() {
                 <p className="font-bold text-5xl">${item.price}</p>
                 <div className="flex flex-col gap-2">
                   <button
-                    className={`button ${inCart ? 'button-delete' : 'button-add'}`}
-                    onClick={() => setInCart(prev => !prev)}
-                    >
-                      {inCart ? 'remove from cart' : 'add to cart'}
+                    className={`button ${cartStore.isInCart(item.id) ? 'button-delete' : 'button-add'}`}
+                    onClick={() => {
+                      if (cartStore.isInCart(item.id)) {
+                        cartStore.removeAllItems(item.id);
+                      } else {
+                        cartStore.addItem(item);
+                      }
+                    }}>
+                    {cartStore.isInCart(item.id) ? 'remove from cart' : 'add to cart'}
                   </button>
                   <button
                     className='button button-buy'>
@@ -122,4 +127,4 @@ export function ItemDetails() {
       }
     </div>
   )
-}
+});

@@ -59,8 +59,11 @@
     "webpack-pwa-manifest": "^4.3.0"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.20.4",
     "feather-icons": "^4.29.0",
+    "mobx": "^6.7.0",
+    "mobx-react-lite": "^3.4.0",
+    "react-paginate": "^8.1.4",
+    "@tanstack/react-query": "^4.20.4",
     "react-router": "^6.5.0",
     "react-router-dom": "^6.5.0"
   }

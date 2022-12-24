@@ -9,7 +9,7 @@
     "allowJs": false,
     "jsx": "react",
     "sourceMap": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
   },
   "files": ["src/index.tsx", "module.d.ts"]
 }

@@ -11,7 +11,7 @@ import { Root } from './components/Root';
 import { ErrorPage } from './components/ErrorPage';
 import { FilterPage, loader as filterLoader } from './components/FilterPage';
 import { ItemDetails, loader as itemDetailsLoader } from './components/ItemDetailsPage';
-import { CartPage } from './components/CartPage';
+import { Cart } from './components/Cart';
 
 const rootDiv = document.getElementById("root");
 if (!rootDiv) {
@@ -43,7 +43,7 @@ const router = createBrowserRouter([
           },
           {
             path: "cart",
-            element: <CartPage />
+            element: <Cart />
           }
         ]
       }
@@ -56,7 +56,7 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      <ReactQueryDevtools position="bottom-right" />
+      {/* <ReactQueryDevtools position="bottom-right" /> */}
     </QueryClientProvider>
   </React.StrictMode>
 );

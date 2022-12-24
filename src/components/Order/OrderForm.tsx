@@ -10,7 +10,11 @@ interface ISegment {
   separator: string;
 }
 
-export const OrderForm = () => {
+interface IOrderFormProps {
+  onSubmit: (e: React.SyntheticEvent) => void;
+}
+
+export const OrderForm = (props: IOrderFormProps) => {
   interface IFormInput {
     value: string;
     maxLength?: number;
@@ -90,8 +94,8 @@ export const OrderForm = () => {
   }
 
   const handleSubmit = (e: React.SyntheticEvent) => {
-    e.preventDefault();
     setIsFormSubmitted(true);
+    props.onSubmit(e);
   }
 
   const initialState: IFormData = {
