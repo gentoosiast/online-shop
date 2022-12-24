@@ -22,12 +22,20 @@
   @apply text-gray-600
 }
 
+.Pagination__disabled__link svg {
+  @apply stroke-gray-400
+}
+
 .button_round {
-  @apply border border-black rounded-full h-12 w-12
+  @apply pointer-events-auto
 }
 
 .button_round__inactive {
-  @apply  border border-gray-500 rounded-full h-12 w-12
+  @apply pointer-events-none
+}
+
+.button_round__inactive svg {
+  @apply stroke-gray-400
 }
 
 .totalPrice {
