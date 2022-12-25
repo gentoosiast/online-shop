@@ -3,7 +3,7 @@ import { IItem } from '../types/IItem';
 import styles from '../css/sidebar.module.css';
 import "../css/main.css"
 import { IFilters } from './FilterPage';
-// import { Slider } from "./Slider"
+import { Slider } from "./Slider"
 
 interface ISidebarProps {
   items: IItem []
