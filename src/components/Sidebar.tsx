@@ -121,7 +121,7 @@ const handleCopy = () => {
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Price</h3>
-        {(notFound) && <div className={styles.sliderText}>not found</div>}
+        {(notFound) && <div  className="text-2xl">not found</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <ReactSlider
@@ -148,7 +148,7 @@ const handleCopy = () => {
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Stock</h3>
-        {(notFound) && <div className={styles.sliderText}>not found</div>}
+        {(notFound) && <div className="text-2xl">not found</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <ReactSlider

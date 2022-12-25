@@ -195,7 +195,8 @@ export const FilterPage = () => {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-5">
-          {itemsToRender.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
+          {Boolean(itemsToRender.length) && itemsToRender.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
+          {Boolean(itemsToRender.length===0) && <div className="text-5xl">No products found</div>}
         </div>
       </div>
     </div>
