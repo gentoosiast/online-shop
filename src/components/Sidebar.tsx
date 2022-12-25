@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IItem } from '../types/IItem';
 import styles from '../css/sidebar.module.css';
 import "../css/main.css"
@@ -16,14 +16,16 @@ interface ISidebarProps {
   itemsToRender: IItem []
   onReset: () => void
   onSliderChange: (type: keyof ISliderFilters, value: number[])=> void
+  customFilters: IFilters
+  minMaxPrice: number[]
 }
 interface ICheckbox {
   [x: number]: boolean;
 }
 
-export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange}: ISidebarProps) => {
+export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange, customFilters, minMaxPrice}: ISidebarProps) => {
 
-const calcAmt = (arr: IItem [], filterType: keyof IItem, el: string) => {
+const calcAmount = (arr: IItem [], filterType: keyof IItem, el: string) => {
   return arr.filter(elem=> elem[filterType] === el).length;
 }
 const categoriesCheckboxes: ICheckbox = {...Array(filters.categories.length).fill(false)}
@@ -31,11 +33,30 @@ const brandsCheckboxes: ICheckbox = {...Array(filters.categories.length).fill(fa
 const [categoriesChecked, setCategoriesChecked] = useState(categoriesCheckboxes);
 const [brandsChecked, setBrandsChecked] = useState(brandsCheckboxes);
 
+
 const handleClick = (type: keyof ICheckboxFilters, el:string, index: number) => {
   onCheck(type, el);
   if (type === 'categories') setCategoriesChecked(prev => ({...prev, [index]: !categoriesChecked[index]}))
   if (type === 'brands') setBrandsChecked(prev => ({...prev, [index]: !brandsChecked[index]}))
 }
+
+useEffect(() => {
+  const maxMinPrice = [Math.min(...itemsToRender.map(el=> el.price)), Math.max(...itemsToRender.map(el=> el.price))]
+  const maxMinStock = [Math.min(...itemsToRender.map(el=> el.stock)), Math.max(...itemsToRender.map(el=> el.stock))]
+  if ((maxMinPrice[0] !== Infinity) && (maxMinStock[0] !== Infinity)) {
+    setPrice(maxMinPrice);
+    setStock(maxMinStock);
+    setNotFound(false);
+  } else {
+    setPrice(filters.prices);
+    setStock(filters.stock);
+    setNotFound(true);
+  }
+}, [itemsToRender])
+
+const [notFound, setNotFound] = useState(false)
+const [price, setPrice] = useState<number[]>(filters.prices);
+const [stock, setStock] = useState<number[]>(filters.stock);
 
 const handleReset = () => {
   onReset();
@@ -53,9 +74,6 @@ const handleCopy = () => {
     setIsCopied(false);
   }, 1000);
 }
-
-const [price, setPrice] = useState(filters.prices);
-const [stock, setStock] = useState(filters.stock);
 
   return (
     <div className='w-fit'>
@@ -79,8 +97,8 @@ const [stock, setStock] = useState(filters.stock);
             onChange={()=>handleClick('categories', el, i)} checked={categoriesChecked[i]}
             ></input>
             {el}</label>
-            <span>({calcAmt(itemsToRender, 'category', el)})</span>/
-            <span>({calcAmt(items, 'category', el)})</span>
+            <span>({calcAmount(itemsToRender, 'category', el)})</span>/
+            <span>({calcAmount(items, 'category', el)})</span>
             </div>
           )}
         </fieldset>
@@ -95,14 +113,15 @@ const [stock, setStock] = useState(filters.stock);
             onChange={()=>handleClick('brands', el, i)}  checked={brandsChecked[i]}
             ></input>
             {el}</label>
-            <span>({calcAmt(itemsToRender, 'brand', el)})</span>/
-            <span>({calcAmt(items, 'brand', el)})</span>
+            <span>({calcAmount(itemsToRender, 'brand', el)})</span>/
+            <span>({calcAmount(items, 'brand', el)})</span>
             </div>
           )}
         </fieldset>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Price</h3>
+        {(notFound) && <div className={styles.sliderText}>not found</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <ReactSlider
@@ -118,16 +137,18 @@ const [stock, setStock] = useState(filters.stock);
                 onSliderChange('prices', value)
                 setPrice(value);
               }}
+
             />
-            <div className={styles.sliderText}>
+            {(!notFound) && <div className={styles.sliderText}>
               <span className={styles.sliderMin}>{`$${price[0]}`}</span>
               <span className={styles.sliderMax}>{`$${price[1]}`}</span>
-            </div>
+            </div>}
           </div>
         </div>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Stock</h3>
+        {(notFound) && <div className={styles.sliderText}>not found</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <ReactSlider
@@ -144,10 +165,10 @@ const [stock, setStock] = useState(filters.stock);
                 setStock(value);
               }}
             />
-            <div className={styles.sliderText}>
+            {(!notFound) && <div className={styles.sliderText}>
               <span className={styles.sliderMin}>{`${stock[0]}`}</span>
               <span className={styles.sliderMax}>{`${stock[1]}`}</span>
-            </div>
+            </div>}
           </div>
       </div>
       </div>

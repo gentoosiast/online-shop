@@ -118,7 +118,6 @@ export const FilterPage = () => {
       }
     }
     if ( (filterType === 'prices') || (filterType === 'stock')) {
-      setIsFiltered(prev => ({...prev, [filterType]: true}))
       setCustomFilters(prev => ({ ...prev, [filterType]: sliderValue}))
     }
   }
@@ -135,11 +134,15 @@ export const FilterPage = () => {
   .filter(elem => (elem.price >= customFilters.prices[0] && elem.price <= customFilters.prices[1]))
   .filter(elem => (elem.stock >= customFilters.stock[0] && elem.stock <= customFilters.stock[1]))
 
+  const minMaxPrice = [Math.min(...itemsToRender.map(el=> el.price)), Math.max(...itemsToRender.map(el=> el.price))];
+
   return (
     <div className='flex'>
       <Sidebar items={items} onCheck={(type, el)=>onFilterClick(type, el)}
       filters={initialFilters} itemsToRender={itemsToRender}
       onReset={()=>onReset()} onSliderChange={(type, value)=>onFilterClick(type, '', value)}
+      customFilters = {customFilters}
+      minMaxPrice = {minMaxPrice}
       />
       <div className="flex flex-col gap-2">
         <div className="flex justify-center items-center gap-10">
