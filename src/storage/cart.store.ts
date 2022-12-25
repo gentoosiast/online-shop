@@ -1,9 +1,9 @@
 import { makeObservable, observable, action, computed, autorun } from 'mobx';
 import { PersistentStorage } from './persistentStorage';
 import { IItem } from '../types/IItem';
-import { CartItem, CartItems, TPromo, TPromocodes } from '../types/cart';
+import { CartItem, CartItems } from '../types/cart';
 
-const availablePromos: TPromo[] = [['NOWAR', 15], ['RSSCHOOL', 5], ['NEWYEAR', 10]];
+const availablePromos = new Map([['NOWAR', 15], ['RSSCHOOL', 5], ['NEWYEAR', 10]]);
 
 const isIItem = (value: unknown): value is IItem => {
   if (!(value && typeof value === 'object')) {
@@ -64,9 +64,25 @@ const isCartEntries = (value: unknown): value is CartEntries => {
   return value.every((el) => isCartEntry(el));
 }
 
+const validateStoragePromos = (promos: unknown): string[] => {
+  const validatedPromos: string[] = [];
+
+  if (!(promos && Array.isArray(promos))) {
+    return validatedPromos;
+  }
+
+  promos.forEach((promo) => {
+    if (typeof promo === 'string' && availablePromos.has(promo)) {
+      validatedPromos.push(promo);
+    }
+  });
+
+  return validatedPromos;
+}
+
 class CartStore {
   items: CartItems;
-  promos: TPromocodes = new Set();
+  promos: Set<string>;
   storage: PersistentStorage;
 
   constructor() {
@@ -77,6 +93,9 @@ class CartStore {
     } else {
       this.items = new Map();
     }
+
+    const storagePromos = this.storage.get('promos');
+    this.promos = new Set(validateStoragePromos(storagePromos));
 
     makeObservable(this, {
       items: observable,
@@ -135,36 +154,35 @@ class CartStore {
     }
   }
 
-  private findPromoByName(promoName: string) {
-    return availablePromos.find((promo) => promo[0] === promoName.toUpperCase());
-  }
-
   isPromoOK = (promoName: string) => {
-    const promo = this.findPromoByName(promoName);
-    const isPromoApplied = promo && this.promos.has(promo);
-
-    return promo && !isPromoApplied;
+    return availablePromos.has(promoName) && !this.promos.has(promoName);
   }
 
   showPromo = (promoName: string) => {
-    return this.findPromoByName(promoName) ?? ['', 0];
+    const promoValue = availablePromos.get(promoName);
+
+    if (!promoValue) {
+      return ""; // should never happen, this method always invoked after isPromoOk()
+    }
+
+    return `${promoName} - ${promoValue}%`;
   }
 
   addPromo = (promoName: string) => {
-    const promo = this.findPromoByName(promoName);
-    if (promo) {
-      this.promos.add(promo);
+    if (availablePromos.has(promoName)) {
+      this.promos.add(promoName);
     }
   }
 
-  removePromo = (promo: TPromo) => {
-    this.promos.delete(promo);
+  removePromo = (promoName: string) => {
+    this.promos.delete(promoName);
   }
 
   clear = () => {
     this.items.clear();
     this.promos.clear();
     this.storage.remove('cart');
+    this.storage.remove('promos');
   }
 
   get totalItems() {
@@ -176,18 +194,17 @@ class CartStore {
   }
 
   get finalPrice() {
-    const percentDiscount = Array.from(this.promos).reduce((acc, entry) => acc + entry[1], 0);
+    const percentDiscount = Array.from(this.promos).reduce((acc, promoName) => {
+      const promoValue = availablePromos.get(promoName) ?? 0;
+      return acc + promoValue;
+    }, 0);
     return Math.round((100 - percentDiscount) / 100 * this.totalPrice);
   }
 }
 
 export const cartStore = new CartStore();
 
-// autorun (() => {
-//   for (const [key, value] of cartStore.items) {
-//     console.log(key, value);
-//   }
-// })
 autorun(() => {
   cartStore.storage.set('cart', cartStore.items);
+  cartStore.storage.set('promos', cartStore.promos);
 });
