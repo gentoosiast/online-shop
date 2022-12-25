@@ -3,23 +3,26 @@ import { IItem } from '../types/IItem';
 import styles from '../css/sidebar.module.css';
 import "../css/main.css"
 import { IFilters } from './FilterPage';
-import { Slider } from "./Slider"
+// import { Slider } from "./Slider"
+import ReactSlider from 'react-slider';
+
+export type ICheckboxFilters = Pick<IFilters, 'categories' | 'brands'>
+export type ISliderFilters = Pick<IFilters, 'prices' | 'stock'>
 
 interface ISidebarProps {
   items: IItem []
-  onCheck: (type: keyof IFilters, el: string)=> void;
+  onCheck: (type: keyof ICheckboxFilters, el: string)=> void;
   filters: IFilters
   itemsToRender: IItem []
   onReset: () => void
+  onSliderChange: (type: keyof ISliderFilters, value: number[])=> void
 }
 interface ICheckbox {
   [x: number]: boolean;
 }
 
-export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset}: ISidebarProps) => {
+export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange}: ISidebarProps) => {
 
-const pricesMinMax = [Math.min(...items.map(el=> el.price)), Math.max(...items.map(el=> el.price))]
-const stockMinMax = [Math.min(...items.map(el=> el.stock)), Math.max(...items.map(el=> el.stock))]
 const calcAmt = (arr: IItem [], filterType: keyof IItem, el: string) => {
   return arr.filter(elem=> elem[filterType] === el).length;
 }
@@ -28,7 +31,7 @@ const brandsCheckboxes: ICheckbox = {...Array(filters.categories.length).fill(fa
 const [categoriesChecked, setCategoriesChecked] = useState(categoriesCheckboxes);
 const [brandsChecked, setBrandsChecked] = useState(brandsCheckboxes);
 
-const handleClick = (type: keyof IFilters, el:string, index: number) => {
+const handleClick = (type: keyof ICheckboxFilters, el:string, index: number) => {
   onCheck(type, el);
   if (type === 'categories') setCategoriesChecked(prev => ({...prev, [index]: !categoriesChecked[index]}))
   if (type === 'brands') setBrandsChecked(prev => ({...prev, [index]: !brandsChecked[index]}))
@@ -38,6 +41,8 @@ const handleReset = () => {
   onReset();
   setCategoriesChecked(categoriesCheckboxes);
   setBrandsChecked(brandsCheckboxes);
+  setPrice(filters.prices)
+  setStock(filters.stock)
 }
 
 const [isCopied, setIsCopied] = useState(false);
@@ -48,6 +53,9 @@ const handleCopy = () => {
     setIsCopied(false);
   }, 1000);
 }
+
+const [price, setPrice] = useState(filters.prices);
+const [stock, setStock] = useState(filters.stock);
 
   return (
     <div className='w-fit'>
@@ -95,23 +103,53 @@ const handleCopy = () => {
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Price</h3>
-        <div className={styles.minMax}>
-          {pricesMinMax.map((el, i) => <input type='number' placeholder = {`${el}`} key={i} className='form-input w-44'
-          ></input>)}
-        </div>
-        <div id='slider'>
-            {/* <Slider min = {pricesMinMax[0]} max = {pricesMinMax[1]}></Slider> */}
+        <div className='slider'>
+          <div className={styles.sliderContainer}>
+            <ReactSlider
+              className={styles.slider}
+              trackClassName={styles.sliderTrack}
+              thumbClassName={styles.sliderThumb}
+              thumbActiveClassName={styles.sliderThumbActive}
+              min={filters.prices[0]}
+              max={filters.prices[1]}
+              value={price}
+              minDistance={0}
+              onChange={(value:number[]) => {
+                onSliderChange('prices', value)
+                setPrice(value);
+              }}
+            />
+            <div className={styles.sliderText}>
+              <span className={styles.sliderMin}>{`$${price[0]}`}</span>
+              <span className={styles.sliderMax}>{`$${price[1]}`}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Stock</h3>
-        <div className={styles.minMax}>
-          {stockMinMax.map((el, i) => <input type='number' placeholder = {`${el}`} key={i} className='form-input w-44'
-          ></input>)}
-        </div>
-        <div id='slider'>
-            {/* <Slider></Slider> */}
-        </div>
+        <div className='slider'>
+          <div className={styles.sliderContainer}>
+            <ReactSlider
+              className={styles.slider}
+              trackClassName={styles.sliderTrack}
+              thumbClassName={styles.sliderThumb}
+              thumbActiveClassName={styles.sliderThumbActive}
+              min={filters.stock[0]}
+              max={filters.stock[1]}
+              value={stock}
+              minDistance={0}
+              onChange={(value:number[]) => {
+                onSliderChange('stock', value)
+                setStock(value);
+              }}
+            />
+            <div className={styles.sliderText}>
+              <span className={styles.sliderMin}>{`${stock[0]}`}</span>
+              <span className={styles.sliderMax}>{`${stock[1]}`}</span>
+            </div>
+          </div>
+      </div>
       </div>
     </div>
   )

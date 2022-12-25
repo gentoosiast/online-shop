@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Form, useSearchParams, useLoaderData } from "react-router-dom";
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { fetchData } from '../fetchData';
-import { IItem, IItemsDto } from '../types/IItem';
+import { IItemsDto } from '../types/IItem';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { ItemCard } from "./ItemCard";
 import { SortOption } from "../types/SortOption";
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
-import { Sidebar } from "./Sidebar"
+import { Sidebar, ICheckboxFilters, ISliderFilters } from "./Sidebar"
 
 export interface IFilters {
   categories: string []
@@ -19,8 +19,6 @@ export interface IFilters {
 export interface IFilterApplied {
   categories: boolean
   brands: boolean
-  prices: boolean
-  stock: boolean
 }
 
 const isItemCardSize = (value: string): value is ItemCardSize => {
@@ -86,15 +84,15 @@ export const FilterPage = () => {
   const initialFilters = {
     categories: [...new Set(items.map(el=> el.category))],
     brands: [...new Set(items.map(el=> el.brand))],
-    prices: [...items.map(el=> el.price)],
-    stock: [...items.map(el=> el.stock)],
+    prices: [Math.min(...items.map(el=> el.price)), Math.max(...items.map(el=> el.price))],
+    stock: [Math.min(...items.map(el=> el.stock)), Math.max(...items.map(el=> el.stock))],
   }
 
   const [customFilters, setCustomFilters] = useState<IFilters>(initialFilters)
-  const [isFiltered, setIsFiltered] = useState<IFilterApplied>({categories: false, brands: false, prices:false, stock: false});
+  const [isFiltered, setIsFiltered] = useState<IFilterApplied>({categories: false, brands: false});
 
-  const onFilterClick = (filterType: keyof IFilters, filterBox: string) => {
-    if ( (filterType === 'categories') || (filterType ==='brands')) {
+  const onFilterClick = (filterType: keyof ICheckboxFilters | keyof ISliderFilters, filterBox?: string, sliderValue?: number[]) => {
+    if ( ((filterType === 'categories') || (filterType === 'brands')) && (filterBox !== undefined)) {
       if (isFiltered[filterType]) {
         // если эта категория фильтровалась
         if (customFilters[filterType].includes(filterBox)) {
@@ -119,19 +117,30 @@ export const FilterPage = () => {
         setCustomFilters(prev => ({ ...prev, [filterType]: [filterBox]}))
       }
     }
+    if ( (filterType === 'prices') || (filterType === 'stock')) {
+      setIsFiltered(prev => ({...prev, [filterType]: true}))
+      setCustomFilters(prev => ({ ...prev, [filterType]: sliderValue}))
+    }
   }
+
 
   const onReset = () => {
     setCustomFilters(initialFilters)
-    setIsFiltered({categories: false, brands: false, prices:false, stock: false})
+    setIsFiltered({categories: false, brands: false})
   }
-  const itemsToRender = [...items].filter(elem => (customFilters.categories.some(el => el === elem.category)))
+
+  const itemsToRender = [...items]
+  .filter(elem => (customFilters.categories.some(el => el === elem.category)))
   .filter(elem => customFilters.brands.some(el => el === elem.brand))
+  .filter(elem => (elem.price >= customFilters.prices[0] && elem.price <= customFilters.prices[1]))
+  .filter(elem => (elem.stock >= customFilters.stock[0] && elem.stock <= customFilters.stock[1]))
 
   return (
     <div className='flex'>
       <Sidebar items={items} onCheck={(type, el)=>onFilterClick(type, el)}
-      filters={initialFilters} itemsToRender={itemsToRender} onReset={()=>onReset()}/>
+      filters={initialFilters} itemsToRender={itemsToRender}
+      onReset={()=>onReset()} onSliderChange={(type, value)=>onFilterClick(type, '', value)}
+      />
       <div className="flex flex-col gap-2">
         <div className="flex justify-center items-center gap-10">
           <div>
