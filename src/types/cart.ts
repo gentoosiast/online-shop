@@ -6,6 +6,3 @@ export interface CartItem {
 }
 
 export type CartItems = Map<number, CartItem>;
-
-export type TPromo = [string, number];
-export type TPromocodes = Set<TPromo>;
