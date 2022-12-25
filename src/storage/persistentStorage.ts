@@ -27,4 +27,8 @@ export class PersistentStorage {
   set(key: string, value: unknown) {
     this.provider.setItem(this.fullKey(key), JSON.stringify(value));
   }
+
+  remove(key: string) {
+    this.provider.removeItem(this.fullKey(key));
+  }
 }
