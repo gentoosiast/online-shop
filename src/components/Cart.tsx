@@ -54,7 +54,7 @@ export const Cart = observer(() => {
             <p>Goods in cart</p>
           </div>
           <div id='container'>
-            <PaginatedItems itemsPerPage={3} />
+            <PaginatedItems />
           </div>
         </div>
         <div  className='border p-4 flex flex-col justify-center gap-3 pt-7'>

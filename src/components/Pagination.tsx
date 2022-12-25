@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { cartStore } from '../storage/cart.store';
 import { CartItem} from '../types/cart';
@@ -24,33 +25,61 @@ const ItemsToShow = ({ currentItems, itemOffset }: IItemsToShowProps) => {
     </>
   )}
 
-interface IPaginatedItemsProps {
-  itemsPerPage: number
-}
-
-export const PaginatedItems = ({itemsPerPage}: IPaginatedItemsProps) => {
+export const PaginatedItems = () => {
   const items = Array.from(cartStore.items.values())
-  const [itemOffset, setItemOffset] = useState(0);
-  const [itemsPerPageInput,setItemsPerPageInput] = useState(itemsPerPage);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const endOffset = itemOffset + itemsPerPageInput;
-  const currentItems = items.slice(itemOffset, endOffset);
-  if (currentItems.length === 0) {
-    setItemOffset(prev => prev-itemsPerPageInput);
-  }
-  const pageCount = Math.ceil(items.length / itemsPerPageInput);
-  const pageOffset = itemOffset/itemsPerPageInput;
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
-    if (+e.target.value > 0) {
-      setItemsPerPageInput(+e.target.value);
+  const limitParam = searchParams.get("limit");
+  let initialItemsPerPage = 3;
+  if (limitParam) {
+    const limitNum = parseInt(limitParam, 10);
+    if (!Number.isNaN(limitNum) && limitNum > 0) {
+      initialItemsPerPage = limitNum;
     }
-    setItemOffset(0);
+  }
+
+  const pageParam = searchParams.get("page");
+  let initialPage = 0;
+  const endPage = Math.ceil(items.length / initialItemsPerPage) - 1;
+  if (pageParam) {
+    const pageNum = parseInt(pageParam, 10) - 1;
+    if (!Number.isNaN(pageNum) && pageNum >= 0) {
+      initialPage = Math.min(endPage, pageNum);
+    }
+  }
+
+  const [pageOffset, setPageOffset] = useState(initialPage);
+  const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
+  const [itemOffset, setItemOffset] = useState(pageOffset * itemsPerPage);
+
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = items.slice(itemOffset, endOffset);
+  if (currentItems.length === 0) { // last item on the page deleted
+    const pageOffset = itemOffset / itemsPerPage;
+    setItemOffset(prev => prev - itemsPerPage);
+    setPageOffset(pageOffset);
+    searchParams.set("page", pageOffset.toString());
+    setSearchParams(searchParams);
+    setPageOffset(pageOffset - 1);
+  }
+  const pageCount = Math.ceil(items.length / itemsPerPage);
+
+  const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newItemsPerPage = parseInt(e.target.value, 10);
+    if (!Number.isNaN(newItemsPerPage) && newItemsPerPage > 0) {
+      setItemsPerPage(newItemsPerPage);
+      const pageOffset = itemOffset / itemsPerPage;
+      setItemOffset(pageOffset * newItemsPerPage);
+      searchParams.set("limit", e.target.value);
+      setSearchParams(searchParams);
+    }
   }
 
   const handlePageClick = ({ selected }: { selected: number }) => {
-    const newOffset = (selected * itemsPerPageInput) % items.length;
+    const newOffset = (selected * itemsPerPage) % items.length;
     setItemOffset(newOffset);
+    searchParams.set("page", (selected + 1).toString());
+    setSearchParams(searchParams);
   };
 
   return (
@@ -58,7 +87,7 @@ export const PaginatedItems = ({itemsPerPage}: IPaginatedItemsProps) => {
       <div className='flex items-center gap-2'>
         <label htmlFor="itemsPerPage">Items per page:</label>
         <input type='number' className='form-input' id='itemsPerPage'
-          value={itemsPerPageInput} onChange={handleInputChange}
+          value={itemsPerPage} onChange={handleItemsPerPageChange}
         />
       </div>
       <ItemsToShow currentItems={currentItems} itemOffset={itemOffset} />
