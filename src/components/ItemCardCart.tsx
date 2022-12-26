@@ -43,7 +43,7 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
           </button>
         </div>
         <div  className="flex items-center">
-          <p className="font-bold">${item.price}</p>
+          <p className="font-bold">${item.price * amount}</p>
         </div>
         <button  className="flex" type="button"
           onClick = {() => cartStore.removeAllItems(item.id)}>
