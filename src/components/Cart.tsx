@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import '../css/main.css';
@@ -8,8 +8,16 @@ import { OrderForm } from "./Order/OrderForm";
 import styles from '../css/cart.module.css';
 
 export const Cart = observer(() => {
+  const location = useLocation();
+  let isModalOpen = false;
+  const locationState: unknown = location.state;
+  if (locationState && typeof locationState === 'object' &&
+    'isModalOpen' in locationState && typeof locationState.isModalOpen === 'boolean') {
+    isModalOpen = locationState.isModalOpen;
+  }
+
   const [promoInput,setPromoInput] = useState('');
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(isModalOpen);
   const navigate = useNavigate();
 
   const handlePromoChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
