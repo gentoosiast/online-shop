@@ -16,14 +16,12 @@ interface ISidebarProps {
   itemsToRender: IItem []
   onReset: () => void
   onSliderChange: (type: keyof ISliderFilters, value: number[])=> void
-  customFilters: IFilters
-  minMaxPrice: number[]
 }
 interface ICheckbox {
   [x: number]: boolean;
 }
 
-export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange, customFilters, minMaxPrice}: ISidebarProps) => {
+export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange}: ISidebarProps) => {
 
 const calcAmount = (arr: IItem [], filterType: keyof IItem, el: string) => {
   return arr.filter(elem=> elem[filterType] === el).length;
