@@ -70,11 +70,11 @@ export const Cart = observer(() => {
           <div className=''>
             <p className="font-bold">Applied promocodes</p>
             <div className="flex flex-col gap-3">
-              { Array.from(cartStore.promos).map((el, i) =>
-                <div key={i} className="flex justify-between items-center">
-                  <p>{`${el.join(' - ')}%`}</p>
+              { Array.from(cartStore.promos).map((promo) =>
+                <div key={promo} className="flex justify-between items-center">
+                  <p>{cartStore.showPromo(promo)}</p>
                   <button className='button button-buy'
-                    onClick={() => cartStore.removePromo(el)}>
+                    onClick={() => cartStore.removePromo(promo)}>
                       remove promo
                   </button>
                 </div>)
@@ -89,7 +89,7 @@ export const Cart = observer(() => {
             />
             {cartStore.isPromoOK(promoInput) &&
               <div className="border p-3 flex justify-between items-center">
-                <p>{`${cartStore.showPromo(promoInput).join(' - ')}%`}</p>
+                <p>{`${cartStore.showPromo(promoInput)}`}</p>
                 <button className='button button-buy' type="submit">
                   apply promo
                 </button>
