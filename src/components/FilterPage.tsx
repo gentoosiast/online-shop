@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, useSearchParams, useLoaderData } from "react-router-dom";
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { fetchData } from '../fetchData';
-import { IItemsDto } from '../types/IItem';
+import { IItem, IItemsDto } from '../types/IItem';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { ItemCard } from "./ItemCard";
 import { SortOption } from "../types/SortOption";
@@ -88,8 +88,33 @@ export const FilterPage = () => {
     stock: [Math.min(...items.map(el=> el.stock)), Math.max(...items.map(el=> el.stock))],
   }
 
-  const [customFilters, setCustomFilters] = useState<IFilters>(initialFilters)
-  const [isFiltered, setIsFiltered] = useState<IFilterApplied>({categories: false, brands: false});
+  const categorySearchParam = searchParams.get('categories') ?? "";
+  const initialCategory = (categorySearchParam) ? categorySearchParam : initialFilters.categories.join('↕');
+  const isInitialCategoryFiltered = (categorySearchParam) ? true : false;
+  const brandSearchParam = searchParams.get('brands') ?? "";
+  const initialBrand = (brandSearchParam) ? brandSearchParam : initialFilters.brands.join('↕');
+  const isInitialBarndFiltered = (brandSearchParam) ? true : false;
+  const priceSearchParam = searchParams.get('prices') ?? "";
+  const initialPrice = (priceSearchParam) ? priceSearchParam : initialFilters.prices.join('↕');
+  const stockSearchParam = searchParams.get('stock') ?? "";
+  const initialStock = (stockSearchParam) ? stockSearchParam : initialFilters.stock.join('↕');
+
+  const initialCustomFilters = {
+    categories: initialCategory.split('↕'),
+    brands: initialBrand.split('↕'),
+    prices: initialPrice.split('↕').map(el=>parseInt(el, 10)),
+    stock: initialStock.split('↕').map(el=>parseInt(el, 10)),
+  }
+
+  const isInitialFiltered = {
+    categories: isInitialCategoryFiltered,
+    brands: isInitialBarndFiltered,
+  }
+
+  // const [customFilters, setCustomFilters] = useState<IFilters>(initialFilters)
+  const [customFilters, setCustomFilters] = useState<IFilters>(initialCustomFilters)
+  // const [isFiltered, setIsFiltered] = useState<IFilterApplied>({categories: false, brands: false});
+  const [isFiltered, setIsFiltered] = useState<IFilterApplied>(isInitialFiltered);
 
   const onFilterClick = (filterType: keyof ICheckboxFilters | keyof ISliderFilters, filterBox?: string, sliderValue?: number[]) => {
     if ( ((filterType === 'categories') || (filterType === 'brands')) && (filterBox !== undefined)) {
@@ -115,18 +140,23 @@ export const FilterPage = () => {
         //если еще не фильтровалась эта категория, то ставим флаг на true и перезаписываем соответствующий массив
         setIsFiltered(prev => ({...prev, [filterType]: true}))
         setCustomFilters(prev => ({ ...prev, [filterType]: [filterBox]}))
-
       }
-      searchParams.set(`${filterType}`, `${customFilters[filterType][0]}`);
-      setSearchParams(searchParams);
     }
-    if ( (filterType === 'prices') || (filterType === 'stock')) {
+    if ( ((filterType === 'prices') || (filterType === 'stock')) && (sliderValue !== undefined)){
       setCustomFilters(prev => ({ ...prev, [filterType]: sliderValue}))
-      // searchParams.set(`${filterType}`, `${customFilters[filterType][0]}↕${customFilters[filterType][1]}`);
-      // setSearchParams(searchParams);
     }
+
   }
 
+  useEffect(() => {
+    Object.entries(customFilters).forEach(filter => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const [filterType, value] = filter;
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      searchParams.set(`${filterType}`, `${value.join('↕')}`);
+      setSearchParams(searchParams);
+    })
+  }, [customFilters])
 
   const onReset = () => {
     setCustomFilters(initialFilters)
