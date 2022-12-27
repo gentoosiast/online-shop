@@ -10,6 +10,9 @@
 .item {
   @apply flex items-center gap-3
 }
+.itemOpacity {
+  @apply flex items-center gap-3 text-slate-400
+}
 /* .checkbox {
   @apply scale-150
 } */

@@ -7,7 +7,6 @@ import { ItemCardSize } from '../types/ItemCardSize';
 import { ItemCard } from "./ItemCard";
 import { SortOption } from "../types/SortOption";
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
-import { Slider } from "./Slider";
 import { Sidebar, ICheckboxFilters, ISliderFilters } from "./Sidebar"
 
 export interface IFilters {
@@ -90,67 +89,36 @@ export const FilterPage = () => {
   }
 
   const categorySearchParam = searchParams.get('categories');
-  // const initialCategory = (categorySearchParam) ? categorySearchParam : initialFilters.categories.join('↕');
-  // const initialCategory = (categorySearchParam) ? categorySearchParam : "";
-  const isInitialCategoryFiltered = Boolean(categorySearchParam);
   const brandSearchParam = searchParams.get('brands');
-  // const initialBrand = (brandSearchParam) ? brandSearchParam : initialFilters.brands.join('↕');
-  const isInitialBrandFiltered = Boolean(brandSearchParam);
   const priceSearchParam = searchParams.get('prices');
-  const initialPrice = (priceSearchParam) ? priceSearchParam : initialFilters.prices.join('↕');
   const stockSearchParam = searchParams.get('stock');
-  const initialStock = (stockSearchParam) ? stockSearchParam : initialFilters.stock.join('↕');
 
   const initialCustomFilters = {
-    // categories: initialCategory.split('↕'),
     categories: categorySearchParam ? categorySearchParam.split('↕') : [],
-    // brands: initialBrand.split('↕'),
     brands: brandSearchParam ? brandSearchParam.split('↕') : [],
-    prices: initialPrice.split('↕').map(el => parseInt(el, 10)),
-    stock: initialStock.split('↕').map(el => parseInt(el, 10)),
+    prices: priceSearchParam ? priceSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
+    stock: stockSearchParam ? stockSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
   }
 
-  const isInitialFiltered = {
-    categories: isInitialCategoryFiltered,
-    brands: isInitialBrandFiltered,
-  }
-
-  // const [customFilters, setCustomFilters] = useState<IFilters>(initialFilters)
-  const [customFilters, setCustomFilters] = useState<IFilters>(initialCustomFilters)
-  // const [isFiltered, setIsFiltered] = useState<IFilterApplied>({categories: false, brands: false});
-  const [isFiltered, setIsFiltered] = useState<IFilterApplied>(isInitialFiltered);
+  const userPrice = Boolean(priceSearchParam);
+  const userStock = Boolean(stockSearchParam);
+  const [customFilters, setCustomFilters] = useState<IFilters>(initialCustomFilters);
+  const [isUserFiltered, setIsUserFiltered] = useState({prices: userPrice, stock: userStock});
 
   const onFilterClick = (filterType: keyof ICheckboxFilters | keyof ISliderFilters, filterBox?: string, sliderValue?: number[]) => {
     if ( ((filterType === 'categories') || (filterType === 'brands')) && (filterBox !== undefined)) {
-      if (isFiltered[filterType]) {
-        // если эта категория фильтровалась
-        if (customFilters[filterType].includes(filterBox)) {
-          // есть кликнутый фильтр уже checked
-          if (customFilters[filterType].length === 1) {
-            // если это единственный фильтр в массиве, то возвращаем все фильтры и флаг false
-            setIsFiltered(prev => ({...prev, [filterType]: false}))
-            // setCustomFilters(prev => ({ ...prev, [filterType]: initialFilters[filterType]}))
-            setCustomFilters(prev => ({ ...prev, [filterType]: []}))
-          }
-          else {
-            // если не единственный фильтр, то просто удаляем из массива
-            setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}))
-          }
-        }
-        else {
-          // если фильтр не checked, то добавляем
-          setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}))
-        }
-      } else {
-        //если еще не фильтровалась эта категория, то ставим флаг на true и перезаписываем соответствующий массив
-        setIsFiltered(prev => ({...prev, [filterType]: true}))
-        setCustomFilters(prev => ({ ...prev, [filterType]: [filterBox]}))
+      if (customFilters[filterType].includes(filterBox)) {
+        setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}))
       }
+      else {
+        setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}))
+      }
+      setIsUserFiltered({prices: false, stock: false})
     }
     if (((filterType === 'prices') || (filterType === 'stock')) && (sliderValue !== undefined)) {
-      setCustomFilters(prev => ({ ...prev, [filterType]: sliderValue}))
+      setCustomFilters(prev => ({ ...prev, [filterType]: sliderValue}));
+      setIsUserFiltered(prev => ({ ...prev, [filterType]: true}))
     }
-
   }
 
   useEffect(() => {
@@ -158,11 +126,7 @@ export const FilterPage = () => {
       if (!(Array.isArray(value))) {
         return;
       }
-      // if ((filterType === 'categories' && !isInitialCategoryFiltered) ||
-      //     (filterType === 'brands') && !isInitialBrandFiltered) {
-      //   return;
-      // }
-      console.log('filterType', filterType, 'value', value);
+      // console.log('filterType', filterType, 'value', value);
       if (value.length > 0) {
         searchParams.set(`${filterType}`, `${value.join('↕')}`);
       } else {
@@ -173,21 +137,29 @@ export const FilterPage = () => {
   }, [customFilters]);
 
   const onReset = () => {
-    setCustomFilters(initialFilters)
-    setIsFiltered({categories: false, brands: false})
+    setCustomFilters({
+      categories: [],
+      brands: [],
+      prices: [],
+      stock: [],
+    });
+    setIsUserFiltered({prices: false, stock: false})
   }
 
   const itemsToRender = items
-    .filter(elem => (customFilters.categories.every(el => el === elem.category)))
-    .filter(elem => customFilters.brands.every(el => el === elem.brand))
-    .filter(elem => (elem.price >= customFilters.prices[0] && elem.price <= customFilters.prices[1]))
-    .filter(elem => (elem.stock >= customFilters.stock[0] && elem.stock <= customFilters.stock[1]))
+    .filter(elem => (customFilters.categories.length>0) ? (customFilters.categories.some(el => el === elem.category)): elem)
+    .filter(elem => (customFilters.brands.length>0) ? (customFilters.brands.some(el => el === elem.brand)) : elem)
+    .filter(elem => (customFilters.prices.length>0) ? (elem.price >= customFilters.prices[0] && elem.price <= customFilters.prices[1]) : elem)
+    .filter(elem => (customFilters.stock.length>0) ? (elem.stock >= customFilters.stock[0] && elem.stock <= customFilters.stock[1]) : elem)
 
   return (
     <div className='flex'>
       <Sidebar items={items} onCheck={(type, el) => onFilterClick(type, el)}
       filters={initialFilters} itemsToRender={itemsToRender}
       onReset={() => onReset()} onSliderChange={(type, value) => onFilterClick(type, '', value)}
+      pricesLimits = {(isUserFiltered.prices) ? customFilters.prices: []}
+      stockLimits = {(isUserFiltered.stock) ? customFilters.stock: []}
+      customFilters={customFilters}
       />
       <div className="flex flex-col gap-2">
         <div className="flex justify-center items-center gap-10">

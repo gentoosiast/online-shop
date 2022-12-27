@@ -16,41 +16,39 @@ interface ISidebarProps {
   itemsToRender: IItem []
   onReset: () => void
   onSliderChange: (type: keyof ISliderFilters, value: number[])=> void
-}
-interface ICheckbox {
-  [x: number]: boolean;
+  pricesLimits: number[]
+  stockLimits: number[]
+  customFilters: IFilters
 }
 
-export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange}: ISidebarProps) => {
+export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange, pricesLimits, stockLimits, customFilters}: ISidebarProps) => {
 
 const calcAmount = (arr: IItem [], filterType: keyof IItem, el: string) => {
   return arr.filter(elem=> elem[filterType] === el).length;
 }
-const categoriesCheckboxes: ICheckbox = {...Array(filters.categories.length).fill(false)}
-const brandsCheckboxes: ICheckbox = {...Array(filters.categories.length).fill(false)}
-const [categoriesChecked, setCategoriesChecked] = useState(categoriesCheckboxes);
-const [brandsChecked, setBrandsChecked] = useState(brandsCheckboxes);
+
+const isChecked = (filterType: keyof IFilters, el: string) => {
+  return (filterType === 'categories' || filterType === 'brands') ? customFilters[filterType].includes(el) : false
+}
 
 
-const handleClick = (type: keyof ICheckboxFilters, el:string, index: number) => {
+const handleClick = (type: keyof ICheckboxFilters, el:string) => {
   onCheck(type, el);
-  if (type === 'categories') setCategoriesChecked(prev => ({...prev, [index]: !categoriesChecked[index]}))
-  if (type === 'brands') setBrandsChecked(prev => ({...prev, [index]: !brandsChecked[index]}))
 }
 
 useEffect(() => {
   const maxMinPrice = [Math.min(...itemsToRender.map(el=> el.price)), Math.max(...itemsToRender.map(el=> el.price))]
   const maxMinStock = [Math.min(...itemsToRender.map(el=> el.stock)), Math.max(...itemsToRender.map(el=> el.stock))]
   if ((maxMinPrice[0] !== Infinity) && (maxMinStock[0] !== Infinity)) {
-    setPrice(maxMinPrice);
-    setStock(maxMinStock);
+    setPrice((pricesLimits.length>0) ? pricesLimits : maxMinPrice);
+    setStock((stockLimits.length>0) ? stockLimits: maxMinStock);
     setNotFound(false);
   } else {
     setPrice(filters.prices);
     setStock(filters.stock);
     setNotFound(true);
   }
-}, [itemsToRender])
+}, [itemsToRender, pricesLimits, stockLimits])
 
 const [notFound, setNotFound] = useState(false)
 const [price, setPrice] = useState<number[]>(filters.prices);
@@ -58,8 +56,6 @@ const [stock, setStock] = useState<number[]>(filters.stock);
 
 const handleReset = () => {
   onReset();
-  setCategoriesChecked(categoriesCheckboxes);
-  setBrandsChecked(brandsCheckboxes);
   setPrice(filters.prices)
   setStock(filters.stock)
 }
@@ -89,10 +85,11 @@ const handleCopy = () => {
         <h3 className={styles.h3}>Category</h3>
         <fieldset className={styles.items}>
           {filters.categories.map((el, i) =>
-          <div key={i} className={styles.item} >
+          <div key={i} className={`${(calcAmount(itemsToRender, 'category', el)) ? styles.item : styles.itemOpacity}`} >
             <label htmlFor={'1'+i.toString()} className={styles.label}>
             <input type='checkbox' id={'1'+i.toString()} className={styles.checkbox}
-            onChange={()=>handleClick('categories', el, i)} checked={categoriesChecked[i]}
+            onChange={()=>handleClick('categories', el)}
+            checked = {isChecked('categories', el)}
             ></input>
             {el}</label>
             <span>({calcAmount(itemsToRender, 'category', el)})</span>/
@@ -105,10 +102,12 @@ const handleCopy = () => {
         <h3 className={styles.h3}>Brand</h3>
         <fieldset  className={styles.items}>
           {filters.brands.map((el, i) =>
-            <div key={i} className={styles.item}>
+            <div key={i} className={`${(calcAmount(itemsToRender, 'brand', el)) ? styles.item : styles.itemOpacity}`}>
             <label htmlFor={'2'+i.toString()}>
             <input type='checkbox' id={'2'+i.toString()} className={styles.checkbox}
-            onChange={()=>handleClick('brands', el, i)}  checked={brandsChecked[i]}
+            onChange={()=>handleClick('brands', el)}
+            checked = {isChecked('brands', el)}
+
             ></input>
             {el}</label>
             <span>({calcAmount(itemsToRender, 'brand', el)})</span>/
