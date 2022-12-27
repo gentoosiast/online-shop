@@ -7,6 +7,7 @@ import { ItemCardSize } from '../types/ItemCardSize';
 import { ItemCard } from "./ItemCard";
 import { SortOption } from "../types/SortOption";
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import { Spinner } from './Spinner'
 
 const isItemCardSize = (value: string): value is ItemCardSize => {
   return value === 'Small' || value === 'Large';
@@ -64,7 +65,7 @@ export const FilterPage = () => {
 
   if (isLoading || isFetching) {
     return (
-      <div className="preloader">Loading</div>
+      <Spinner/>
     );
   }
 

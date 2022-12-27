@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import '../css/main.css';
@@ -113,7 +113,13 @@ export const Cart = observer(() => {
       </div>
       }
       {(cartStore.totalItems === 0) &&
-        <div className="text-center text-bold text-6xl">The cart is empty</div>
+      <div>
+        <p className="text-bold text-6xl py-5">В корзине пока пусто</p>
+        <p className="text-bold text-xl py-2">Перейдите на главную страницу, чтобы выбрать товары</p>
+        <Link to="/">
+          <button className="button button-buy">Перейти на главную</button>
+        </Link>
+      </div>
       }
       {modalIsOpen &&
         <>
