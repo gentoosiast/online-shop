@@ -1,11 +1,13 @@
 import React from "react";
+import { observer } from 'mobx-react-lite';
+import { cartStore } from '../storage/cart.store';
 import { Link } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
 
-export function Header() {
+export const Header = observer(() => {
   return (
-    <header className="flex flex-row p-5 bg-blue-200 rounded-t-3xl">
+    <header className="flex justify-between p-5 bg-blue-200 rounded-t-3xl">
       <div className="basis-1/4 flex items-center">
         <Link to="/">
           <div className="flex items-center">
@@ -14,16 +16,15 @@ export function Header() {
           </div>
         </Link>
       </div>
-      <input className="basis-1/2 form-input" type='text' placeholder="I'm looking for..." />
       <div className="basis-1/4 flex items-center justify-end gap-2">
-        <Link to="/cart" aria-label="Shopping Cart">
+        <Link to="/cart" className="flex gap-2" aria-label="Shopping Cart">
           <svg className="feather cart-icon">
             <use href={`${featherSprite}#shopping-bag`} />
           </svg>
+          <p className="cart-items">{cartStore.totalItems} item(s)</p>
+          <p className="cart-price">${cartStore.totalPrice}</p>
         </Link>
-        <p>7 items</p>
-        <p>$0</p>
       </div>
    </header>
   )
-}
+});

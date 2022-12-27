@@ -1,0 +1,47 @@
+.Pagination__container {
+  @apply flex justify-between w-1/2 m-auto py-2
+}
+
+.Pagination__active {
+  @apply px-3 border text-red-600 font-bold cursor-auto
+}
+
+.Pagination__page {
+  @apply px-3 font-bold
+}
+
+.Pagination__next, .Pagination__prev {
+  @apply px-3 font-bold whitespace-nowrap
+}
+
+.Pagination__active__link {
+  @apply cursor-auto
+}
+
+.Pagination__disabled__link {
+  @apply text-gray-600
+}
+
+.Pagination__disabled__link svg {
+  @apply stroke-gray-400
+}
+
+.button_round {
+  @apply pointer-events-auto
+}
+
+.button_round__inactive {
+  @apply pointer-events-none
+}
+
+.button_round__inactive svg {
+  @apply stroke-gray-400
+}
+
+.totalPrice {
+  @apply font-bold
+}
+
+.totalPriceCrossed {
+  @apply font-bold line-through
+}

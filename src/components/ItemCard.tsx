@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import { cartStore } from '../storage/cart.store';
 import { IItem } from "../types/IItem";
 import { ItemCardSize } from '../types/ItemCardSize';
 
@@ -8,12 +10,7 @@ interface IItemsCardProps {
   size: ItemCardSize;
 }
 
-export function ItemCard ({item, size}: IItemsCardProps) {
-  const [inCart, setInCart] = useState(false)
-  // const handleDetailsClick = (e) => {
-
-  // };
-
+export const ItemCard = observer(({item, size}: IItemsCardProps) => {
   return (
     <>
       {size === "Small" &&
@@ -24,10 +21,16 @@ export function ItemCard ({item, size}: IItemsCardProps) {
 
             <div className="flex flex-col gap-2">
               <button
-                className={`button ${inCart ? 'button-delete': 'button-add'}`}
-                onClick={() => setInCart(prev => !prev)}
+                className={`button ${cartStore.isInCart(item.id) ? 'button-delete': 'button-add'}`}
+                onClick={() => {
+                  if (cartStore.isInCart(item.id)) {
+                    cartStore.removeAllItems(item.id);
+                  } else {
+                    cartStore.addItem(item);
+                  }
+                }}
                 >
-                  {inCart ? 'remove from cart' : 'add to cart'}
+                  {cartStore.isInCart(item.id) ? 'remove from cart' : 'add to cart'}
               </button>
 
             <Link
@@ -55,10 +58,16 @@ export function ItemCard ({item, size}: IItemsCardProps) {
 
           <div className="flex flex-col gap-2">
             <button
-              className={`button ${inCart ? 'button-delete': 'button-add'}`}
-              onClick={() => setInCart(prev => !prev)}
+              className={`button ${cartStore.isInCart(item.id) ? 'button-delete' : 'button-add'}`}
+              onClick={() => {
+                if (cartStore.isInCart(item.id)) {
+                  cartStore.removeAllItems(item.id);
+                } else {
+                  cartStore.addItem(item);
+                }
+              }}
               >
-                {inCart ? 'remove from cart' : 'add to cart'}
+                {cartStore.isInCart(item.id) ? 'remove from cart' : 'add to cart'}
             </button>
 
             <Link
@@ -71,4 +80,4 @@ export function ItemCard ({item, size}: IItemsCardProps) {
       }
     </>
   )
-}
+});
