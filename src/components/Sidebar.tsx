@@ -31,7 +31,6 @@ const isChecked = (filterType: keyof IFilters, el: string) => {
   return (filterType === 'categories' || filterType === 'brands') ? customFilters[filterType].includes(el) : false
 }
 
-
 const handleClick = (type: keyof ICheckboxFilters, el:string) => {
   onCheck(type, el);
 }
@@ -48,7 +47,7 @@ useEffect(() => {
     setStock(filters.stock);
     setNotFound(true);
   }
-}, [itemsToRender, pricesLimits, stockLimits])
+}, [filters.prices, filters.stock, itemsToRender, pricesLimits, stockLimits])
 
 const [notFound, setNotFound] = useState(false)
 const [price, setPrice] = useState<number[]>(filters.prices);

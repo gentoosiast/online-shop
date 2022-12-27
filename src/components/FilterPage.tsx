@@ -75,12 +75,6 @@ export const FilterPage = () => {
   const sortSearchParam = searchParams.get('sort') ?? '';
   const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : 'price-ASC';
 
-  if (isLoading || isFetching) {
-    return (
-      <div className="preloader">Loading</div>
-    );
-  }
-
   const initialFilters = {
     categories: [...new Set(items.map(el => el.category))],
     brands: [...new Set(items.map(el => el.brand))],
@@ -93,30 +87,43 @@ export const FilterPage = () => {
   const priceSearchParam = searchParams.get('prices');
   const stockSearchParam = searchParams.get('stock');
 
+  const initialCustomSliders = {
+    prices: priceSearchParam ? priceSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
+    stock: stockSearchParam ? stockSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
+  }
+
   const initialCustomFilters = {
     categories: categorySearchParam ? categorySearchParam.split('↕') : [],
     brands: brandSearchParam ? brandSearchParam.split('↕') : [],
-    prices: priceSearchParam ? priceSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
-    stock: stockSearchParam ? stockSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
+    prices: initialCustomSliders.prices,
+    stock: initialCustomSliders.stock,
   }
 
   const userPrice = Boolean(priceSearchParam);
   const userStock = Boolean(stockSearchParam);
   const [customFilters, setCustomFilters] = useState<IFilters>(initialCustomFilters);
+  const [customSliders, setCustomSliders] = useState(initialCustomSliders)
   const [isUserFiltered, setIsUserFiltered] = useState({prices: userPrice, stock: userStock});
 
   const onFilterClick = (filterType: keyof ICheckboxFilters | keyof ISliderFilters, filterBox?: string, sliderValue?: number[]) => {
     if ( ((filterType === 'categories') || (filterType === 'brands')) && (filterBox !== undefined)) {
       if (customFilters[filterType].includes(filterBox)) {
-        setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}))
+        if (customFilters.categories.length + customFilters.brands.length == 1) {
+          setIsUserFiltered({prices: Boolean(customSliders.prices.length), stock: Boolean(customSliders.stock.length)})
+          setCustomFilters(prev => ({ ...prev, [filterType]: [], prices: customSliders.prices, stock: customSliders.stock}))
+        }
+        else {
+          setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}))
+        }
       }
       else {
         setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}))
+        setIsUserFiltered({prices: false, stock: false})
       }
-      setIsUserFiltered({prices: false, stock: false})
     }
     if (((filterType === 'prices') || (filterType === 'stock')) && (sliderValue !== undefined)) {
       setCustomFilters(prev => ({ ...prev, [filterType]: sliderValue}));
+      setCustomSliders(prev => ({ ...prev, [filterType]: sliderValue}));
       setIsUserFiltered(prev => ({ ...prev, [filterType]: true}))
     }
   }
@@ -134,7 +141,7 @@ export const FilterPage = () => {
       }
       setSearchParams(searchParams);
     })
-  }, [customFilters]);
+  }, [customFilters, searchParams, setSearchParams]);
 
   const onReset = () => {
     setCustomFilters({
@@ -151,6 +158,13 @@ export const FilterPage = () => {
     .filter(elem => (customFilters.brands.length>0) ? (customFilters.brands.some(el => el === elem.brand)) : elem)
     .filter(elem => (customFilters.prices.length>0) ? (elem.price >= customFilters.prices[0] && elem.price <= customFilters.prices[1]) : elem)
     .filter(elem => (customFilters.stock.length>0) ? (elem.stock >= customFilters.stock[0] && elem.stock <= customFilters.stock[1]) : elem)
+
+
+  if (isLoading || isFetching) {
+    return (
+      <div className="preloader">Loading</div>
+    );
+  }
 
   return (
     <div className='flex'>
