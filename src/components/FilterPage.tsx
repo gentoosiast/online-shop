@@ -7,7 +7,6 @@ import { ItemCardSize } from '../types/ItemCardSize';
 import { ItemCard } from "./ItemCard";
 import { SortOption } from "../types/SortOption";
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
-import { Spinner } from './Spinner'
 
 const isItemCardSize = (value: string): value is ItemCardSize => {
   return value === 'Small' || value === 'Large';
@@ -63,11 +62,11 @@ export const FilterPage = () => {
   const sortSearchParam = searchParams.get('sort') ?? '';
   const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : 'price-ASC';
 
-  if (isLoading || isFetching) {
-    return (
-      <Spinner/>
-    );
-  }
+  // if (isLoading || isFetching) {
+  //   return (
+  //     <div/>
+  //   );
+  // }
 
   return (
     <div className="flex flex-col gap-2">
@@ -121,7 +120,7 @@ export const FilterPage = () => {
         </div>
       </div>
       <div className="flex flex-wrap justify-center gap-5">
-        {items.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
+        {items.map(item => <ItemCard key={item.id} item={item} size={cardSize}/>)}
       </div>
     </div>
     )

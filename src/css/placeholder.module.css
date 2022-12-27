@@ -1,0 +1,38 @@
+/* .loadWraper {
+  @apply relative h-full w-full bg-slate-300 z-40 overflow-hidden rounded-b-md
+}
+
+.activity {
+  @apply absolute -left-1/2 h-full w-1/2 z-50 bg-gradient-to-l from-stone-500 via-stone-400 via-stone-300 via-stone-400 to-stone-500 animate-pulse
+} */
+
+
+.load-wraper{
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(211,211,211);
+  z-index: 10;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.activity{
+  position: absolute;
+  left: -45%;
+  height: 100%;
+  width: 65%;
+  background-image: linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05));
+  /* background-image: -moz-linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05)); */
+  /* background-image: -webkit-linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05)); */
+  animation: loading 1s infinite;
+  z-index: 20;
+}
+
+@keyframes loading {
+  0%{
+    left: -45%;
+  }
+  100%{
+    left: 100%;
+  }
+}
