@@ -87,49 +87,45 @@ export const FilterPage = () => {
   const priceSearchParam = searchParams.get('prices');
   const stockSearchParam = searchParams.get('stock');
 
-  const initialCustomSliders = {
+  const initialCalcFilters = {
+    categories: categorySearchParam ? categorySearchParam.split('↕') : [],
+    brands: brandSearchParam ? brandSearchParam.split('↕') : [],
     prices: priceSearchParam ? priceSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
     stock: stockSearchParam ? stockSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
   }
 
-  const initialCustomFilters = {
-    categories: categorySearchParam ? categorySearchParam.split('↕') : [],
-    brands: brandSearchParam ? brandSearchParam.split('↕') : [],
-    prices: initialCustomSliders.prices,
-    stock: initialCustomSliders.stock,
-  }
-
-  const userPrice = Boolean(priceSearchParam);
-  const userStock = Boolean(stockSearchParam);
-  const [customFilters, setCustomFilters] = useState<IFilters>(initialCustomFilters);
-  const [customSliders, setCustomSliders] = useState(initialCustomSliders)
-  const [isUserFiltered, setIsUserFiltered] = useState({prices: userPrice, stock: userStock});
+  const priceMoved = Boolean(priceSearchParam);
+  const stockMoved = Boolean(stockSearchParam);
+  const considerSliders = (initialCalcFilters.categories.length + initialCalcFilters.brands.length == 0);
+  const [calcFilters, setCalcFilters] = useState<IFilters>(initialCalcFilters);
+  const [customSliders, setCustomSliders] = useState({prices: initialCalcFilters.prices, stock: initialCalcFilters.stock})
+  const [isUserFiltered, setIsUserFiltered] = useState({prices: priceMoved && considerSliders, stock: stockMoved && considerSliders});
 
   const onFilterClick = (filterType: keyof ICheckboxFilters | keyof ISliderFilters, filterBox?: string, sliderValue?: number[]) => {
     if ( ((filterType === 'categories') || (filterType === 'brands')) && (filterBox !== undefined)) {
-      if (customFilters[filterType].includes(filterBox)) {
-        if (customFilters.categories.length + customFilters.brands.length == 1) {
+      if (calcFilters[filterType].includes(filterBox)) {
+        if (calcFilters.categories.length + calcFilters.brands.length == 1) {
           setIsUserFiltered({prices: Boolean(customSliders.prices.length), stock: Boolean(customSliders.stock.length)})
-          setCustomFilters(prev => ({ ...prev, [filterType]: [], prices: customSliders.prices, stock: customSliders.stock}))
+          setCalcFilters(prev => ({ ...prev, [filterType]: [], prices: customSliders.prices, stock: customSliders.stock}))
         }
         else {
-          setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}))
+          setCalcFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}))
         }
       }
       else {
-        setCustomFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}))
+        setCalcFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}))
         setIsUserFiltered({prices: false, stock: false})
       }
     }
     if (((filterType === 'prices') || (filterType === 'stock')) && (sliderValue !== undefined)) {
-      setCustomFilters(prev => ({ ...prev, [filterType]: sliderValue}));
+      setCalcFilters(prev => ({ ...prev, [filterType]: sliderValue}));
       setCustomSliders(prev => ({ ...prev, [filterType]: sliderValue}));
       setIsUserFiltered(prev => ({ ...prev, [filterType]: true}))
     }
   }
 
   useEffect(() => {
-    Object.entries(customFilters).forEach(([filterType, value]) => {
+    Object.entries(calcFilters).forEach(([filterType, value]) => {
       if (!(Array.isArray(value))) {
         return;
       }
@@ -141,10 +137,10 @@ export const FilterPage = () => {
       }
       setSearchParams(searchParams);
     })
-  }, [customFilters, searchParams, setSearchParams]);
+  }, [calcFilters, searchParams, setSearchParams]);
 
   const onReset = () => {
-    setCustomFilters({
+    setCalcFilters({
       categories: [],
       brands: [],
       prices: [],
@@ -154,10 +150,10 @@ export const FilterPage = () => {
   }
 
   const itemsToRender = items
-    .filter(elem => (customFilters.categories.length>0) ? (customFilters.categories.some(el => el === elem.category)): elem)
-    .filter(elem => (customFilters.brands.length>0) ? (customFilters.brands.some(el => el === elem.brand)) : elem)
-    .filter(elem => (customFilters.prices.length>0) ? (elem.price >= customFilters.prices[0] && elem.price <= customFilters.prices[1]) : elem)
-    .filter(elem => (customFilters.stock.length>0) ? (elem.stock >= customFilters.stock[0] && elem.stock <= customFilters.stock[1]) : elem)
+    .filter(elem => (calcFilters.categories.length>0) ? (calcFilters.categories.some(el => el === elem.category)): elem)
+    .filter(elem => (calcFilters.brands.length>0) ? (calcFilters.brands.some(el => el === elem.brand)) : elem)
+    .filter(elem => (calcFilters.prices.length>0) ? (elem.price >= calcFilters.prices[0] && elem.price <= calcFilters.prices[1]) : elem)
+    .filter(elem => (calcFilters.stock.length>0) ? (elem.stock >= calcFilters.stock[0] && elem.stock <= calcFilters.stock[1]) : elem)
 
 
   if (isLoading || isFetching) {
@@ -171,9 +167,9 @@ export const FilterPage = () => {
       <Sidebar items={items} onCheck={(type, el) => onFilterClick(type, el)}
       filters={initialFilters} itemsToRender={itemsToRender}
       onReset={() => onReset()} onSliderChange={(type, value) => onFilterClick(type, '', value)}
-      pricesLimits = {(isUserFiltered.prices) ? customFilters.prices: []}
-      stockLimits = {(isUserFiltered.stock) ? customFilters.stock: []}
-      customFilters={customFilters}
+      pricesLimits = {(isUserFiltered.prices) ? calcFilters.prices: []}
+      stockLimits = {(isUserFiltered.stock) ? calcFilters.stock: []}
+      customFilters={calcFilters}
       />
       <div className="flex flex-col gap-2">
         <div className="flex justify-center items-center gap-10">
