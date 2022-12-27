@@ -17,7 +17,7 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
       {size === "Small" &&
           <div className={`flex flex-col gap-2 item-card relative w-58 h-96`}
           >
-            <div className="font-bold relative h-14 mt-3 min-h-[14] flex">
+            <div className="w-54 font-bold relative h-14 mt-3 min-h-[14] flex overflow-hidden">
               <div className={styles.loadWraper}>
                 <div className={styles.activity}></div>
               </div>
