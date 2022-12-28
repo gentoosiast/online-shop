@@ -79,8 +79,26 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
+        test: /\.module\.css$/,
         exclude: /node_modules/,
+        use: [
+          devMode === "production"
+            ? MiniCSSExtractPlugin.loader
+            : "style-loader",
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[local]_[hash:base64:5]',
+              }
+            }
+          },
+          "postcss-loader",
+        ],
+      },
+      {
+        test: /\.css$/,
+        exclude: [/node_modules/, /\.module\.css$/],
         use: [
           devMode === "production"
             ? MiniCSSExtractPlugin.loader
