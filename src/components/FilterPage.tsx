@@ -1,25 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Form, useSearchParams, useLoaderData } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Form, useSearchParams, useLoaderData } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
-import { fetchData } from '../fetchData';
 import { IItemsDto } from '../types/IItem';
 import { ItemCardSize } from '../types/ItemCardSize';
-import { ItemCard } from "./ItemCard";
-import { SortOption } from "../types/SortOption";
+import { SortOption } from '../types/SortOption';
+import { IFilters, ISliderFilters } from '../types/filters';
+import { fetchData } from '../fetchData';
+import { ItemCard } from './ItemCard';
+import { Sidebar } from './Sidebar';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
-import { Sidebar, ICheckboxFilters, ISliderFilters } from "./Sidebar"
-
-export interface IFilters {
-  categories: string[];
-  brands: string[];
-  prices: number[];
-  stock: number[];
-}
-
-export interface IFilterApplied {
-  categories: boolean;
-  brands: boolean;
-}
 
 const isItemCardSize = (value: string): value is ItemCardSize => {
   return value === 'Small' || value === 'Large';
@@ -75,52 +64,51 @@ export const FilterPage = () => {
   const sortSearchParam = searchParams.get('sort') ?? '';
   const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : 'price-ASC';
 
-  const initialFilters = {
-    categories: [...new Set(items.map(el => el.category))],
-    brands: [...new Set(items.map(el => el.brand))],
-    prices: [Math.min(...items.map(el => el.price)), Math.max(...items.map(el => el.price))],
-    stock: [Math.min(...items.map(el => el.stock)), Math.max(...items.map(el => el.stock))],
+  const initialFilters: IFilters = {
+    categories: [...new Set(items.map(item => item.category))],
+    brands: [...new Set(items.map(item => item.brand))],
+    price: [Math.min(...items.map(item => item.price)), Math.max(...items.map(item => item.price))],
+    stock: [Math.min(...items.map(item => item.stock)), Math.max(...items.map(item => item.stock))],
   }
 
   const categorySearchParam = searchParams.get('categories');
   const brandSearchParam = searchParams.get('brands');
-  const priceSearchParam = searchParams.get('prices');
+  const priceSearchParam = searchParams.get('price');
   const stockSearchParam = searchParams.get('stock');
 
-  const initialCalcFilters = {
+  const initialCalcFilters: IFilters = {
     categories: categorySearchParam ? categorySearchParam.split('↕') : [],
     brands: brandSearchParam ? brandSearchParam.split('↕') : [],
-    prices: priceSearchParam ? priceSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
+    price: priceSearchParam ? priceSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
     stock: stockSearchParam ? stockSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
   }
 
   const priceMoved = Boolean(priceSearchParam);
   const stockMoved = Boolean(stockSearchParam);
-  const considerSliders = (initialCalcFilters.categories.length + initialCalcFilters.brands.length == 0);
+  const considerSliders = (initialCalcFilters.categories.length + initialCalcFilters.brands.length === 0);
   const [calcFilters, setCalcFilters] = useState<IFilters>(initialCalcFilters);
-  const [customSliders, setCustomSliders] = useState({prices: initialCalcFilters.prices, stock: initialCalcFilters.stock})
-  const [isUserFiltered, setIsUserFiltered] = useState({prices: priceMoved && considerSliders, stock: stockMoved && considerSliders});
+  const [customSliders, setCustomSliders] = useState<ISliderFilters>({price: initialCalcFilters.price, stock: initialCalcFilters.stock})
+  const [isUserFiltered, setIsUserFiltered] = useState({price: priceMoved && considerSliders, stock: stockMoved && considerSliders});
 
-  const onFilterClick = (filterType: keyof ICheckboxFilters | keyof ISliderFilters, filterBox?: string, sliderValue?: number[]) => {
-    if ( ((filterType === 'categories') || (filterType === 'brands')) && (filterBox !== undefined)) {
+  const onFilterClick = (filterType: keyof IFilters, filterBox?: string, sliderValue?: number[]) => {
+    if ((filterType === 'categories' || filterType === 'brands') && filterBox !== undefined) {
       if (calcFilters[filterType].includes(filterBox)) {
-        if (calcFilters.categories.length + calcFilters.brands.length == 1) {
-          setIsUserFiltered({prices: Boolean(customSliders.prices.length), stock: Boolean(customSliders.stock.length)})
-          setCalcFilters(prev => ({ ...prev, [filterType]: [], prices: customSliders.prices, stock: customSliders.stock}))
+        if (calcFilters.categories.length + calcFilters.brands.length === 1) {
+          setIsUserFiltered({price: Boolean(customSliders.price.length), stock: Boolean(customSliders.stock.length)});
+          setCalcFilters(prev => ({ ...prev, [filterType]: [], price: customSliders.price, stock: customSliders.stock}));
+        } else {
+          setCalcFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}));
         }
-        else {
-          setCalcFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}))
-        }
-      }
-      else {
-        setCalcFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}))
-        setIsUserFiltered({prices: false, stock: false})
+      } else {
+        setCalcFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}));
+        setIsUserFiltered({price: false, stock: false});
       }
     }
-    if (((filterType === 'prices') || (filterType === 'stock')) && (sliderValue !== undefined)) {
+
+    if ((filterType === 'price' || filterType === 'stock') && sliderValue !== undefined) {
       setCalcFilters(prev => ({ ...prev, [filterType]: sliderValue}));
       setCustomSliders(prev => ({ ...prev, [filterType]: sliderValue}));
-      setIsUserFiltered(prev => ({ ...prev, [filterType]: true}))
+      setIsUserFiltered(prev => ({ ...prev, [filterType]: true}));
     }
   }
 
@@ -129,7 +117,6 @@ export const FilterPage = () => {
       if (!(Array.isArray(value))) {
         return;
       }
-      // console.log('filterType', filterType, 'value', value);
       if (value.length > 0) {
         searchParams.set(`${filterType}`, `${value.join('↕')}`);
       } else {
@@ -143,18 +130,17 @@ export const FilterPage = () => {
     setCalcFilters({
       categories: [],
       brands: [],
-      prices: [],
+      price: [],
       stock: [],
     });
-    setIsUserFiltered({prices: false, stock: false})
+    setIsUserFiltered({price: false, stock: false});
   }
 
   const itemsToRender = items
-    .filter(elem => (calcFilters.categories.length>0) ? (calcFilters.categories.some(el => el === elem.category)): elem)
-    .filter(elem => (calcFilters.brands.length>0) ? (calcFilters.brands.some(el => el === elem.brand)) : elem)
-    .filter(elem => (calcFilters.prices.length>0) ? (elem.price >= calcFilters.prices[0] && elem.price <= calcFilters.prices[1]) : elem)
-    .filter(elem => (calcFilters.stock.length>0) ? (elem.stock >= calcFilters.stock[0] && elem.stock <= calcFilters.stock[1]) : elem)
-
+    .filter((item) => calcFilters.categories.length > 0 ? calcFilters.categories.some((category) => category === item.category) : true)
+    .filter((item) => calcFilters.brands.length > 0 ? calcFilters.brands.some((brand) => brand === item.brand) : true)
+    .filter((item) => calcFilters.price.length > 0 ? item.price >= calcFilters.price[0] && item.price <= calcFilters.price[1] : true)
+    .filter((item) => calcFilters.stock.length > 0 ? item.stock >= calcFilters.stock[0] && item.stock <= calcFilters.stock[1] : true)
 
   if (isLoading || isFetching) {
     return (
@@ -164,12 +150,12 @@ export const FilterPage = () => {
 
   return (
     <div className='flex'>
-      <Sidebar items={items} onCheck={(type, el) => onFilterClick(type, el)}
-      filters={initialFilters} itemsToRender={itemsToRender}
-      onReset={() => onReset()} onSliderChange={(type, value) => onFilterClick(type, '', value)}
-      pricesLimits = {(isUserFiltered.prices) ? calcFilters.prices: []}
-      stockLimits = {(isUserFiltered.stock) ? calcFilters.stock: []}
-      customFilters={calcFilters}
+      <Sidebar items={items} onCheck={(filterType, value) => onFilterClick(filterType, value)}
+        filters={initialFilters} itemsToRender={itemsToRender}
+        onReset={() => onReset()} onSliderChange={(filterType, value) => onFilterClick(filterType, '', value)}
+        priceLimits={isUserFiltered.price ? calcFilters.price : []}
+        stockLimits={isUserFiltered.stock ? calcFilters.stock : []}
+        customFilters={calcFilters}
       />
       <div className="flex flex-col gap-2">
         <div className="flex justify-center items-center gap-10">
@@ -186,7 +172,7 @@ export const FilterPage = () => {
               <option value="discount-DESC">Sort by discount (descending)</option>
             </select>
           </div>
-          <div>Found: {items.length} items</div>
+          <div>Found: {itemsToRender.length} item(s)</div>
           <Form id="search-form" role="search" autoComplete="off">
             <input id="q" className="form-input" name="q" type='search' placeholder="I'm looking for..."
               defaultValue={searchParams.get('q') ?? ''} aria-label="Search items"
@@ -222,10 +208,10 @@ export const FilterPage = () => {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-5">
-          {Boolean(itemsToRender.length) && itemsToRender.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
-          {Boolean(itemsToRender.length===0) && <div className="text-5xl">No products found</div>}
+          {itemsToRender.length > 0 && itemsToRender.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
+          {itemsToRender.length === 0 && <div className="text-5xl">No products found</div>}
         </div>
       </div>
     </div>
-    )
+  )
 }

@@ -1,72 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import { IItem } from '../types/IItem';
-import styles from '../css/sidebar.module.css';
-import "../css/main.css"
-import { IFilters } from './FilterPage';
-// import { Slider } from "./Slider"
 import ReactSlider from 'react-slider';
-
-export type ICheckboxFilters = Pick<IFilters, 'categories' | 'brands'>
-export type ISliderFilters = Pick<IFilters, 'prices' | 'stock'>
+import { IFilters, ICheckboxFilters, ISliderFilters } from '../types/filters';
+import { IItem } from '../types/IItem';
+import '../css/main.css';
+import styles from '../css/sidebar.module.css';
 
 interface ISidebarProps {
-  items: IItem []
-  onCheck: (type: keyof ICheckboxFilters, el: string)=> void;
+  items: IItem[]
+  onCheck: (type: keyof ICheckboxFilters, el: string) => void;
   filters: IFilters
-  itemsToRender: IItem []
+  itemsToRender: IItem[]
   onReset: () => void
-  onSliderChange: (type: keyof ISliderFilters, value: number[])=> void
-  pricesLimits: number[]
+  onSliderChange: (type: keyof ISliderFilters, value: number[]) => void
+  priceLimits: number[]
   stockLimits: number[]
   customFilters: IFilters
 }
 
-export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange, pricesLimits, stockLimits, customFilters}: ISidebarProps) => {
-
-const calcAmount = (arr: IItem [], filterType: keyof IItem, el: string) => {
-  return arr.filter(elem=> elem[filterType] === el).length;
-}
-
-const isChecked = (filterType: keyof IFilters, el: string) => {
-  return (filterType === 'categories' || filterType === 'brands') ? customFilters[filterType].includes(el) : false
-}
-
-const handleClick = (type: keyof ICheckboxFilters, el:string) => {
-  onCheck(type, el);
-}
-
-useEffect(() => {
-  const maxMinPrice = [Math.min(...itemsToRender.map(el=> el.price)), Math.max(...itemsToRender.map(el=> el.price))]
-  const maxMinStock = [Math.min(...itemsToRender.map(el=> el.stock)), Math.max(...itemsToRender.map(el=> el.stock))]
-  if ((maxMinPrice[0] !== Infinity) && (maxMinStock[0] !== Infinity)) {
-    setPrice((pricesLimits.length>0) ? pricesLimits : maxMinPrice);
-    setStock((stockLimits.length>0) ? stockLimits: maxMinStock);
-    setNotFound(false);
-  } else {
-    setPrice(filters.prices);
-    setStock(filters.stock);
-    setNotFound(true);
+export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSliderChange, priceLimits, stockLimits, customFilters}: ISidebarProps) => {
+  const calcAmount = (items: IItem[], itemProp: keyof IItem, value: string) => {
+    return items.filter((item) => item[itemProp] === value).length;
   }
-}, [filters.prices, filters.stock, itemsToRender, pricesLimits, stockLimits])
 
-const [notFound, setNotFound] = useState(false)
-const [price, setPrice] = useState<number[]>(filters.prices);
-const [stock, setStock] = useState<number[]>(filters.stock);
+  const isChecked = (filterType: keyof ICheckboxFilters, value: string) => {
+    return customFilters[filterType].includes(value);
+  }
 
-const handleReset = () => {
-  onReset();
-  setPrice(filters.prices)
-  setStock(filters.stock)
-}
+  const handleClick = (filterType: keyof ICheckboxFilters, value: string) => {
+    onCheck(filterType, value);
+  }
 
-const [isCopied, setIsCopied] = useState(false);
+  useEffect(() => {
+    if (itemsToRender.length > 0) {
+      const maxMinPrice = [Math.min(...itemsToRender.map((item) => item.price)), Math.max(...itemsToRender.map((item) => item.price))]
+      const maxMinStock = [Math.min(...itemsToRender.map((item) => item.stock)), Math.max(...itemsToRender.map((item) => item.stock))]
+      setPrice(priceLimits.length > 0 ? priceLimits : maxMinPrice);
+      setStock(stockLimits.length > 0 ? stockLimits : maxMinStock);
+    } else {
+      setPrice(filters.price);
+      setStock(filters.stock);
+    }
+  }, [filters.price, filters.stock, itemsToRender, priceLimits, stockLimits]);
 
-const handleCopy = () => {
-  setIsCopied(true);
-  setTimeout(() => {
-    setIsCopied(false);
-  }, 1000);
-}
+  const [price, setPrice] = useState<number[]>(filters.price);
+  const [stock, setStock] = useState<number[]>(filters.stock);
+
+  const handleReset = () => {
+    onReset();
+    setPrice(filters.price)
+    setStock(filters.stock)
+  }
+
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = () => {
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+  }
 
   return (
     <div className='w-fit'>
@@ -77,22 +69,22 @@ const handleCopy = () => {
           handleCopy();
           }, () => console.log('failed to copy'));
         }}>
-          { (isCopied) ? 'Link copied!' : 'Copy link'}
+          {(isCopied) ? 'Link copied!' : 'Copy link'}
           </button>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Category</h3>
         <fieldset className={styles.items}>
-          {filters.categories.map((el, i) =>
-          <div key={i} className={`${(calcAmount(itemsToRender, 'category', el)) ? styles.item : styles.itemOpacity}`} >
+          {filters.categories.map((category, i) =>
+          <div key={i} className={`${(calcAmount(itemsToRender, 'category', category)) ? styles.item : styles.itemOpacity}`} >
             <label htmlFor={'1'+i.toString()} className={styles.label}>
             <input type='checkbox' id={'1'+i.toString()} className={styles.checkbox}
-            onChange={()=>handleClick('categories', el)}
-            checked = {isChecked('categories', el)}
-            ></input>
-            {el}</label>
-            <span>({calcAmount(itemsToRender, 'category', el)})</span>/
-            <span>({calcAmount(items, 'category', el)})</span>
+              onChange={() => handleClick('categories', category)}
+              checked={isChecked('categories', category)}
+            />
+            {category}</label>
+            <span>({calcAmount(itemsToRender, 'category', category)})</span>/
+            <span>({calcAmount(items, 'category', category)})</span>
             </div>
           )}
         </fieldset>
@@ -100,42 +92,41 @@ const handleCopy = () => {
       <div className={styles.box}>
         <h3 className={styles.h3}>Brand</h3>
         <fieldset  className={styles.items}>
-          {filters.brands.map((el, i) =>
-            <div key={i} className={`${(calcAmount(itemsToRender, 'brand', el)) ? styles.item : styles.itemOpacity}`}>
-            <label htmlFor={'2'+i.toString()}>
+          {filters.brands.map((brand, i) =>
+            <div key={i} className={`${(calcAmount(itemsToRender, 'brand', brand)) ? styles.item : styles.itemOpacity}`}>
+            <label htmlFor={'2'+i.toString()} className={styles.label}>
             <input type='checkbox' id={'2'+i.toString()} className={styles.checkbox}
-            onChange={()=>handleClick('brands', el)}
-            checked = {isChecked('brands', el)}
-
-            ></input>
-            {el}</label>
-            <span>({calcAmount(itemsToRender, 'brand', el)})</span>/
-            <span>({calcAmount(items, 'brand', el)})</span>
+              onChange={() => handleClick('brands', brand)}
+              checked = {isChecked('brands', brand)}
+            />
+            {brand}</label>
+            <span>({calcAmount(itemsToRender, 'brand', brand)})</span>/
+            <span>({calcAmount(items, 'brand', brand)})</span>
             </div>
           )}
         </fieldset>
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Price</h3>
-        {(notFound) && <div  className="text-2xl">not found</div>}
+        {itemsToRender.length === 0 && <div  className="text-2xl">not found</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <ReactSlider
               className={styles.slider}
-              trackClassName={styles.sliderTrack}
+              trackClassName="sliderTrack"
               thumbClassName={styles.sliderThumb}
               thumbActiveClassName={styles.sliderThumbActive}
-              min={filters.prices[0]}
-              max={filters.prices[1]}
+              min={filters.price[0]}
+              max={filters.price[1]}
               value={price}
               minDistance={0}
-              onChange={(value:number[]) => {
-                onSliderChange('prices', value)
+              onChange={(value: number[]) => {
+                onSliderChange('price', value)
                 setPrice(value);
               }}
 
             />
-            {(!notFound) && <div className={styles.sliderText}>
+            {itemsToRender.length > 0 && <div className={styles.sliderText}>
               <span className={styles.sliderMin}>{`$${price[0]}`}</span>
               <span className={styles.sliderMax}>{`$${price[1]}`}</span>
             </div>}
@@ -144,24 +135,24 @@ const handleCopy = () => {
       </div>
       <div className={styles.box}>
         <h3 className={styles.h3}>Stock</h3>
-        {(notFound) && <div className="text-2xl">not found</div>}
+        {itemsToRender.length === 0 && <div className="text-2xl">not found</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <ReactSlider
               className={styles.slider}
-              trackClassName={styles.sliderTrack}
+              trackClassName="sliderTrack"
               thumbClassName={styles.sliderThumb}
               thumbActiveClassName={styles.sliderThumbActive}
               min={filters.stock[0]}
               max={filters.stock[1]}
               value={stock}
               minDistance={0}
-              onChange={(value:number[]) => {
+              onChange={(value: number[]) => {
                 onSliderChange('stock', value)
                 setStock(value);
               }}
             />
-            {(!notFound) && <div className={styles.sliderText}>
+            {itemsToRender.length > 0 && <div className={styles.sliderText}>
               <span className={styles.sliderMin}>{`${stock[0]}`}</span>
               <span className={styles.sliderMax}>{`${stock[1]}`}</span>
             </div>}
