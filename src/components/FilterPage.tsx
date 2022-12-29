@@ -15,6 +15,24 @@ interface ISortFnObj {
   [fnName: string]: SortFn;
 }
 
+const searchItemFields = (item: IItem, searchString: string): boolean => {
+  if (searchString.length === 0) {
+    return true;
+  }
+
+  for (const [key, value] of Object.entries(item)) {
+    if (['id', 'thumbnail', 'images'].includes(key)) {
+      continue;
+    }
+
+    if ((typeof value === 'string' || typeof value === 'number') && value.toString().includes(searchString)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 const sortFuncs: ISortFnObj  = {
   'price-ASC': (itemA, itemB) => itemA.price - itemB.price,
   'price-DESC': (itemA, itemB) => itemB.price - itemA.price,
@@ -71,14 +89,19 @@ export const FilterPage = () => {
     staleTime: 1000 * 60 * 5,
   });
 
+  const defaultCardSize = 'Small';
   const cardSearchParam = searchParams.get('card') ?? '';
-  const initialCardSize = isItemCardSize(cardSearchParam) ? cardSearchParam : 'Small';
+  const initialCardSize = isItemCardSize(cardSearchParam) ? cardSearchParam : defaultCardSize;
   const [cardSize, setCardSize] = useState<ItemCardSize>(initialCardSize);
 
+  const defaultSortParam = 'rating-DESC';
   const sortSearchParam = searchParams.get('sort') ?? '';
-  const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : 'rating-DESC';
+  const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : defaultSortParam;
 
   const [sortOption, setSortOption] = useState(initialSortOption);
+
+  const initialSearchValue = searchParams.get('q') ?? '';
+  const [searchValue, setSearchValue] = useState(initialSearchValue);
 
   const initialFilters: IFilters = {
     categories: [...new Set(items.map(item => item.category))],
@@ -150,6 +173,13 @@ export const FilterPage = () => {
       stock: [],
     });
     setIsUserFiltered({price: false, stock: false});
+    for (const key of Array.from(searchParams.keys())) {
+      searchParams.delete(key);
+    }
+    setSearchParams(searchParams);
+    setSearchValue('');
+    setSortOption(defaultSortParam);
+    setCardSize(defaultCardSize);
   }
 
   const itemsToRender = items
@@ -157,6 +187,7 @@ export const FilterPage = () => {
     .filter((item) => calcFilters.brands.length > 0 ? calcFilters.brands.some((brand) => brand === item.brand) : true)
     .filter((item) => calcFilters.price.length > 0 ? item.price >= calcFilters.price[0] && item.price <= calcFilters.price[1] : true)
     .filter((item) => calcFilters.stock.length > 0 ? item.stock >= calcFilters.stock[0] && item.stock <= calcFilters.stock[1] : true)
+    .filter((item) => searchItemFields(item, searchValue))
     .sort(sortFuncs[sortOption])
 
   if (isLoading || isFetching) {
@@ -195,10 +226,15 @@ export const FilterPage = () => {
           <div>Found: {itemsToRender.length} item(s)</div>
           <Form id="search-form" role="search" autoComplete="off">
             <input id="q" className="form-input" name="q" type='search' placeholder="I'm looking for..."
-              defaultValue={searchParams.get('q') ?? ''} aria-label="Search items"
+              value={searchValue} aria-label="Search items"
               onChange={(event) => {
                 event.preventDefault();
-                searchParams.set('q', event.target.value);
+                setSearchValue(event.target.value);
+                if (event.target.value.length > 0) {
+                  searchParams.set('q', event.target.value);
+                } else {
+                  searchParams.delete('q');
+                }
                 setSearchParams(searchParams);
               }} />
           </Form>
