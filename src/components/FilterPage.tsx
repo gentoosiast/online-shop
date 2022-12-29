@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, useSearchParams, useLoaderData } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
-import { IItemsDto } from '../types/IItem';
+import { IItem, IItemsDto } from '../types/IItem';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { SortOption } from '../types/SortOption';
 import { IFilters, ISliderFilters } from '../types/filters';
@@ -9,6 +9,20 @@ import { fetchData } from '../fetchData';
 import { ItemCard } from './ItemCard';
 import { Sidebar } from './Sidebar';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+
+type SortFn = (itemA: IItem, itemB: IItem) => number;
+interface ISortFnObj {
+  [fnName: string]: SortFn;
+}
+
+const sortFuncs: ISortFnObj  = {
+  'price-ASC': (itemA, itemB) => itemA.price - itemB.price,
+  'price-DESC': (itemA, itemB) => itemB.price - itemA.price,
+  'rating-ASC': (itemA, itemB) => itemA.rating - itemB.rating,
+  'rating-DESC': (itemA, itemB) => itemB.rating - itemA.rating,
+  'discount-ASC': (itemA, itemB) => itemA.discountPercentage - itemB.discountPercentage,
+  'discount-DESC': (itemA, itemB) => itemB.discountPercentage - itemA.discountPercentage,
+};
 
 const isItemCardSize = (value: string): value is ItemCardSize => {
   return value === 'Small' || value === 'Large';
@@ -62,7 +76,9 @@ export const FilterPage = () => {
   const [cardSize, setCardSize] = useState<ItemCardSize>(initialCardSize);
 
   const sortSearchParam = searchParams.get('sort') ?? '';
-  const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : 'price-ASC';
+  const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : 'rating-DESC';
+
+  const [sortOption, setSortOption] = useState(initialSortOption);
 
   const initialFilters: IFilters = {
     categories: [...new Set(items.map(item => item.category))],
@@ -141,6 +157,7 @@ export const FilterPage = () => {
     .filter((item) => calcFilters.brands.length > 0 ? calcFilters.brands.some((brand) => brand === item.brand) : true)
     .filter((item) => calcFilters.price.length > 0 ? item.price >= calcFilters.price[0] && item.price <= calcFilters.price[1] : true)
     .filter((item) => calcFilters.stock.length > 0 ? item.stock >= calcFilters.stock[0] && item.stock <= calcFilters.stock[1] : true)
+    .sort(sortFuncs[sortOption])
 
   if (isLoading || isFetching) {
     return (
@@ -160,9 +177,12 @@ export const FilterPage = () => {
       <div className="flex flex-col gap-2">
         <div className="flex justify-center items-center gap-10">
           <div>
-            <select name="sort" defaultValue={initialSortOption} onChange={(event) => {
-              searchParams.set('sort', event.target.value);
-              setSearchParams(searchParams);
+            <select name="sort" value={sortOption} onChange={(event) => {
+              if (isSortOption(event.target.value)) {
+                setSortOption(event.target.value);
+                searchParams.set('sort', event.target.value);
+                setSearchParams(searchParams);
+              }
             }}>
               <option value="price-ASC">Sort by price (ascending)</option>
               <option value="price-DESC">Sort by price (descending)</option>
