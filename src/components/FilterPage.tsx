@@ -173,9 +173,9 @@ export const FilterPage = () => {
       stock: [],
     });
     setIsUserFiltered({price: false, stock: false});
-    for (const key of Array.from(searchParams.keys())) {
+    Array.from(searchParams.keys()).forEach((key) => {
       searchParams.delete(key);
-    }
+    });
     setSearchParams(searchParams);
     setSearchQuery('');
     setSortOption(defaultSortParam);
