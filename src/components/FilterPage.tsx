@@ -25,7 +25,8 @@ const searchItemFields = (item: IItem, searchString: string): boolean => {
       continue;
     }
 
-    if ((typeof value === 'string' || typeof value === 'number') && value.toString().includes(searchString)) {
+    if ((typeof value === 'string' || typeof value === 'number') &&
+      value.toString().toLowerCase().includes(searchString.toLowerCase())) {
       return true;
     }
   }
