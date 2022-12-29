@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, useSearchParams, useLoaderData } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
-import { IItemsDto } from '../types/IItem';
+import { IItem, IItemsDto } from '../types/IItem';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { SortOption } from '../types/SortOption';
 import { IFilters, ISliderFilters } from '../types/filters';
@@ -9,6 +9,39 @@ import { fetchData } from '../fetchData';
 import { ItemCard } from './ItemCard';
 import { Sidebar } from './Sidebar';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+
+type SortFn = (itemA: IItem, itemB: IItem) => number;
+interface ISortFnObj {
+  [fnName: string]: SortFn;
+}
+
+const searchItemFields = (item: IItem, searchString: string): boolean => {
+  if (searchString.length === 0) {
+    return true;
+  }
+
+  for (const [key, value] of Object.entries(item)) {
+    if (['id', 'thumbnail', 'images'].includes(key)) {
+      continue;
+    }
+
+    if ((typeof value === 'string' || typeof value === 'number') &&
+      value.toString().toLowerCase().includes(searchString.toLowerCase())) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+const sortFuncs: ISortFnObj  = {
+  'price-ASC': (itemA, itemB) => itemA.price - itemB.price,
+  'price-DESC': (itemA, itemB) => itemB.price - itemA.price,
+  'rating-ASC': (itemA, itemB) => itemA.rating - itemB.rating,
+  'rating-DESC': (itemA, itemB) => itemB.rating - itemA.rating,
+  'discount-ASC': (itemA, itemB) => itemA.discountPercentage - itemB.discountPercentage,
+  'discount-DESC': (itemA, itemB) => itemB.discountPercentage - itemA.discountPercentage,
+};
 
 const isItemCardSize = (value: string): value is ItemCardSize => {
   return value === 'Small' || value === 'Large';
@@ -57,12 +90,19 @@ export const FilterPage = () => {
     staleTime: 1000 * 60 * 5,
   });
 
+  const defaultCardSize = 'Small';
   const cardSearchParam = searchParams.get('card') ?? '';
-  const initialCardSize = isItemCardSize(cardSearchParam) ? cardSearchParam : 'Small';
+  const initialCardSize = isItemCardSize(cardSearchParam) ? cardSearchParam : defaultCardSize;
   const [cardSize, setCardSize] = useState<ItemCardSize>(initialCardSize);
 
+  const defaultSortParam = 'rating-DESC';
   const sortSearchParam = searchParams.get('sort') ?? '';
-  const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : 'price-ASC';
+  const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : defaultSortParam;
+
+  const [sortOption, setSortOption] = useState(initialSortOption);
+
+  const initialSearchQuery = searchParams.get('q') ?? '';
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
 
   const initialFilters: IFilters = {
     categories: [...new Set(items.map(item => item.category))],
@@ -134,6 +174,13 @@ export const FilterPage = () => {
       stock: [],
     });
     setIsUserFiltered({price: false, stock: false});
+    Array.from(searchParams.keys()).forEach((key) => {
+      searchParams.delete(key);
+    });
+    setSearchParams(searchParams);
+    setSearchQuery('');
+    setSortOption(defaultSortParam);
+    setCardSize(defaultCardSize);
   }
 
   const itemsToRender = items
@@ -141,6 +188,8 @@ export const FilterPage = () => {
     .filter((item) => calcFilters.brands.length > 0 ? calcFilters.brands.some((brand) => brand === item.brand) : true)
     .filter((item) => calcFilters.price.length > 0 ? item.price >= calcFilters.price[0] && item.price <= calcFilters.price[1] : true)
     .filter((item) => calcFilters.stock.length > 0 ? item.stock >= calcFilters.stock[0] && item.stock <= calcFilters.stock[1] : true)
+    .filter((item) => searchItemFields(item, searchQuery))
+    .sort(sortFuncs[sortOption])
 
   if (isLoading || isFetching) {
     return (
@@ -160,9 +209,12 @@ export const FilterPage = () => {
       <div className="flex flex-col gap-2">
         <div className="flex justify-center items-center gap-10">
           <div>
-            <select name="sort" defaultValue={initialSortOption} onChange={(event) => {
-              searchParams.set('sort', event.target.value);
-              setSearchParams(searchParams);
+            <select name="sort" value={sortOption} onChange={(event) => {
+              if (isSortOption(event.target.value)) {
+                setSortOption(event.target.value);
+                searchParams.set('sort', event.target.value);
+                setSearchParams(searchParams);
+              }
             }}>
               <option value="price-ASC">Sort by price (ascending)</option>
               <option value="price-DESC">Sort by price (descending)</option>
@@ -175,10 +227,15 @@ export const FilterPage = () => {
           <div>Found: {itemsToRender.length} item(s)</div>
           <Form id="search-form" role="search" autoComplete="off">
             <input id="q" className="form-input" name="q" type='search' placeholder="I'm looking for..."
-              defaultValue={searchParams.get('q') ?? ''} aria-label="Search items"
+              value={searchQuery} aria-label="Search items"
               onChange={(event) => {
                 event.preventDefault();
-                searchParams.set('q', event.target.value);
+                setSearchQuery(event.target.value);
+                if (event.target.value.length > 0) {
+                  searchParams.set('q', event.target.value);
+                } else {
+                  searchParams.delete('q');
+                }
                 setSearchParams(searchParams);
               }} />
           </Form>
