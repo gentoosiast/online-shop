@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LoaderFunctionArgs, Link, useLoaderData, useParams } from "react-router-dom";
+import { LoaderFunctionArgs, Link, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
@@ -33,6 +33,7 @@ export const loader =
   }
 
 export const ItemDetails = observer(() => {
+  const navigate = useNavigate();
   const params = useParams();
     const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof loader>>
@@ -115,9 +116,14 @@ export const ItemDetails = observer(() => {
                     }}>
                     {cartStore.isInCart(item.id) ? 'remove from cart' : 'add to cart'}
                   </button>
-                  <button
-                    className='button button-buy'>
-                      buy now
+                  <button className='button button-buy' aria-label='Add item to the cart and proceed to filling in order details'
+                    onClick={() => {
+                      if (!cartStore.isInCart(item.id)) {
+                        cartStore.addItem(item);
+                      }
+                      navigate('/cart', { state: { isModalOpen: true } });
+                    }}>
+                    buy now
                   </button>
                 </div>
               </div>

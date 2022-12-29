@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom";
 import { IItem } from "../types/IItem"
 import { cartStore } from "../storage/cart.store"
 import { observer } from 'mobx-react-lite';
@@ -16,7 +17,9 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
     <div className='border p-4 w-full'>
       <div className="flex justify-between gap-2">
         <div>{number}</div>
-        <img src={item.images[0]} className="max-h-32" alt={item.title}/>
+        <Link to={`/item/${item.id}`} aria-label={`Open details page for ${item.title}`}>
+          <img src={item.images[0]} className="max-h-32" alt={item.title}/>
+        </Link>
         <div className="p-2">
           <p className="font-bold h-auto">{item.title}</p>
           <p className="h-auto">Brand: {item.brand}</p>
@@ -43,7 +46,7 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
           </button>
         </div>
         <div  className="flex items-center">
-          <p className="font-bold">${item.price}</p>
+          <p className="font-bold">${item.price * amount}</p>
         </div>
         <button  className="flex" type="button"
           onClick = {() => cartStore.removeAllItems(item.id)}>
