@@ -100,8 +100,8 @@ export const FilterPage = () => {
 
   const [sortOption, setSortOption] = useState(initialSortOption);
 
-  const initialSearchValue = searchParams.get('q') ?? '';
-  const [searchValue, setSearchValue] = useState(initialSearchValue);
+  const initialSearchQuery = searchParams.get('q') ?? '';
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
 
   const initialFilters: IFilters = {
     categories: [...new Set(items.map(item => item.category))],
@@ -177,7 +177,7 @@ export const FilterPage = () => {
       searchParams.delete(key);
     }
     setSearchParams(searchParams);
-    setSearchValue('');
+    setSearchQuery('');
     setSortOption(defaultSortParam);
     setCardSize(defaultCardSize);
   }
@@ -187,7 +187,7 @@ export const FilterPage = () => {
     .filter((item) => calcFilters.brands.length > 0 ? calcFilters.brands.some((brand) => brand === item.brand) : true)
     .filter((item) => calcFilters.price.length > 0 ? item.price >= calcFilters.price[0] && item.price <= calcFilters.price[1] : true)
     .filter((item) => calcFilters.stock.length > 0 ? item.stock >= calcFilters.stock[0] && item.stock <= calcFilters.stock[1] : true)
-    .filter((item) => searchItemFields(item, searchValue))
+    .filter((item) => searchItemFields(item, searchQuery))
     .sort(sortFuncs[sortOption])
 
   if (isLoading || isFetching) {
@@ -226,10 +226,10 @@ export const FilterPage = () => {
           <div>Found: {itemsToRender.length} item(s)</div>
           <Form id="search-form" role="search" autoComplete="off">
             <input id="q" className="form-input" name="q" type='search' placeholder="I'm looking for..."
-              value={searchValue} aria-label="Search items"
+              value={searchQuery} aria-label="Search items"
               onChange={(event) => {
                 event.preventDefault();
-                setSearchValue(event.target.value);
+                setSearchQuery(event.target.value);
                 if (event.target.value.length > 0) {
                   searchParams.set('q', event.target.value);
                 } else {
