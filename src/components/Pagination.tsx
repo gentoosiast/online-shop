@@ -54,22 +54,20 @@ export const PaginatedItems = () => {
 
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = items.slice(itemOffset, endOffset);
-  if (currentItems.length === 0) { // last item on the page deleted
-    const pageOffset = itemOffset / itemsPerPage;
-    setItemOffset(prev => prev - itemsPerPage);
-    setPageOffset(pageOffset);
-    searchParams.set("page", pageOffset.toString());
-    setSearchParams(searchParams);
-    setPageOffset(pageOffset - 1);
-  }
   const pageCount = Math.ceil(items.length / itemsPerPage);
 
   const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newItemsPerPage = parseInt(e.target.value, 10);
     if (!Number.isNaN(newItemsPerPage) && newItemsPerPage > 0) {
       setItemsPerPage(newItemsPerPage);
-      const pageOffset = itemOffset / itemsPerPage;
-      setItemOffset(pageOffset * newItemsPerPage);
+      const newPageCount = Math.ceil(items.length / newItemsPerPage);
+      const newPageOffset = pageOffset > newPageCount - 1 ? newPageCount - 1 : pageOffset;
+      if (newPageOffset !== pageOffset) {
+        setPageOffset(newPageOffset);
+        searchParams.set("page", (newPageOffset + 1).toString());
+        setSearchParams(searchParams);
+      }
+      setItemOffset(newPageOffset * newItemsPerPage);
       searchParams.set("limit", e.target.value);
       setSearchParams(searchParams);
     }
@@ -78,6 +76,7 @@ export const PaginatedItems = () => {
   const handlePageClick = ({ selected }: { selected: number }) => {
     const newOffset = (selected * itemsPerPage) % items.length;
     setItemOffset(newOffset);
+    setPageOffset(selected);
     searchParams.set("page", (selected + 1).toString());
     setSearchParams(searchParams);
   };
