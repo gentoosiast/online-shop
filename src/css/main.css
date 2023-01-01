@@ -84,7 +84,7 @@
   }
 
   .card-image {
-    @apply relative flex justify-center items-center bg-gray-100 overflow-hidden rounded-sm;
+    @apply relative flex justify-center items-center bg-transparent overflow-hidden rounded-sm;
   }
 
   .card-image-img {
@@ -95,12 +95,12 @@
     @apply opacity-100;
   }
 
-  .card-image-placeholder-animation {
-    @apply absolute z-10 -left-1/2 w-1/2 h-full bg-gradient-loading animate-loading;
+  .card-image-placeholder {
+    @apply absolute w-full h-full object-contain left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 transition-opacity duration-500;
   }
 
-  .image-loaded ~ .card-image-placeholder-animation {
-    @apply animate-none;
+  .image-loaded ~ .card-image-placeholder {
+    @apply opacity-0;
   }
 
   .breadcrumb {

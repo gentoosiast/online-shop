@@ -5,6 +5,7 @@ import { cartStore } from '../storage/cart.store';
 import { IItem } from "../types/IItem";
 import { ItemCardSize } from '../types/ItemCardSize';
 import { Image } from './Image';
+import catPlaceholder from '../assets/cat-placeholder.svg';
 
 interface IItemsCardProps {
   item: IItem
@@ -20,7 +21,8 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
             <p className="font-bold h-14">{item.title}</p>
             <div className="card-image w-40 h-40">
               <Image className="card-image-img" src={item.images[0]} alt={item.title} />
-              <div className="card-image-placeholder-animation"></div>
+              <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
+              {/* <div className="card-image-placeholder-animation"></div> */}
             </div>
 
             <div className="flex flex-col gap-2">
