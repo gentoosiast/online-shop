@@ -18,7 +18,12 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
       <div className="flex justify-between gap-2">
         <div>{number}</div>
         <Link to={`/item/${item.id}`} aria-label={`Open details page for ${item.title}`}>
-          <img src={item.images[0]} className="max-h-32" alt={item.title}/>
+          <div className="card-image w-32 h-32" role="img" aria-label={item.title}
+            style={ { backgroundImage: `url(${item.images[0]})` } }>
+            <div className="card-image-placeholder">
+              <div className="card-image-placeholder-animation"></div>
+            </div>
+          </div>
         </Link>
         <div className="p-2">
           <p className="font-bold h-auto">{item.title}</p>

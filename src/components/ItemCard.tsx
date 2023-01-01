@@ -17,7 +17,12 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
           <div className={`flex flex-col gap-2 item-card w-1/6`}
           >
             <p className="font-bold h-14">{item.title}</p>
-            <img src={item.images[0]} className="max-h-40" alt={item.title}/>
+            <div className="card-image w-40 h-40" role="img" aria-label={item.title}
+              style={ { backgroundImage: `url(${item.images[0]})` } }>
+              <div className="card-image-placeholder">
+                <div className="card-image-placeholder-animation"></div>
+              </div>
+            </div>
 
             <div className="flex flex-col gap-2">
               <button
@@ -46,7 +51,12 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
         <div className={`flex flex-col gap-2 item-card w-1/4`}
         >
           <p className="font-bold h-14">{item.title}</p>
-          <img src={item.images[0]} className="max-h-40" alt={item.title}/>
+          <div className="card-image w-40 h-40" role="img" aria-label={item.title}
+            style={ { backgroundImage: `url(${item.images[0]})` } }>
+            <div className="card-image-placeholder">
+              <div className="card-image-placeholder-animation"></div>
+            </div>
+          </div>
           <div>
             <p><span className="font-bold">Category:</span> {item.category}</p>
             <p><span className="font-bold">Brand:</span> {item.brand}</p>

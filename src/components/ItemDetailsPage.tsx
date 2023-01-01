@@ -61,19 +61,30 @@ export const ItemDetails = observer(() => {
           <div className="border p-5 rounded flex flex-col gap-5 items-center m-auto">
             <div className="font-bold text-6xl">{item.title}</div>
             <div className="flex flex-row gap-5">
-              <div className="photos flex gap-2 items-center">
-                <div className="all-pics flex flex-col gap-1">
+              <div className="all-images flex gap-4 items-center">
+                <div className="aside-images flex flex-col gap-2">
                   {
-                    // TODO: images from different URLs can be duplicates
                     item.images.map((img, i) =>
-                      <img key={i} src={img} className={`w-24 rounded cursor-pointer border-2
-                        ${img === item.images[mainImgIdx] ? "border-blue-600": "border-transparent"}`} alt={item.title}
-                        onClick = {() => setMainImgIdx(i)}
-                      ></img>)
+                      <div key={i} className={`card-image w-24 h-24 cursor-pointer border-2 ${img === item.images[mainImgIdx] ? 'border-blue-600' : 'border-transparent'}`}
+                        role="img" aria-label={item.title}
+                        style={ { backgroundImage: `url(${img})` } }
+                        onClick = {() => setMainImgIdx(i)}>
+                        <div className="card-image-placeholder">
+                          <div className="card-image-placeholder-animation"></div>
+                        </div>
+                      </div>
+                      // <img key={i} src={img} className={`w-24 rounded cursor-pointer border-2
+                      //   ${img === item.images[mainImgIdx] ? "border-blue-600": "border-transparent"}`} alt={item.title}
+                      //   onClick = {() => setMainImgIdx(i)}
+                      // />
+                      )
                   }
                 </div>
-                <div className="main-pic">
-                  <img src={item.images[mainImgIdx]} className="w-72 rounded" alt={item.title}/>
+                <div className="main-image card-image w-72 h-72" aria-role='img' aria-label={item.title}
+                  style={ { backgroundImage: `url(${item.images[mainImgIdx]})` } }>
+                  <div className="card-image-placeholder">
+                    <div className="card-image-placeholder-animation"></div>
+                  </div>
                 </div>
               </div>
               <div className="details flex flex-col gap-2">
