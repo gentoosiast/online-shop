@@ -22,7 +22,6 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
             <div className="card-image w-40 h-40">
               <Image className="card-image-img" src={item.images[0]} alt={item.title} />
               <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
-              {/* <div className="card-image-placeholder-animation"></div> */}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -54,7 +53,7 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
           <p className="font-bold h-14">{item.title}</p>
           <div className="card-image w-40 h-40">
             <Image className="card-image-img" src={item.images[0]} alt={item.title} />
-            <div className="card-image-placeholder-animation"></div>
+            <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
           </div>
 
           <div>

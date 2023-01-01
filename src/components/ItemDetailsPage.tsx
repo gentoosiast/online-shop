@@ -6,6 +6,7 @@ import { cartStore } from '../storage/cart.store';
 import { Image } from './Image';
 import { IItem } from "../types/IItem";
 import { fetchData } from '../fetchData';
+import catPlaceholder from '../assets/cat-placeholder.svg';
 
 const fetchItem = async (id: string) => {
   const endpoint = `https://dummyjson.com/products/${id}`;
@@ -69,14 +70,14 @@ export const ItemDetails = observer(() => {
                       <div key={i} className={`card-image w-24 h-24 cursor-pointer border-2 ${img === item.images[mainImgIdx] ? 'border-blue-600' : 'border-transparent'}`}
                         onClick={() => setMainImgIdx(i)}>
                         <Image className="card-image-img" src={img} alt={item.title} />
-                        <div className="card-image-placeholder-animation"></div>
+                        <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
                       </div>
                     )
                   }
                 </div>
                 <div className="main-image card-image w-72 h-72">
                   <Image className="card-image-img" src={item.images[mainImgIdx]} alt={item.title} />
-                  <div className="card-image-placeholder-animation"></div>
+                  <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
                 </div>
               </div>
               <div className="details flex flex-col gap-2">

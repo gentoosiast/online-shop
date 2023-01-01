@@ -5,6 +5,7 @@ import { cartStore } from "../storage/cart.store"
 import { observer } from 'mobx-react-lite';
 import { Image } from './Image';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import catPlaceholder from '../assets/cat-placeholder.svg';
 import styles from '../css/cart.module.css';
 
 interface IItemCardCart {
@@ -21,7 +22,7 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
         <Link to={`/item/${item.id}`} aria-label={`Open details page for ${item.title}`}>
           <div className="card-image w-32 h-32">
             <Image className="card-image-img" src={item.images[0]} alt={item.title} />
-            <div className="card-image-placeholder-animation"></div>
+            <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
           </div>
         </Link>
         <div className="p-2">
