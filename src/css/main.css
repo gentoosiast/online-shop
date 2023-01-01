@@ -84,15 +84,23 @@
   }
 
   .card-image {
-    @apply relative bg-cover bg-center bg-no-repeat;
+    @apply relative flex justify-center items-center bg-gray-100 overflow-hidden rounded-sm;
   }
 
-  .card-image-placeholder {
-    @apply relative -z-10 h-full w-full bg-gray-200 overflow-hidden;
+  .card-image-img {
+    @apply relative w-full h-full object-contain opacity-0 transition-opacity duration-500;
+  }
+
+  .card-image-img.image-loaded {
+    @apply opacity-100;
   }
 
   .card-image-placeholder-animation {
-    @apply absolute -z-10 -left-1/2 w-1/2 h-full bg-gradient-loading animate-loading;
+    @apply absolute z-10 -left-1/2 w-1/2 h-full bg-gradient-loading animate-loading;
+  }
+
+  .image-loaded ~ .card-image-placeholder-animation {
+    @apply animate-none;
   }
 
   .breadcrumb {

@@ -3,6 +3,7 @@ import { LoaderFunctionArgs, Link, useLoaderData, useNavigate, useParams } from 
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
+import { Image } from './Image';
 import { IItem } from "../types/IItem";
 import { fetchData } from '../fetchData';
 
@@ -66,25 +67,16 @@ export const ItemDetails = observer(() => {
                   {
                     item.images.map((img, i) =>
                       <div key={i} className={`card-image w-24 h-24 cursor-pointer border-2 ${img === item.images[mainImgIdx] ? 'border-blue-600' : 'border-transparent'}`}
-                        role="img" aria-label={item.title}
-                        style={ { backgroundImage: `url(${img})` } }
-                        onClick = {() => setMainImgIdx(i)}>
-                        <div className="card-image-placeholder">
-                          <div className="card-image-placeholder-animation"></div>
-                        </div>
+                        onClick={() => setMainImgIdx(i)}>
+                        <Image className="card-image-img" src={img} alt={item.title} />
+                        <div className="card-image-placeholder-animation"></div>
                       </div>
-                      // <img key={i} src={img} className={`w-24 rounded cursor-pointer border-2
-                      //   ${img === item.images[mainImgIdx] ? "border-blue-600": "border-transparent"}`} alt={item.title}
-                      //   onClick = {() => setMainImgIdx(i)}
-                      // />
-                      )
+                    )
                   }
                 </div>
-                <div className="main-image card-image w-72 h-72" aria-role='img' aria-label={item.title}
-                  style={ { backgroundImage: `url(${item.images[mainImgIdx]})` } }>
-                  <div className="card-image-placeholder">
-                    <div className="card-image-placeholder-animation"></div>
-                  </div>
+                <div className="main-image card-image w-72 h-72">
+                  <Image className="card-image-img" src={item.images[mainImgIdx]} alt={item.title} />
+                  <div className="card-image-placeholder-animation"></div>
                 </div>
               </div>
               <div className="details flex flex-col gap-2">

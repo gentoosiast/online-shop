@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { IItem } from "../types/IItem"
 import { cartStore } from "../storage/cart.store"
 import { observer } from 'mobx-react-lite';
+import { Image } from './Image';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
 import styles from '../css/cart.module.css';
 
@@ -18,11 +19,9 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
       <div className="flex justify-between gap-2">
         <div>{number}</div>
         <Link to={`/item/${item.id}`} aria-label={`Open details page for ${item.title}`}>
-          <div className="card-image w-32 h-32" role="img" aria-label={item.title}
-            style={ { backgroundImage: `url(${item.images[0]})` } }>
-            <div className="card-image-placeholder">
-              <div className="card-image-placeholder-animation"></div>
-            </div>
+          <div className="card-image w-32 h-32">
+            <Image className="card-image-img" src={item.images[0]} alt={item.title} />
+            <div className="card-image-placeholder-animation"></div>
           </div>
         </Link>
         <div className="p-2">
