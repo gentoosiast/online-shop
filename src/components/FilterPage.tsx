@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, useSearchParams, useLoaderData } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
-import { IItem, IItemsDto } from '../types/IItem';
+import { IItem } from '../types/IItem';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { SortOption } from '../types/SortOption';
 import { IFilters, ISliderFilters } from '../types/filters';
@@ -54,9 +54,12 @@ const isSortOption = (value: string): value is SortOption => {
 }
 
 const fetchItems = async () => {
-  const endpoint = 'https://dummyjson.com/products?limit=25';
+  // TODO
+  // const endpoint = 'https://online-store-backend-production.up.railway.app/products/';
+  // TODO 2: probably IItemsDto is no longer needed
+  const endpoint = 'http://localhost:8000/products/';
   try {
-    const data = await fetchData<IItemsDto>(endpoint);
+    const data = await fetchData<IItem[]>(endpoint);
     return data;
   } catch(e) {
     throw new Error(e instanceof Error ? e.message : "fetchItems: Some unknown error occured");
@@ -71,7 +74,7 @@ const itemsQuery = () => ({
 
 export const loader =
   (queryClient: QueryClient) =>
-  async (): Promise<IItemsDto> => {
+  async (): Promise<IItem[]> => {
     const query = itemsQuery();
     return (
       queryClient.getQueryData(query.queryKey) ??
@@ -84,7 +87,7 @@ export const FilterPage = () => {
   const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof loader>>
   >
-  const { data: {products: items}, isLoading, isFetching } = useQuery({
+  const { data: items, isLoading, isFetching } = useQuery({
     ...itemsQuery(),
     initialData,
     staleTime: 1000 * 60 * 5,

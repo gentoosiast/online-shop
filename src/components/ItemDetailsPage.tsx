@@ -7,7 +7,9 @@ import { IItem } from "../types/IItem";
 import { fetchData } from '../fetchData';
 
 const fetchItem = async (id: string) => {
-  const endpoint = `https://dummyjson.com/products/${id}`;
+  // TODO
+  // const endpoint = `https://online-store-backend-production.up.railway.app/products/${id}`;
+  const endpoint = `http://localhost:8000/products/${id}`;
   try {
     const data = await fetchData<IItem>(endpoint);
     return data;
