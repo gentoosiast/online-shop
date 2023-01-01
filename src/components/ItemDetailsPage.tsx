@@ -3,8 +3,10 @@ import { LoaderFunctionArgs, Link, useLoaderData, useNavigate, useParams } from 
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
+import { Image } from './Image';
 import { IItem } from "../types/IItem";
 import { fetchData } from '../fetchData';
+import catPlaceholder from '../assets/cat-placeholder.svg';
 
 const fetchItem = async (id: string) => {
   // TODO
@@ -63,19 +65,21 @@ export const ItemDetails = observer(() => {
           <div className="border p-5 rounded flex flex-col gap-5 items-center m-auto">
             <div className="font-bold text-6xl">{item.title}</div>
             <div className="flex flex-row gap-5">
-              <div className="photos flex gap-2 items-center">
-                <div className="all-pics flex flex-col gap-1">
+              <div className="all-images flex gap-4 items-center">
+                <div className="aside-images flex flex-col gap-2">
                   {
-                    // TODO: images from different URLs can be duplicates
                     item.images.map((img, i) =>
-                      <img key={i} src={img} className={`w-24 rounded cursor-pointer border-2
-                        ${img === item.images[mainImgIdx] ? "border-blue-600": "border-transparent"}`} alt={item.title}
-                        onClick = {() => setMainImgIdx(i)}
-                      ></img>)
+                      <div key={i} className={`card-image w-24 h-24 cursor-pointer border-2 ${img === item.images[mainImgIdx] ? 'border-blue-600' : 'border-transparent'}`}
+                        onClick={() => setMainImgIdx(i)}>
+                        <Image className="card-image-img" src={img} alt={item.title} />
+                        <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
+                      </div>
+                    )
                   }
                 </div>
-                <div className="main-pic">
-                  <img src={item.images[mainImgIdx]} className="w-72 rounded" alt={item.title}/>
+                <div className="main-image card-image w-72 h-72">
+                  <Image className="card-image-img" src={item.images[mainImgIdx]} alt={item.title} />
+                  <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
                 </div>
               </div>
               <div className="details flex flex-col gap-2">
