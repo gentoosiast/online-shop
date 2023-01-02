@@ -91,6 +91,13 @@ export const PaginatedItems = () => {
     }
   }
 
+  const handleItemsPerPageBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = parseInt(e.target.value, 10);
+    if (Number.isNaN(inputValue) || inputValue <= 0) {
+      setItemsPerPageInput(itemsPerPage.toString());
+    }
+  }
+
   const handlePageClick = ({ selected }: { selected: number }) => {
     const newOffset = (selected * itemsPerPage) % items.length;
     setItemOffset(newOffset);
@@ -104,7 +111,7 @@ export const PaginatedItems = () => {
       <div className='flex items-center gap-2'>
         <label htmlFor="itemsPerPage">Items per page:</label>
         <input type='number' className='form-input' id='itemsPerPage'
-          value={itemsPerPageInput} onChange={handleItemsPerPageChange}
+          value={itemsPerPageInput} onChange={handleItemsPerPageChange} onBlur={handleItemsPerPageBlur}
         />
       </div>
       <ItemsToShow currentItems={currentItems} itemOffset={itemOffset} />
