@@ -122,8 +122,19 @@ module.exports = {
         },
       },
       {
-        test: /\.(avif|jpe?g||png|svg|webp)$/,
+        test: /\.(avif|jpe?g||png|webp)$/,
         type: "asset",
+      },
+      {
+        test: /\.svg$/i,
+        type: "asset",
+        resourceQuery: { not: [/component/] }, // exclude react component if *.svg?url
+      },
+      {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        resourceQuery: /component/, // *.svg?component
+        use: ['@svgr/webpack'],
       },
       {
         test: /\.(mp3|ogg)$/,

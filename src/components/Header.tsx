@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import { Link } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
-import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import CartSvg from '../assets/shopping-cart.svg?component';
 
 export const Header = observer(() => {
   return (
@@ -18,9 +18,7 @@ export const Header = observer(() => {
       </div>
       <div className="basis-1/4 flex items-center justify-end gap-2">
         <Link to="/cart" className="flex gap-2" aria-label="Shopping Cart">
-          <svg className="feather cart-icon">
-            <use href={`${featherSprite}#shopping-bag`} />
-          </svg>
+          <CartSvg className="shopping-cart-icon" />
           <p className="cart-items">{cartStore.totalItems} item(s)</p>
           <p className="cart-price">${cartStore.totalPrice}</p>
         </Link>
