@@ -1,25 +1,41 @@
 .box {
-  @apply text-xl border rounded p-5
+  @apply text-xl bg-gray-50 rounded p-3
 }
 
 .h3 {
   @apply font-bold text-xl p-2
 }
 
-.items {
-  @apply h-40 overflow-y-auto p-2
+.items_category {
+  @apply p-2
+}
+.items_brand {
+  @apply h-60 overflow-y-scroll p-2
+}
+.items_brand::-webkit-scrollbar {
+  width: 15px;
+  height: 20px;
+}
+.items_brand::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  background: #f7f4ed;
+}
+.items_brand::-webkit-scrollbar-thumb {
+  background: #a5d6a7;
+  border-radius: 100vh;
+  border: 3px solid #f6f7ed;
+}
+
+.items_brand::-webkit-scrollbar-thumb:hover {
+  background: #4caf50;
 }
 
 .item {
-  @apply flex items-center gap-3
+  @apply flex items-center justify-between
 }
 
 .itemOpacity {
-  @apply flex items-center gap-3 text-slate-400
-}
-
-.label {
-  @apply cursor-pointer
+  @apply flex items-center justify-between text-gray-400
 }
 
 .minMax {
@@ -36,22 +52,25 @@
 
 :global {
   .sliderTrack {
-    @apply h-1 rounded-sm border bg-gradient-to-br from-gray-400 to-gray-300 border-gray-300;
+    @apply h-2 rounded-sm border bg-gradient-to-br from-gray-300 to-gray-300;
   }
 
   .sliderTrack-1 {
-    @apply h-3 rounded-sm border bg-gradient-to-br from-pink-700 to-pink-300;
+    @apply h-2 rounded-sm border bg-gradient-to-br from-green-200 to-green-200;
   }
 }
 
 .sliderThumb {
-  @apply cursor-grab w-4 h-4 rounded-full bg-slate-600 outline-none
+  @apply cursor-grab w-4 h-4 rounded-full bg-green-500 outline-none
 }
 
 .sliderThumbActive {
-  @apply bg-red-400
+  @apply bg-green-700
 }
 
 .sliderText {
   @apply flex justify-between text-sm;
+}
+.not_found {
+  @apply text-center text-gray-600
 }

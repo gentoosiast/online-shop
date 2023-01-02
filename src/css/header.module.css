@@ -1,0 +1,42 @@
+.header {
+  @apply flex justify-between py-5 items-center border-b border-green-500
+}
+
+.header__shop {
+  @apply flex items-center
+}
+
+.header_cart {
+  @apply w-32
+}
+
+.header__cart {
+  @apply flex items-center gap-2
+}
+
+.link_shop {
+  @apply flex items-center cursor-pointer
+}
+
+.logo {
+  @apply w-14
+}
+
+.title {
+  @apply font-bold text-xl text-green-500
+}
+
+.cart_items {
+  @apply bg-red-600 w-6 h-6 rounded-full relative bottom-1 right-3 text-center text-white
+}
+
+.cart_price {
+  @apply w-2
+}
+.cart_icon {
+  @apply h-8
+}
+
+.cart_icon:hover {
+  filter: invert(54%) sepia(97%) saturate(1361%) hue-rotate(144deg) brightness(93%) contrast(101%);
+}

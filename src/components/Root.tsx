@@ -7,7 +7,7 @@ export const Root = () => {
   return (
     <>
       <Header />
-      <main>
+      <main className='my-6'>
         <Outlet />
       </main>
       <Footer />

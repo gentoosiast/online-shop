@@ -9,6 +9,8 @@ import { fetchData } from '../fetchData';
 import { ItemCard } from './ItemCard';
 import { Sidebar } from './Sidebar';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import { Select, Option } from "@material-tailwind/react";
+import type { SelectProps } from "@material-tailwind/react";
 
 type SortFn = (itemA: IItem, itemB: IItem) => number;
 interface ISortFnObj {
@@ -219,13 +221,30 @@ export const FilterPage = () => {
                 setSearchParams(searchParams);
               }
             }}>
-              <option value="price-ASC">Sort by price (ascending)</option>
-              <option value="price-DESC">Sort by price (descending)</option>
-              <option value="rating-ASC">Sort by rating (ascending)</option>
-              <option value="rating-DESC">Sort by rating (descending)</option>
-              <option value="discount-ASC">Sort by discount (ascending)</option>
-              <option value="discount-DESC">Sort by discount (descending)</option>
+              <option value="price-ASC">по цене ↑</option>
+              <option value="price-DESC">по цене ↓</option>
+              <option value="rating-ASC">по рейтингу ↑</option>
+              <option value="rating-DESC">по рейтингу ↓</option>
+              <option value="discount-ASC">по скидке ↑</option>
+              <option value="discount-DESC">по скидке ↓</option>
             </select>
+            {/* <Select label="Сортировать по:"
+            value={sortOption}
+            onChange={(value) => {
+              if (isSortOption(value)) {
+                setSortOption(value);
+                searchParams.set('sort', value);
+                setSearchParams(searchParams);
+              }
+            }}
+            >
+              <Option value="price-ASC">Sort by price (ascending)</Option>
+              <Option value="price-DESC">Sort by price (descending)</Option>
+              <Option value="rating-ASC">Sort by rating (ascending)</Option>
+              <Option value="rating-DESC">Sort by rating (ascending)</Option>
+              <Option value="discount-ASC">Sort by discount (ascending)</Option>
+              <Option value="discount-DESC">Sort by discount (descending)</Option>
+          </Select> */}
           </div>
           <div>Found: {itemsToRender.length} item(s)</div>
           <Form id="search-form" role="search" autoComplete="off">

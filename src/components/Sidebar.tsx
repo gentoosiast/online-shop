@@ -4,6 +4,7 @@ import { IFilters, ICheckboxFilters, ISliderFilters } from '../types/filters';
 import { IItem } from '../types/IItem';
 import '../css/main.css';
 import styles from '../css/sidebar.module.css';
+import { Checkbox } from "@material-tailwind/react";
 
 interface ISidebarProps {
   items: IItem[]
@@ -61,54 +62,66 @@ export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSlid
   }
 
   return (
-    <div className='w-fit'>
-      <div>
-        <button className='button button-add' onClick={handleReset}>Reset filters</button>
+    <div className='w-96'>
+      <div className='w-96 flex flex-col gap-3'>
+        <button className='button button-add' onClick={handleReset}>Сбросить фильтры</button>
         <button className={ (isCopied) ? 'button button-delete' : 'button button-add'}
         onClick={()=>{navigator.clipboard.writeText(location.href).then(() => {
           handleCopy();
           }, () => console.log('failed to copy'));
         }}>
-          {(isCopied) ? 'Link copied!' : 'Copy link'}
+          {(isCopied) ? 'Скопирована!' : 'Скопировать ссылку'}
           </button>
       </div>
       <div className={styles.box}>
-        <h3 className={styles.h3}>Category</h3>
-        <fieldset className={styles.items}>
+        <h3 className={styles.h3}>Категория</h3>
+        <fieldset className={styles.items_category}>
           {filters.categories.map((category, i) =>
-          <div key={i} className={`${(calcAmount(itemsToRender, 'category', category)) ? styles.item : styles.itemOpacity}`} >
-            <label htmlFor={'1'+i.toString()} className={styles.label}>
-            <input type='checkbox' id={'1'+i.toString()} className={styles.checkbox}
-              onChange={() => handleClick('categories', category)}
-              checked={isChecked('categories', category)}
-            />
-            {category}</label>
-            <span>({calcAmount(itemsToRender, 'category', category)})</span>/
-            <span>({calcAmount(items, 'category', category)})</span>
+            <div key={i} className={`${(calcAmount(itemsToRender, 'category', category)) ? styles.item : styles.itemOpacity}`} >
+            {/* <label htmlFor={'1'+i.toString()} className={styles.label}>
+              <input type='checkbox' id={'1'+i.toString()} className={styles.checkbox}
+                onChange={() => handleClick('categories', category)}
+                checked={isChecked('categories', category)}
+              /> */}
+            {/* {category}</label> */}
+              <Checkbox color="green" label={category} id={'1'+i.toString()}
+                onChange={() => handleClick('categories', category)}
+                checked={isChecked('categories', category)}
+              />
+              <div>
+                <span>({calcAmount(itemsToRender, 'category', category)})</span>/
+                <span>({calcAmount(items, 'category', category)})</span>
+             </div>
             </div>
           )}
         </fieldset>
       </div>
       <div className={styles.box}>
-        <h3 className={styles.h3}>Brand</h3>
-        <fieldset  className={styles.items}>
+        <h3 className={styles.h3}>Бренд</h3>
+        <fieldset  className={styles.items_brand}>
           {filters.brands.map((brand, i) =>
             <div key={i} className={`${(calcAmount(itemsToRender, 'brand', brand)) ? styles.item : styles.itemOpacity}`}>
-            <label htmlFor={'2'+i.toString()} className={styles.label}>
+            {/* <label htmlFor={'2'+i.toString()} className={styles.label}>
             <input type='checkbox' id={'2'+i.toString()} className={styles.checkbox}
               onChange={() => handleClick('brands', brand)}
               checked = {isChecked('brands', brand)}
             />
-            {brand}</label>
-            <span>({calcAmount(itemsToRender, 'brand', brand)})</span>/
-            <span>({calcAmount(items, 'brand', brand)})</span>
+            {brand}</label> */}
+              <Checkbox color="green" label={brand} id={'2'+i.toString()}
+                  onChange={() => handleClick('brands', brand)}
+                  checked={isChecked('brands', brand)}
+                />
+              <div>
+                <span>({calcAmount(itemsToRender, 'brand', brand)})</span>/
+                <span>({calcAmount(items, 'brand', brand)})</span>
+              </div>
             </div>
           )}
         </fieldset>
       </div>
       <div className={styles.box}>
-        <h3 className={styles.h3}>Price</h3>
-        {itemsToRender.length === 0 && <div  className="text-2xl">not found</div>}
+        <h3 className={styles.h3}>Цена, ₽</h3>
+        {itemsToRender.length === 0 && <div  className={styles.not_found}>не найдено</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <ReactSlider
@@ -127,15 +140,15 @@ export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSlid
 
             />
             {itemsToRender.length > 0 && <div className={styles.sliderText}>
-              <span className={styles.sliderMin}>{`$${price[0]}`}</span>
-              <span className={styles.sliderMax}>{`$${price[1]}`}</span>
+              <span className={styles.sliderMin}>{`${price[0]}₽`}</span>
+              <span className={styles.sliderMax}>{`${price[1]}₽`}</span>
             </div>}
           </div>
         </div>
       </div>
       <div className={styles.box}>
-        <h3 className={styles.h3}>Stock</h3>
-        {itemsToRender.length === 0 && <div className="text-2xl">not found</div>}
+        <h3 className={styles.h3}>На складе, шт.</h3>
+        {itemsToRender.length === 0 && <div className={styles.not_found}>не найдено</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <ReactSlider

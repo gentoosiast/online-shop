@@ -1,9 +1,15 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+
+const withMT = require("@material-tailwind/react/utils/withMT");
+
+module.exports = withMT({
   content: ["./src/**/*.{html,ts,tsx,js,jsx}"],
   safelist: ["sliderTrack-1"],
   theme: {
-    extend: {},
+    extend: {}
+  },
+  fontFamily: {
+    sans: ['Bebas Neue', 'sans-serif'],
   },
   plugins: [],
-};
+});
