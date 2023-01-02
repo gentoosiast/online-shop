@@ -49,6 +49,7 @@ export const PaginatedItems = () => {
 
   const [pageOffset, setPageOffset] = useState(initialPage);
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
+  const [itemsPerPageInput, setItemsPerPageInput] = useState(itemsPerPage.toString());
   if (initialItemsPerPage !== itemsPerPage) {
     setItemsPerPage(initialItemsPerPage);
   }
@@ -73,6 +74,7 @@ export const PaginatedItems = () => {
   const pageCount = Math.ceil(items.length / itemsPerPage);
 
   const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setItemsPerPageInput(e.target.value);
     const newItemsPerPage = parseInt(e.target.value, 10);
     if (!Number.isNaN(newItemsPerPage) && newItemsPerPage > 0) {
       setItemsPerPage(newItemsPerPage);
@@ -102,7 +104,7 @@ export const PaginatedItems = () => {
       <div className='flex items-center gap-2'>
         <label htmlFor="itemsPerPage">Items per page:</label>
         <input type='number' className='form-input' id='itemsPerPage'
-          value={itemsPerPage} onChange={handleItemsPerPageChange}
+          value={itemsPerPageInput} onChange={handleItemsPerPageChange}
         />
       </div>
       <ItemsToShow currentItems={currentItems} itemOffset={itemOffset} />
