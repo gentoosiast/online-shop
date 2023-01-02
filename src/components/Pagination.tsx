@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { cartStore } from '../storage/cart.store';
@@ -28,7 +28,6 @@ const ItemsToShow = ({ currentItems, itemOffset }: IItemsToShowProps) => {
 export const PaginatedItems = () => {
   const items = Array.from(cartStore.items.values())
   const [searchParams, setSearchParams] = useSearchParams();
-
   const limitParam = searchParams.get("limit");
   let initialItemsPerPage = 3;
   if (limitParam) {
@@ -50,7 +49,24 @@ export const PaginatedItems = () => {
 
   const [pageOffset, setPageOffset] = useState(initialPage);
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
+  if (initialItemsPerPage !== itemsPerPage) {
+    setItemsPerPage(initialItemsPerPage);
+  }
+
   const [itemOffset, setItemOffset] = useState(pageOffset * itemsPerPage);
+  if (initialPage !== pageOffset) {
+    setPageOffset(initialPage);
+    setItemOffset(initialPage * itemsPerPage);
+  }
+
+  // last item on the page deleted
+  useEffect(() => {
+    const endPage = Math.ceil(items.length / itemsPerPage);
+    if (pageParam && parseInt(pageParam, 10) > endPage) {
+      searchParams.set("page", (endPage).toString());
+      setSearchParams(searchParams);
+    }
+  });
 
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = items.slice(itemOffset, endOffset);
