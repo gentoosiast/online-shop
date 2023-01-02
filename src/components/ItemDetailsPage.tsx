@@ -54,12 +54,12 @@ export const ItemDetails = observer(() => {
       {item &&
         <>
           <div className="p-5 flex justify-evenly items-center gap-1">
-            <Link to="/"><span>store</span></Link>
-            <span className="breadcrumb">/</span>
-            <span>{item.category}</span>
-            <span className="breadcrumb">/</span>
-            <span>{item.brand}</span>
-            <span className="breadcrumb">/</span>
+            <Link to="/"><span className='breadcrumb'>store</span></Link>
+            <span className="breadcrumb-separator">/</span>
+            <Link to={`/?categories=${item.category}`}><span className='breadcrumb'>{item.category}</span></Link>
+            <span className="breadcrumb-separator">/</span>
+            <Link to={`/?brands=${item.brand}`}><span className='breadcrumb'>{item.brand}</span></Link>
+            <span className="breadcrumb-separator">/</span>
             <span>{item.title}</span>
           </div>
           <div className="border p-5 rounded flex flex-col gap-5 items-center m-auto">

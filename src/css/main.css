@@ -104,6 +104,10 @@
   }
 
   .breadcrumb {
+    @apply hover:underline underline-offset-4 decoration-dashed;
+  }
+
+  .breadcrumb-separator {
     @apply text-gray-400;
   }
 
