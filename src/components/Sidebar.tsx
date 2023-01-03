@@ -62,10 +62,10 @@ export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSlid
   }
 
   return (
-    <div className='w-96'>
-      <div className='w-96 flex flex-col gap-3'>
-        <button className='button button-add' onClick={handleReset}>Сбросить фильтры</button>
-        <button className={ (isCopied) ? 'button button-delete' : 'button button-add'}
+    <div className='w-80 text-base'>
+      <div className='w-80 flex flex-col gap-3'>
+        <button className={styles.buttonReset} onClick={handleReset}>Сбросить фильтры</button>
+        <button className={ (isCopied) ? styles.buttonCopied : styles.buttonCopy}
         onClick={()=>{navigator.clipboard.writeText(location.href).then(() => {
           handleCopy();
           }, () => console.log('failed to copy'));

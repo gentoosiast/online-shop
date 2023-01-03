@@ -9,6 +9,9 @@ import { fetchData } from '../fetchData';
 import { ItemCard } from './ItemCard';
 import { Sidebar } from './Sidebar';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import { Input } from "@material-tailwind/react";
+import Grid4 from "../assets/grid4.svg?component";
+import Grid9 from "../assets/grid9.svg?component";
 import { Select, Option } from "@material-tailwind/react";
 import type { SelectProps } from "@material-tailwind/react";
 
@@ -246,9 +249,9 @@ export const FilterPage = () => {
               <Option value="discount-DESC">Sort by discount (descending)</Option>
           </Select> */}
           </div>
-          <div>Found: {itemsToRender.length} item(s)</div>
+          <div>Найдено: {itemsToRender.length} шт.</div>
           <Form id="search-form" role="search" autoComplete="off">
-            <input id="q" className="form-input" name="q" type='search' placeholder="I'm looking for..."
+            <Input id="q" className="form-input" name="q" type='search' label="Я ищу..." color='green'
               value={searchQuery} aria-label="Search items"
               onChange={(event) => {
                 event.preventDefault();
@@ -269,9 +272,10 @@ export const FilterPage = () => {
                 setCardSize("Small");
               }
             }>
-              <svg className={`feather list-icon border-2 ${cardSize === "Small" ? 'border-slate-700': 'border-transparent'}`}>
+              {/* <svg className={`feather list-icon border-2 ${cardSize === "Small" ? 'border-slate-700': 'border-transparent'}`}>
                 <use href={`${featherSprite}#list`} />
-              </svg>
+              </svg> */}
+              <Grid9 className={`${cardSize === "Small" ? 'fill-green-500': ''}`}/>
             </button>
             <button
               onClick={() => {
@@ -280,9 +284,10 @@ export const FilterPage = () => {
                 setCardSize("Large");
               }
             }>
-              <svg className={`feather grid-icon border-2 ${cardSize === "Large" ? 'border-slate-700' : 'border-transparent'}`}>
+              {/* <svg className={`feather grid-icon border-2 ${cardSize === "Large" ? 'border-slate-700' : 'border-transparent'}`}>
                 <use href={`${featherSprite}#grid`} />
-              </svg>
+              </svg> */}
+              <Grid4 className={`${cardSize === "Large" ? 'fill-green-500': ''}`}/>
             </button>
           </div>
         </div>

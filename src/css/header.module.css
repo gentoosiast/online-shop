@@ -19,24 +19,38 @@
 }
 
 .logo {
-  @apply w-14
+  position:relative;
+  width: 45px;
+  height: 40px;
+}
+.logo img {
+  position:absolute;
+  left: 0;
+  top: 0;
+}
+
+.logo1 {
+  opacity:0;
+}
+.logo:hover .logo1 {
+  opacity:1;
+}
+
+.logo:hover .logo2, .logo .logo2:hover {
+  opacity:0;
 }
 
 .title {
-  @apply font-bold text-xl text-green-500
+  @apply font-bold text-xl text-orange-800 pl-5
 }
 
 .cart_items {
-  @apply bg-red-600 w-6 h-6 rounded-full relative bottom-1 right-3 text-center text-white
+  @apply bg-orange-800 w-6 h-6 rounded-full relative bottom-1 right-3 text-center text-white
 }
 
 .cart_price {
   @apply w-2
 }
 .cart_icon {
-  @apply h-8
-}
-
-.cart_icon:hover {
-  filter: invert(54%) sepia(97%) saturate(1361%) hue-rotate(144deg) brightness(93%) contrast(101%);
+  @apply h-8 hover:fill-orange-800 transition duration-300
 }

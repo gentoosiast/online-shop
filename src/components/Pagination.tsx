@@ -6,6 +6,8 @@ import { CartItem} from '../types/cart';
 import { ItemCardCart } from './ItemCardCart';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
 import styles from '../css/cart.module.css';
+import { Input } from "@material-tailwind/react";
+
 
 const nextLabelNode = (<svg className="feather next-page"><use href={`${featherSprite}#chevron-right`} /></svg>);
 const prevLabelNode = (<svg className="feather prev-page"><use href={`${featherSprite}#chevron-left`} /></svg>);
@@ -20,7 +22,8 @@ const ItemsToShow = ({ currentItems, itemOffset }: IItemsToShowProps) => {
     <>
       {Boolean(currentItems) &&
         currentItems.map((el, i) =>
-        <ItemCardCart key={el.item.id} number={i+1+itemOffset} item={el.item} amount={el.quantity}></ItemCardCart>
+        <ItemCardCart key={el.item.id} number={i+1+itemOffset} item={el.item} amount={el.quantity}
+        ></ItemCardCart>
         )}
     </>
   )}
@@ -83,11 +86,21 @@ export const PaginatedItems = () => {
 
   return (
     <>
-      <div className='flex items-center gap-2'>
-        <label htmlFor="itemsPerPage">Items per page:</label>
-        <input type='number' className='form-input' id='itemsPerPage'
-          value={itemsPerPage} onChange={handleItemsPerPageChange}
-        />
+      <div>
+        <div className='w-20 pb-4'>
+          {/* <label htmlFor="itemsPerPage">Товаров на странице:</label> */}
+          <Input type='number' className='form-input' id='itemsPerPage'
+          label="Товаров на странице:" color='green'
+            value={itemsPerPage} onChange={handleItemsPerPageChange}
+          />
+        </div>
+        <div className="flex px-8 p-3 border-b border-green-500">
+          <p className='font-bold w-10'>№</p>
+          <p className='font-bold w-96'>Товар</p>
+          <p className='font-bold w-16'></p>
+          <p className='font-bold w-40'>Количество</p>
+          <p className='font-bold '>Цена</p>
+        </div>
       </div>
       <ItemsToShow currentItems={currentItems} itemOffset={itemOffset} />
       <ReactPaginate

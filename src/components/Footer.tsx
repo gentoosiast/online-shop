@@ -2,7 +2,7 @@ import React from 'react';
 import githubLogo from '../assets/github-light-bg.svg';
 import rsLogo from '../assets/rslogo-light-bg.svg';
 import styles from '../css/header.module.css';
-import logoImg from '../assets/logo.png';
+import logoImg from '../assets/cat_icon.png';
 import email from '../assets/message.png';
 import phone from '../assets/calling.png';
 
@@ -11,8 +11,9 @@ export const Footer = () => {
     <footer>
       <div className='footer2 flex justify-between items-center bg-green-50 py-2 border-t border-b'>
         <div className='flex items-center'>
+          <div className={styles.logo}></div>
           <img src={logoImg} alt="Online Shop Logo" className={styles.logo} />
-          <h2 className='text-green-600'>Shop name</h2>
+          <h2 className='text-green-600'>RedCat</h2>
         </div>
         <div  className={styles.link_shop}>
           <img src={email} alt="email" className='' />

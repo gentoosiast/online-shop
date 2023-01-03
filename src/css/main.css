@@ -1,16 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    font-family: Bebas Neue, sans-serif;
-  }
-}
 
 @layer components {
   #root {
-    @apply m-auto max-w-screen-2xl text-base;
+    @apply m-auto text-base px-20 font-ubuntu;
   }
 
   .backdrop {
@@ -94,7 +90,7 @@
   }
 
   .button {
-    @apply px-4 py-2 w-48 border rounded transition-colors duration-300 text-center;
+    @apply px-4 py-2 w-48 border rounded-md transition-colors duration-300 text-center;
   }
 
   .button-add {
@@ -102,7 +98,7 @@
   }
 
   .button-delete {
-    @apply bg-red-600 text-gray-50 border-red-700 hover:bg-red-500 hover:border-red-700;
+    @apply bg-orange-800 text-gray-50 border-orange-800 hover:bg-orange-500 hover:border-orange-700;
   }
 
   .button-buy {

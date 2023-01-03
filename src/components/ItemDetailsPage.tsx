@@ -92,7 +92,7 @@ export const ItemDetails = observer(() => {
                       value={Math.round(item.rating * 10) / 10}
                       size={24}
                       color1 = {'#cfd8dc'}
-                      color2={'#ffb300'}
+                      color2={'#f57c00'}
                       // onChange={ratingChanged}
                       />
                     <span className="text-lg">Рейтинг:</span>

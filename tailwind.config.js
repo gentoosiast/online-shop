@@ -6,10 +6,11 @@ module.exports = withMT({
   content: ["./src/**/*.{html,ts,tsx,js,jsx}"],
   safelist: ["sliderTrack-1"],
   theme: {
-    extend: {}
-  },
-  fontFamily: {
-    sans: ['Bebas Neue', 'sans-serif'],
+    extend: {
+      fontFamily: {
+        'ubuntu': 'Ubuntu'
+      },
+    }
   },
   plugins: [],
 });

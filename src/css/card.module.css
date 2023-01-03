@@ -1,0 +1,40 @@
+.cardRemove {
+  width: 32px;
+  filter: invert(24%) sepia(74%) saturate(2272%) hue-rotate(346deg) brightness(89%) contrast(89%);
+}
+
+.cardAdd {
+  width: 32px;
+  filter: invert(33%) sepia(95%) saturate(365%) hue-rotate(74deg) brightness(98%) contrast(86%);
+}
+
+.info {
+  width: 20px;
+}
+
+.info:hover {
+  filter: invert(33%) sepia(95%) saturate(365%) hue-rotate(74deg) brightness(98%) contrast(86%);
+}
+
+.buttonsBox {
+  @apply w-40 flex pt-2 items-center justify-between
+}
+
+.buttonsBoxLarge {
+  @apply w-60 flex px-2 pt-2 items-center justify-between
+}
+
+.mainImg {
+  @apply h-48 w-40 flex
+}
+
+.mainImgLarge {
+  @apply h-80 w-64 flex
+}
+
+.title {
+  @apply text-sm h-12
+}
+.titleLarge {
+  @apply text-base
+}

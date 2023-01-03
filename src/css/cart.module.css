@@ -39,9 +39,17 @@
 }
 
 .totalPrice {
-  @apply font-bold
+  @apply font-bold flex justify-between
 }
 
 .totalPriceCrossed {
-  @apply font-bold line-through
+  @apply font-bold line-through flex justify-between
+}
+
+.delete_logo {
+  @apply hover:fill-red-600 transition duration-300
+}
+
+.cat {
+  @apply m-auto p-20
 }
