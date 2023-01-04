@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
-import { IItem } from "../types/IItem";
+import { IItem } from "../types/items";
 import { ItemCardSize } from '../types/ItemCardSize';
 import { Image } from './Image';
 import catPlaceholder from '../assets/cat-placeholder.svg';

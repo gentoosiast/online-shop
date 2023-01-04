@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "react-router-dom";
-import { IItem } from "../types/IItem"
+import { IItem } from "../types/items"
 import { cartStore } from "../storage/cart.store"
 import { observer } from 'mobx-react-lite';
 import { Image } from './Image';
