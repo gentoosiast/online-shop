@@ -69,6 +69,7 @@
     "react-paginate": "^8.1.4",
     "react-router": "^6.5.0",
     "react-router-dom": "^6.6.1",
-    "react-slider": "^2.0.4"
+    "react-slider": "^2.0.4",
+    "use-debounce": "^9.0.2"
   }
 }

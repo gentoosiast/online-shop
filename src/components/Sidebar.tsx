@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactSlider from 'react-slider';
+import { useDebouncedCallback } from 'use-debounce';
 import { IFilters, ICheckboxFilters, ISliderFilters } from '../types/filters';
 import { IItem } from '../types/IItem';
 import '../css/main.css';
@@ -29,6 +30,12 @@ export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSlid
   const handleClick = (filterType: keyof ICheckboxFilters, value: string) => {
     onCheck(filterType, value);
   }
+
+  const debounceSlider = useDebouncedCallback(
+    (sliderType: keyof ISliderFilters, sliderValue: number[]) => {
+      onSliderChange(sliderType, sliderValue);
+    }, 800
+  );
 
   useEffect(() => {
     if (itemsToRender.length > 0) {
@@ -121,8 +128,8 @@ export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSlid
               value={price}
               minDistance={0}
               onChange={(value: number[]) => {
-                onSliderChange('price', value)
                 setPrice(value);
+                debounceSlider('price', value);
               }}
 
             />
@@ -148,8 +155,8 @@ export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSlid
               value={stock}
               minDistance={0}
               onChange={(value: number[]) => {
-                onSliderChange('stock', value)
                 setStock(value);
+                debounceSlider('stock', value);
               }}
             />
             {itemsToRender.length > 0 && <div className={styles.sliderText}>
