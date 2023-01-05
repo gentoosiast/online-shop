@@ -23,7 +23,14 @@
   width: 45px;
   height: 40px;
 }
-.logo img {
+
+.logo_footer {
+  position:relative;
+  width: 30px;
+  height: 25px;
+}
+
+.logo img, .logo_footer img {
   position:absolute;
   left: 0;
   top: 0;
@@ -32,16 +39,16 @@
 .logo1 {
   opacity:0;
 }
-.logo:hover .logo1 {
+.logo:hover .logo1, .logo_footer:hover .logo1 {
   opacity:1;
 }
 
-.logo:hover .logo2, .logo .logo2:hover {
+.logo:hover .logo2, .logo .logo2:hover, .logo_footer:hover .logo2, .logo_footer .logo2:hover {
   opacity:0;
 }
 
 .title {
-  @apply font-bold text-xl text-orange-800 pl-5
+  @apply font-bold text-xl text-orange-800 pl-3 hover:text-orange-600 transition duration-300
 }
 
 .cart_items {
@@ -49,8 +56,32 @@
 }
 
 .cart_price {
-  @apply w-2
+  @apply w-2 hover:text-gray-500 transition duration-300
 }
 .cart_icon {
-  @apply h-8 hover:fill-orange-800 transition duration-300
+  @apply h-8 hover:fill-gray-500 transition duration-300
 }
+
+.media {
+  @apply flex justify-between items-center border border-green-200 p-2 rounded-md w-8 h-8 cursor-pointer hover:scale-105 transition duration-300
+}
+
+.link_shop_footer {
+  @apply flex items-center cursor-pointer w-1/4 mr-8 gap-3 hover:text-gray-700 transition duration-300
+}
+.link_shop_footer1 {
+  @apply flex items-center cursor-pointer w-1/5 mr-8 gap-3 hover:text-gray-700 transition duration-300
+}
+
+.footer3 {
+  @apply text-gray-700 text-xs
+}
+
+.footerNowhere {
+  @apply hover:text-gray-700 cursor-pointer transition duration-300
+}
+
+.rs {
+  @apply w-16 hover:scale-105 transition duration-300
+}
+

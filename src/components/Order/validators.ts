@@ -7,35 +7,35 @@ const checkWordsLength = (value: string, numWords: number, wordLength: number) =
 export const validators = {
   fullName: (value: string) => {
     if (!checkWordsLength(value, 2, 3)) {
-      return 'Full Name should consist of at least two words, three characters each';
+      return 'Должно быть введено не менее 2х слов, каждое длиной более 3х символов';
     }
     return null;
   },
 
   phone: (value: string) => {
     if (!/^\+\d{9,}$/.test(value)) {
-      return 'Phone number should start with "+" and consist of 9 digits or more';
+      return 'Номер телефона должен начинаться с "+" и содержать не менее 9 цифр';
     }
     return null;
   },
 
   address: (value: string) => {
     if (!checkWordsLength(value, 3, 5)) {
-      return 'Address should consist of at least three words, five characters each';
+      return 'Должно быть введено не менее 3х слов, каждое длиной не менее 5 символов';
     }
     return null;
   },
 
   email: (value: string) => {
     if (!/[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      return "Email should be valid email address";
+      return "Должен быть введен действительный email";
     }
     return null;
   },
 
   cardNumber: (value: string) => {
     if (!/^\d{16}$/.test(value)) {
-      return 'Credit card number should consist of 16 digits';
+      return 'Номер кредитной карты должен состоять из 16 цифр';
     }
     return null;
   },
@@ -43,7 +43,7 @@ export const validators = {
   cardExpiration: (value: string) => {
 
     if (!(value.length === 4 && /^(0[1-9]|1[0-2])\d{2}$/.test(value))) {
-      return 'Credit card expiration date should consist of 4 digits; month should be between 01-12';
+      return 'Дата истечения срока действия карты должна состоять из 4 цифр; месяца должны быть введены в формате 01 - 12';
     }
 
     const month = parseInt(value.slice(0, 2), 10) - 1; // the month used by Date() is 0-indexed
@@ -54,7 +54,7 @@ export const validators = {
     const currentDate = new Date();
 
     if (currentDate > cardDate) {
-      return 'Your credit card is already past its expiration date';
+      return 'Ваша кредитная карта имеет истекший срок действия';
     }
 
     return null;
@@ -62,7 +62,7 @@ export const validators = {
 
   cardCVV: (value: string) => {
     if (!/^\d{3}$/.test(value)) {
-      return 'CVV should consist of 3 digits';
+      return 'CVV должен состоять из 3 цифр';
     }
     return null;
   }

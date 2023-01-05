@@ -8,7 +8,7 @@ import { IFilters, ISliderFilters } from '../types/filters';
 import { fetchData } from '../fetchData';
 import { ItemCard } from './ItemCard';
 import { Sidebar } from './Sidebar';
-import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+// import featherSprite from 'feather-icons/dist/feather-sprite.svg';
 import { Input } from "@material-tailwind/react";
 import Grid4 from "../assets/grid4.svg?component";
 import Grid9 from "../assets/grid9.svg?component";
@@ -214,10 +214,10 @@ export const FilterPage = () => {
         stockLimits={isUserFiltered.stock ? calcFilters.stock : []}
         customFilters={calcFilters}
       />
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-center items-center gap-10">
+      <div className='filterPage'>
+        <div className="filterBar">
           <div>
-            <select name="sort" value={sortOption} onChange={(event) => {
+            <select name="sort"  className='selectInput' value={sortOption} onChange={(event) => {
               if (isSortOption(event.target.value)) {
                 setSortOption(event.target.value);
                 searchParams.set('sort', event.target.value);
@@ -272,9 +272,6 @@ export const FilterPage = () => {
                 setCardSize("Small");
               }
             }>
-              {/* <svg className={`feather list-icon border-2 ${cardSize === "Small" ? 'border-slate-700': 'border-transparent'}`}>
-                <use href={`${featherSprite}#list`} />
-              </svg> */}
               <Grid9 className={`${cardSize === "Small" ? 'fill-green-500': ''}`}/>
             </button>
             <button
@@ -284,16 +281,13 @@ export const FilterPage = () => {
                 setCardSize("Large");
               }
             }>
-              {/* <svg className={`feather grid-icon border-2 ${cardSize === "Large" ? 'border-slate-700' : 'border-transparent'}`}>
-                <use href={`${featherSprite}#grid`} />
-              </svg> */}
               <Grid4 className={`${cardSize === "Large" ? 'fill-green-500': ''}`}/>
             </button>
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-5">
           {itemsToRender.length > 0 && itemsToRender.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
-          {itemsToRender.length === 0 && <div className="text-5xl">No products found</div>}
+          {itemsToRender.length === 0 && <div className="text-xl py-10">По Вашему запросу ничего не найдено.</div>}
         </div>
       </div>
     </div>

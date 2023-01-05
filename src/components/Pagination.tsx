@@ -97,8 +97,8 @@ export const PaginatedItems = () => {
         <div className="flex px-8 p-3 border-b border-green-500">
           <p className='font-bold w-10'>№</p>
           <p className='font-bold w-96'>Товар</p>
-          <p className='font-bold w-16'></p>
-          <p className='font-bold w-40'>Количество</p>
+          <p className='font-bold w-24'></p>
+          <p className='font-bold w-44'>Количество</p>
           <p className='font-bold '>Цена</p>
         </div>
       </div>

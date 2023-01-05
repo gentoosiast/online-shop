@@ -5,7 +5,8 @@ import { IItem } from '../types/IItem';
 import '../css/main.css';
 import styles from '../css/sidebar.module.css';
 import { Checkbox } from "@material-tailwind/react";
-
+import saleImg from '../assets/sale.png';
+import superSaleImg from '../assets/super_sale.png';
 interface ISidebarProps {
   items: IItem[]
   onCheck: (type: keyof ICheckboxFilters, el: string) => void;
@@ -171,6 +172,11 @@ export const Sidebar = ({items, onCheck, filters, itemsToRender, onReset, onSlid
             </div>}
           </div>
       </div>
+      </div>
+      <div className={styles.box}>
+        <img src={superSaleImg} alt="saleAdd" className='relative top-28 left-4'/>
+        <p className={styles.sale}>скидки до 30%</p>
+        <img src={saleImg} alt="saleAdd" className='rounded-md'/>
       </div>
     </div>
   )

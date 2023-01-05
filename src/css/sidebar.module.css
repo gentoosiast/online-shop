@@ -86,3 +86,7 @@
 .buttonCopy {
   @apply underline underline-offset-4 text-green-600 hover:text-green-900
 }
+
+.sale {
+  @apply relative top-32 text-white  pl-16 text-2xl
+}

@@ -8,12 +8,16 @@
   filter: invert(33%) sepia(95%) saturate(365%) hue-rotate(74deg) brightness(98%) contrast(86%);
 }
 
+.cardAdd:hover, .cardRemove:hover {
+  filter: invert(48%) sepia(15%) saturate(0%) hue-rotate(207deg) brightness(92%) contrast(104%);
+}
+
 .info {
   width: 20px;
 }
 
 .info:hover {
-  filter: invert(33%) sepia(95%) saturate(365%) hue-rotate(74deg) brightness(98%) contrast(86%);
+  filter: invert(48%) sepia(15%) saturate(0%) hue-rotate(207deg) brightness(92%) contrast(104%);
 }
 
 .buttonsBox {

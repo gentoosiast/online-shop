@@ -86,7 +86,7 @@ export const Cart = observer(() => {
           </div>
           {(cartStore.totalPrice !== cartStore.finalPrice) &&
           <div className=''>
-            <p className="font-bold">Примененные промокоды: </p>
+            <p className="font-bold pb-4">Примененные промокоды: </p>
             <div className="flex flex-col gap-3">
               { Array.from(cartStore.promos).map((promo) =>
                 <div key={promo} className="flex justify-between items-center text-green-500">

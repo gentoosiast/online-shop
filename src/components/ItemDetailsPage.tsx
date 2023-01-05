@@ -115,7 +115,7 @@ export const ItemDetails = observer(() => {
                   <span className="text-gray-500">В наличии: </span>
                   <span>{item.stock} шт.</span>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 pt-4">
                   <button
                     className={`button ${cartStore.isInCart(item.id) ? 'button-delete' : 'button-add'}`}
                     onClick={() => {

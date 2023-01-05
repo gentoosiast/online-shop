@@ -3,11 +3,11 @@
 }
 
 .Pagination__active {
-  @apply px-3 border text-red-600 font-bold cursor-auto
+  @apply px-3  text-white bg-green-500 border text-white font-bold cursor-auto
 }
 
 .Pagination__page {
-  @apply px-3 font-bold
+  @apply px-3 font-bold border rounded-sm border-gray-500 drop-shadow
 }
 
 .Pagination__next, .Pagination__prev {
@@ -47,7 +47,7 @@
 }
 
 .delete_logo {
-  @apply hover:fill-red-600 transition duration-300
+  @apply hover:fill-gray-500 transition duration-300
 }
 
 .cat {
