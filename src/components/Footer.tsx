@@ -16,8 +16,8 @@ import cards from '../assets/all_cards.png';
 export const Footer = () => {
   return (
     <footer className='pt-12'>
-      <div className='footer1 flex justify-between p-4'>
-        <div className='col1 w-1/5 shrink-0'>
+      <div className='footer1 flex justify-between p-4 mobile-1:flex-col laptop:flex-row'>
+        <div className='col1 mobile-1:w-full laptop:w-1/5 shrink-0'>
           <p className='font-bold'>Категории</p>
           <p className={styles.footerNowhere}>Кружки</p>
           <p className={styles.footerNowhere}>Бумажная продукция</p>
@@ -26,7 +26,7 @@ export const Footer = () => {
           <p className={styles.footerNowhere}>Одежда</p>
           <p className={styles.footerNowhere}>Книги</p>
         </div>
-        <div className='col2 w-1/4 shrink-0'>
+        <div className='col2 mobile-1:w-full laptop:w-1/4 shrink-0'>
           <p className='font-bold'>Покупателям</p>
           <p className={styles.footerNowhere}>Как сделать заказ</p>
           <p className={styles.footerNowhere}>Способы оплаты</p>
@@ -35,7 +35,7 @@ export const Footer = () => {
           <p className={styles.footerNowhere}>Вопросы и ответы</p>
           <p className={styles.footerNowhere}>Специальные предложения</p>
         </div>
-        <div className='col3 w-1/4 shrink-0'>
+        <div className='col3 mobile-1:w-full laptop:w-1/4 shrink-0'>
           <p className='font-bold'>Разное</p>
           <p className={styles.footerNowhere}>Поставщикам</p>
           <p className={styles.footerNowhere}>Трудоустройство</p>
@@ -43,7 +43,7 @@ export const Footer = () => {
           <p className={styles.footerNowhere}>Статьи</p>
           <p className={styles.footerNowhere}>Контакты</p>
         </div>
-        <div className='col4 w-1/5 shrink-0'>
+        <div className='col4 mobile-1:w-fit laptop:w-1/5 shrink-0'>
           <p className='font-bold pb-2'>Мы в соцсетях</p>
           <div className='flex justify-between'>
             <div className={styles.media}><img src={fb} alt="fb" className='m-auto'/></div>
@@ -56,8 +56,8 @@ export const Footer = () => {
           <div className=''><img src={cards} alt="cards" className=''/></div>
         </div>
       </div>
-      <div className='footer2 flex justify-between items-center bg-green-50 p-4 border-t border-b'>
-        <div className='flex items-center w-1/5'>
+      <div className='footer2 flex justify-between items-center bg-green-50 p-4 border-t border-b mobile-1:flex-col laptop:flex-row'>
+        <div className='flex items-center mobile-1:w-full laptop:w-1/5'>
           <div className={styles.logo_footer}>
             <img src={CatIcon1} alt="Online Shop Logo" className={styles.logo1}/>
             <img src={CatIcon2} alt="Online Shop Logo" className={styles.logo2}/>
@@ -77,7 +77,7 @@ export const Footer = () => {
           <h2 className=''>+375 (17) 209-90-62</h2>
         </div>
       </div>
-      <div className='footer3 flex items-center justify-between p-4'>
+      <div className='footer3 flex items-center justify-between p-4 mobile-1:flex-col laptop:flex-row'>
         {/* <div className='flex gap-5'> */}
           <a href = 'https://github.com/gentoosiast' target = "_blank" className='w-1/5 text-gray-700 text-sm hover:text-black'>
             @gentoosiast

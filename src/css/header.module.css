@@ -67,10 +67,10 @@
 }
 
 .link_shop_footer {
-  @apply flex items-center cursor-pointer w-1/4 mr-8 gap-3 hover:text-gray-700 transition duration-300
+  @apply flex items-center cursor-pointer mobile-1:w-full laptop:w-1/4 mr-8 gap-3 hover:text-gray-700 transition duration-300
 }
 .link_shop_footer1 {
-  @apply flex items-center cursor-pointer w-1/5 mr-8 gap-3 hover:text-gray-700 transition duration-300
+  @apply flex items-center cursor-pointer mobile-1:w-full laptop:w-1/5 mr-8 gap-3 hover:text-gray-700 transition duration-300
 }
 
 .footer3 {
@@ -78,7 +78,7 @@
 }
 
 .footerNowhere {
-  @apply hover:text-gray-700 cursor-pointer transition duration-300
+  @apply hover:text-gray-700 cursor-pointer transition duration-300 mobile-1:hidden laptop:block
 }
 
 .rs {

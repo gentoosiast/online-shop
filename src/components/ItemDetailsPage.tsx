@@ -50,7 +50,7 @@ export const ItemDetails = observer(() => {
 
   const [mainImgIdx, setMainImgIdx] = useState(0);
   return (
-    <div className="p-5 flex flex-col m-auto">
+    <div className="p-5 flex flex-col m-auto ">
       {item &&
         <>
           <div className="p-5 flex justify-start gap-1">
@@ -63,9 +63,9 @@ export const ItemDetails = observer(() => {
             <span>{item.title}</span>
           </div>
           <div className="p-5 flex flex-col gap-5 items-center m-auto">
-            <div className="flex flex-row gap-5">
-              <div className="photos flex gap-2 items-center flex-none shrink-0">
-                <div className="all-pics flex flex-col gap-1">
+            <div className="flex mobile-1: flex-col laptop:flex-row gap-5">
+              <div className="photos flex gap-2 items-center flex-none shrink-0 mobile-1:flex-col tablet:flex-row">
+                <div className="all-pics flex mobile-1:flex-row tablet:flex-col gap-1 ">
                   {
                     // TODO: images from different URLs can be duplicates
                     item.images.map((img, i) =>
@@ -115,7 +115,7 @@ export const ItemDetails = observer(() => {
                   <span className="text-gray-500">В наличии: </span>
                   <span>{item.stock} шт.</span>
                 </div>
-                <div className="flex gap-2 pt-4">
+                <div className="buttons flex gap-2 pt-4 mobile-1:flex-col tablet:flex-row">
                   <button
                     className={`button ${cartStore.isInCart(item.id) ? 'button-delete' : 'button-add'}`}
                     onClick={() => {
