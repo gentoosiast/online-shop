@@ -16,7 +16,7 @@ import cards from '../assets/all_cards.png';
 export const Footer = () => {
   return (
     <footer className='pt-12'>
-      <div className='footer1 flex justify-between p-4 mobile-1:flex-col laptop:flex-row'>
+      <div className='footer1 mobile-1:hidden laptop:flex justify-between p-4  laptop:flex-row'>
         <div className='col1 mobile-1:w-full laptop:w-1/5 shrink-0'>
           <p className='font-bold'>Категории</p>
           <p className={styles.footerNowhere}>Кружки</p>
@@ -56,7 +56,7 @@ export const Footer = () => {
           <div className=''><img src={cards} alt="cards" className=''/></div>
         </div>
       </div>
-      <div className='footer2 flex justify-between items-center bg-green-50 p-4 border-t border-b mobile-1:flex-col laptop:flex-row'>
+      <div className='footer2 mobile-1:hidden laptop:flex justify-between items-center bg-green-50 p-4 border-t border-b flex-row'>
         <div className='flex items-center mobile-1:w-full laptop:w-1/5'>
           <div className={styles.logo_footer}>
             <img src={CatIcon1} alt="Online Shop Logo" className={styles.logo1}/>
@@ -77,7 +77,7 @@ export const Footer = () => {
           <h2 className=''>+375 (17) 209-90-62</h2>
         </div>
       </div>
-      <div className='footer3 flex items-center justify-between p-4 mobile-1:flex-col laptop:flex-row'>
+      <div className='footer3 mobile-1:hidden tablet:flex items-center justify-between p-4 flex-row'>
         {/* <div className='flex gap-5'> */}
           <a href = 'https://github.com/gentoosiast' target = "_blank" className='w-1/5 text-gray-700 text-sm hover:text-black'>
             @gentoosiast

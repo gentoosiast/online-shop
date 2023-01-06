@@ -6,7 +6,7 @@
 
 @layer components {
   #root {
-    @apply m-auto text-base  font-ubuntu mobile-1:px-10 laptop:px-20
+    @apply m-auto text-base  font-ubuntu mobile-1:px-0 tablet-big:px-20
   }
 
   .backdrop {

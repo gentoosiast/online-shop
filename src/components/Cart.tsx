@@ -59,7 +59,7 @@ export const Cart = observer(() => {
   return (
     <div>
       {(cartStore.totalItems > 0) &&
-      <div className="py-5 flex flex-row flex-nowrap items-start gap-12">
+      <div className="py-5 flex flex-col desktop:flex-row laptop:flex-nowrap items-start gap-12">
         <div className="flex flex-col">
           <div className="flex font-bold h-18 pb-6 justify-between items-center">
             <p className="text-xl">Корзина</p>
