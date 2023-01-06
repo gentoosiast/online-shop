@@ -12,8 +12,8 @@ import { Sidebar } from './Sidebar';
 import { Input } from "@material-tailwind/react";
 import Grid4 from "../assets/grid4.svg?component";
 import Grid9 from "../assets/grid9.svg?component";
-import { Select, Option } from "@material-tailwind/react";
-import type { SelectProps } from "@material-tailwind/react";
+// import { Select, Option } from "@material-tailwind/react";
+// import type { SelectProps } from "@material-tailwind/react";
 
 type SortFn = (itemA: IItem, itemB: IItem) => number;
 interface ISortFnObj {
