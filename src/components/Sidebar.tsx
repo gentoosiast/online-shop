@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import ReactSlider from 'react-slider';
+import Slider from 'rc-slider';``
+import 'rc-slider/assets/index.css';
 import { useDebouncedCallback } from 'use-debounce';
-import { SliderValue } from '../types/SliderValue';
+import { SliderValue, isSliderValue } from '../types/SliderValue';
 import { IFilters, ICheckboxFilters, ISliderFilters } from '../types/filters';
 import { InitialItemsStats, FilteredItemsStats } from '../types/items';
 import '../css/main.css';
@@ -20,12 +21,12 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
   const [stock, setStock] = useState<SliderValue>(filteredItemsStats.stock);
 
   useEffect(() => {
-    setPrice(filters.price ?? filteredItemsStats.price);
-  }, [filters.price, filteredItemsStats.price]);
+    setPrice(filteredItemsStats.price);
+  }, [filteredItemsStats.price]);
 
   useEffect(() => {
-    setStock(filters.stock ?? filteredItemsStats.stock);
-  }, [filters.stock, filteredItemsStats.stock]);
+    setStock(filteredItemsStats.stock);
+  }, [filteredItemsStats.stock]);
 
   const isChecked = (filterType: keyof Pick<InitialItemsStats, "brands" | "categories">, value: string) => {
     return filters[filterType].includes(value);
@@ -40,6 +41,17 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
       onFilterChange(sliderType, sliderValue);
     }, 800
   );
+
+  const handleSliderChange = (filterType: keyof ISliderFilters, value: number | number[]) => {
+    if (isSliderValue(value)) {
+      if (filterType === 'price') {
+        setPrice(value);
+      } else {
+        setStock(value);
+      }
+      debounceSlider(filterType, value);
+    }
+  }
 
   const handleReset = () => {
     onReset();
@@ -105,7 +117,22 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
         {filteredItemsStats.total === 0 && <div  className="text-2xl">not found</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
-            <ReactSlider
+            <Slider
+              range
+              min={initialItemsStats.price[0]}
+              max={initialItemsStats.price[1]}
+              value={price}
+              marks={initialItemsStats.priceValues}
+              dots={true}
+              included={false}
+              allowCross={false}
+              step={null}
+              onChange={(value: number[] | number) => {
+                handleSliderChange('price', value);
+              }}
+            />
+
+            {/* <ReactSlider
               className={styles.slider}
               trackClassName="sliderTrack"
               thumbClassName={styles.sliderThumb}
@@ -119,7 +146,7 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
                 debounceSlider('price', value);
               }}
 
-            />
+            /> */}
             {filteredItemsStats.total > 0 && <div className={styles.sliderText}>
               <span className={styles.sliderMin}>{`$${price[0]}`}</span>
               <span className={styles.sliderMax}>{`$${price[1]}`}</span>
@@ -132,7 +159,21 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
         {filteredItemsStats.total === 0 && <div className="text-2xl">not found</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
-            <ReactSlider
+            <Slider
+              range
+              min={initialItemsStats.stock[0]}
+              max={initialItemsStats.stock[1]}
+              value={stock}
+              marks={initialItemsStats.stockValues}
+              dots={true}
+              included={false}
+              allowCross={false}
+              step={null}
+              onChange={(value: number[] | number) => {
+                handleSliderChange('stock', value);
+              }}
+            />
+            {/* <ReactSlider
               className={styles.slider}
               trackClassName="sliderTrack"
               thumbClassName={styles.sliderThumb}
@@ -145,7 +186,8 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
                 setStock(value);
                 debounceSlider('stock', value);
               }}
-            />
+
+            /> */}
             {filteredItemsStats.total > 0 && <div className={styles.sliderText}>
               <span className={styles.sliderMin}>{`${stock[0]}`}</span>
               <span className={styles.sliderMax}>{`${stock[1]}`}</span>

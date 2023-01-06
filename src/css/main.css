@@ -126,4 +126,8 @@
   .button-details {
     @apply text-gray-50 bg-zinc-500 hover:bg-zinc-400 border-zinc-600 hover:border-zinc-500;
   }
+
+  .rc-slider-track {
+    @apply bg-pink-800 absolute h-1;
+  }
 }

@@ -66,10 +66,10 @@
     "feather-icons": "^4.29.0",
     "mobx": "^6.7.0",
     "mobx-react-lite": "^3.4.0",
+    "rc-slider": "^10.1.0",
     "react-paginate": "^8.1.4",
     "react-router": "^6.5.0",
     "react-router-dom": "^6.6.1",
-    "react-slider": "^2.0.4",
     "use-debounce": "^9.0.2"
   }
 }
