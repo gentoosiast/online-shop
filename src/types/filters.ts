@@ -3,8 +3,8 @@ import { SliderValue } from './SliderValue';
 export interface IFilters {
   categories: string[];
   brands: string[];
-  price: SliderValue;
-  stock: SliderValue;
+  price: SliderValue | null;
+  stock: SliderValue | null;
 }
 
 export type ICheckboxFilters = Pick<IFilters, 'categories' | 'brands'>

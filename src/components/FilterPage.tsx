@@ -182,8 +182,8 @@ export const FilterPage = () => {
     const filters: IFilters = {
       categories: [],
       brands: [],
-      price: [-Infinity, Infinity],
-      stock: [-Infinity, Infinity],
+      price: null,
+      stock: null,
     };
 
     const categorySearchParam = searchParams.get('categories');
@@ -257,8 +257,8 @@ export const FilterPage = () => {
   const filteredItems = useMemo(() => ([...items])
     .filter((item) => filters.categories.length > 0 ? filters.categories.some((category) => category === item.category) : true)
     .filter((item) => filters.brands.length > 0 ? filters.brands.some((brand) => brand === item.brand) : true)
-    .filter((item) => item.price >= filters.price[0] && item.price <= filters.price[1])
-    .filter((item) => item.stock >= filters.stock[0] && item.stock <= filters.stock[1])
+    .filter((item) => filters.price ? item.price >= filters.price[0] && item.price <= filters.price[1] : true)
+    .filter((item) => filters.stock ? item.stock >= filters.stock[0] && item.stock <= filters.stock[1] : true)
     .filter((item) => searchItemFields(item, searchQuery))
     .sort(sortFuncs[sortOption])
   , [filters, items, sortOption, searchQuery]);
