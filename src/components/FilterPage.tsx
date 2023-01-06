@@ -238,7 +238,8 @@ export const FilterPage = () => {
   const handleFilterChange = (filterType: keyof IFilters, filterValue: string | SliderValue) => {
     if ((filterType === 'categories' || filterType === 'brands') && typeof filterValue === 'string') {
       if (filters[filterType].includes(filterValue)) { // uncheck checkobox
-        updateSearchParams(filterType, []);
+        const newFilterTypeValue = filters[filterType].filter((value) => value !== filterValue);
+        updateSearchParams(filterType, newFilterTypeValue);
       } else {
         updateSearchParams(filterType, [...filters[filterType], filterValue]);
       }
