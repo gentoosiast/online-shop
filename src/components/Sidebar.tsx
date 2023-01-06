@@ -20,9 +20,9 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
   const [stock, setStock] = useState<SliderValue>(filteredItemsStats.stock);
 
   useEffect(() => {
-    setPrice(filteredItemsStats.price);
-    setStock(filteredItemsStats.stock);
-  }, [filteredItemsStats]);
+    setPrice(price);
+    setStock(stock);
+  }, [price, stock]);
 
   const isChecked = (filterType: keyof Pick<InitialItemsStats, "brands" | "categories">, value: string) => {
     return filters[filterType].includes(value);
