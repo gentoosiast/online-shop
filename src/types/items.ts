@@ -21,11 +21,18 @@ export interface IItemsDto {
   limit: number
 }
 
+interface IMark {
+  style: Record<string, string>;
+  label: string;
+}
+
 export interface InitialItemsStats {
   categories: string[],
   brands: string[],
   categoryCounts: Map<string, number>,
   brandCounts: Map<string, number>,
+  priceValues: Record<number, IMark>,
+  stockValues: Record<number, IMark>,
   price: SliderValue,
   stock: SliderValue,
 }

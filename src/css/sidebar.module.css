@@ -30,28 +30,6 @@
   @apply w-72 flex flex-col m-auto;
 }
 
-.slider {
-  @apply flex items-center rounded-sm h-6 bg-transparent;
-}
-
-:global {
-  .sliderTrack {
-    @apply h-1 rounded-sm border bg-gradient-to-br from-gray-400 to-gray-300 border-gray-300;
-  }
-
-  .sliderTrack-1 {
-    @apply h-3 rounded-sm border bg-gradient-to-br from-pink-700 to-pink-300;
-  }
-}
-
-.sliderThumb {
-  @apply cursor-grab w-4 h-4 rounded-full bg-slate-600 outline-none
-}
-
-.sliderThumbActive {
-  @apply bg-red-400
-}
-
 .sliderText {
   @apply flex justify-between text-sm;
 }

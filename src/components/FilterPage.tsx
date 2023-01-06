@@ -5,7 +5,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { IItem, InitialItemsStats, FilteredItemsStats } from '../types/items';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { SortOption } from '../types/SortOption';
-import { SliderValue } from '../types/SliderValue';
+import { SliderValue, isSliderValue } from '../types/SliderValue';
 import { IFilters, ValueDivider } from '../types/filters';
 import { fetchData } from '../fetchData';
 import { ItemCard } from './ItemCard';
@@ -53,15 +53,6 @@ const isSortOption = (value: string): value is SortOption => {
   const options = ["price-ASC", "price-DESC", "rating-ASC", "rating-DESC", "discount-ASC", "discount-DESC"];
 
   return options.includes(value);
-}
-
-const isSliderValue = (value: unknown): value is SliderValue => {
-  if (!Array.isArray(value) || value.length !== 2 ||
-    !value.every((v) => typeof v === 'number' && !Number.isNaN(v)) || value[0] > value[1]) {
-    return false;
-  }
-
-  return true;
 }
 
 const fetchItems = async () => {
@@ -135,6 +126,8 @@ export const FilterPage = () => {
       brands: [],
       categoryCounts: new Map(),
       brandCounts: new Map(),
+      priceValues: {},
+      stockValues: {},
       price: [Infinity, -Infinity],
       stock: [Infinity, -Infinity],
     };
@@ -146,6 +139,20 @@ export const FilterPage = () => {
 
       if (!stats.brands.includes(item.brand)) {
         stats.brands.push(item.brand);
+      }
+
+      if (!(item.price in stats.priceValues)) {
+        stats.priceValues[item.price] = {
+          style: { display: 'none' },
+          label: `${item.price}`,
+        };
+      }
+
+      if (!(item.stock in stats.stockValues)) {
+        stats.stockValues[item.stock] = {
+          style: { display: 'none' },
+          label: `${item.stock}`,
+        };
       }
 
       const categoryCount = stats.categoryCounts.get(item.category) ?? 0;
@@ -172,6 +179,8 @@ export const FilterPage = () => {
 
     stats.categories.sort();
     stats.brands.sort();
+    // stats.priceValues.sort((a, b) => a - b);
+    // stats.stockValues.sort((a, b) => a - b);
 
     return stats;
   }
