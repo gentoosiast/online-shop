@@ -1,5 +1,5 @@
 .header {
-  @apply flex justify-between mobile-1:py-2 tablet-big:py-5 items-center border-b border-green-500
+  @apply flex justify-between py-2 tablet-big:py-5 items-center border-b border-green-500
 }
 
 .header__shop {
@@ -54,7 +54,7 @@
 }
 
 .title {
-  @apply font-bold text-xl text-orange-800 pl-3 hover:text-orange-600 transition duration-300 mobile-1:hidden tablet-big:block
+  @apply font-bold text-xl text-orange-800 pl-3 hover:text-orange-600 transition duration-300 hidden tablet-big:block
 }
 
 .cart_items {
@@ -62,7 +62,7 @@
 }
 
 .cart_price {
-  @apply w-2 hover:text-gray-500 transition duration-300 mobile-1:hidden tablet-big:block
+  @apply w-2 hover:text-gray-500 transition duration-300 hidden tablet-big:block
 }
 .cart_icon {
   @apply h-6 tablet-big:h-8 hover:fill-gray-500 transition duration-300

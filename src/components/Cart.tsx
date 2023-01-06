@@ -68,7 +68,7 @@ export const Cart = observer(() => {
             <PaginatedItems />
           </div>
         </div>
-        <div className='total flex flex-col justify-center gap-3 pt-24'>
+        <div className='total flex flex-col justify-center gap-3 pt-1 laptop:pt-24'>
           <p className = 'font-bold text-2xl p-3 border-b border-green-500'>Итого</p>
           <div className={ (cartStore.totalPrice == cartStore.finalPrice) ? styles.totalPrice : styles.totalPriceCrossed }>
             <p>Цена: </p>
