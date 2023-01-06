@@ -271,7 +271,6 @@ export const FilterPage = () => {
       price: [Infinity, -Infinity],
       stock: [Infinity, -Infinity],
     };
-    stats.total = items.length;
 
     items.forEach((item) => {
       const categoryCount = stats.categoryCounts.get(item.category) ?? 0;
