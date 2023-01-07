@@ -1,22 +1,27 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+
+const withMT = require("@material-tailwind/react/utils/withMT");
+
+module.exports = withMT({
   content: ["./src/**/*.{html,ts,tsx,js,jsx}"],
   safelist: [],
   theme: {
-    extend: {
-      backgroundImage: {
-        'gradient-loading': 'linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05))',
-      },
-      keyframes: {
-        loading: {
-          '0%': { left: '-50%' },
-          '100%': { left: '100%' },
-        }
-      },
-      animation: {
-        loading: 'loading 1s infinite',
-      }
+    screens: {
+      'mobile-1': '320px',
+      'mobile-2': '360px',
+      'mobile-3': '414px',
+      'mobile-4': '480px',
+      'tablet': '600px',
+      'tablet-big': '768px',
+      'laptop-1': '950px',
+      'laptop': '1024px',
+      'desktop': '1280px',
     },
+    extend: {
+      fontFamily: {
+        'ubuntu': 'Ubuntu'
+      },
+    }
   },
   plugins: [],
-};
+});

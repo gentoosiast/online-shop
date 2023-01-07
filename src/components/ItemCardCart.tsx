@@ -1,11 +1,14 @@
 import React from "react"
 import { Link } from "react-router-dom";
-import { IItem } from "../types/items"
 import { cartStore } from "../storage/cart.store"
 import { observer } from 'mobx-react-lite';
+import { Tooltip } from 'react-tooltip';
 import { Image } from './Image';
+import { IItem } from "../types/items"
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import DeleteImg from "../assets/Delete.svg?component";
 import catPlaceholder from '../assets/cat-placeholder.svg';
+import 'react-tooltip/dist/react-tooltip.css';
 import styles from '../css/cart.module.css';
 
 interface IItemCardCart {
@@ -16,27 +19,39 @@ interface IItemCardCart {
 
 export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => {
   return (
-    <div className='border p-4 w-full'>
-      <div className="flex justify-between gap-2">
-        <div>{number}</div>
+    <div className='px-8 py-2 w-full bg-gray-100 my-3'>
+      <div className="flex justify-between items-center gap-4">
+        <div className="w-6">{number}</div>
         <Link to={`/item/${item.id}`} aria-label={`Open details page for ${item.title}`}>
           <div className="card-image w-32 h-32">
             <Image className="card-image-img" src={item.images[0]} alt={item.title} />
             <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
           </div>
         </Link>
-        <div className="p-2">
+        <div className="descr p-2 w-80">
           <p className="font-bold h-auto">{item.title}</p>
-          <p className="h-auto">Brand: {item.brand}</p>
-          <p className="h-auto">Category: {item.category}</p>
-          <p className="h-auto">Discount: {item.discountPercentage}%</p>
-          <p className="h-auto">Available: {item.stock}</p>
+          <div>
+            <span className="text-gray-500">Категория: </span>
+            <span>{item.category}</span>
+          </div>
+          <div>
+            <span className="text-gray-500">Бренд: </span>
+            <span>{item.brand}</span>
+          </div>
+          <div>
+            <span className="text-gray-500">В наличии: </span>
+            <span>{item.stock} шт.</span>
+          </div>
+          <div>
+            <span className="text-gray-500">Скидка: </span>
+            <span>{item.discountPercentage}%</span>
+          </div>
         </div>
-        <div className="flex items-center">
+        <div className="add-remove flex items-center w-40">
           <button
             aria-label="remove one item of the same type from the shopping cart"
             onClick = {() => cartStore.removeOneItem(item.id)}>
-            <svg className="feather minus-one">
+            <svg className="feather minus-one bg-green-600 rounded-full text-white">
               <use href={`${featherSprite}#minus-circle`} />
             </svg>
           </button>
@@ -45,20 +60,19 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
             className={(cartStore.isEnoughInStock(item.id)) ? styles.button_round : styles.button_round__inactive}
             aria-label="add one more item of the same type to the shopping cart"
             onClick = {() => cartStore.addItem(item)}>
-            <svg className={`feather plus-one`}>
+            <svg className={`feather plus-one bg-green-600 rounded-full text-white`}>
               <use href={`${featherSprite}#plus-circle`} />
             </svg>
           </button>
         </div>
-        <div  className="flex items-center">
-          <p className="font-bold">${item.price * amount}</p>
+        <div  className="price flex items-center w-20">
+          <p className="font-bold text-green-700">{item.price * amount} ₽</p>
         </div>
         <button  className="flex" type="button"
           onClick = {() => cartStore.removeAllItems(item.id)}>
-          <svg className="feather cart-icon">
-            <use href={`${featherSprite}#x`} />
-          </svg>
+          <DeleteImg className={styles.delete_logo} id={item.id.toString()}/>
         </button>
+        <Tooltip anchorId={item.id.toString()} content="удалить" variant='error' place='bottom'/>
       </div>
     </div>
   )

@@ -2,25 +2,32 @@ import React from "react";
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import { Link } from 'react-router-dom';
-import logoImg from '../assets/logo.png';
-import CartSvg from '../assets/shopping-cart.svg?component';
+import CatIcon1 from '../assets/cat_walk_icon_.png';
+import CatIcon2 from '../assets/cat_icon.png';
+import CartImg from "../assets/cart.svg?component"
+import styles from '../css/header.module.css';
 
 export const Header = observer(() => {
   return (
-    <header className="flex justify-between p-5 bg-blue-200 rounded-t-3xl">
-      <div className="basis-1/4 flex items-center">
-        <Link to="/">
-          <div className="flex items-center">
-            <img src={logoImg} alt="Online Shop Logo" className="w-14 cursor-pointer" />
-            <h2 className="font-bold text-xl cursor-pointer">Shop name</h2>
+    <header className={styles.header}>
+      <div className={styles.header__shop}>
+        <Link to="/" >
+          <div className={styles.link_shop}>
+            <div className={styles.logo}>
+              <img src={CatIcon1} alt="Online Shop Logo" className={styles.logo1}/>
+              <img src={CatIcon2} alt="Online Shop Logo" className={styles.logo2}/>
+            </div>
+            <h2 className={styles.title}>RedCat</h2>
           </div>
         </Link>
       </div>
-      <div className="basis-1/4 flex items-center justify-end gap-2">
-        <Link to="/cart" className="flex gap-2" aria-label="Shopping Cart">
-          <CartSvg className="shopping-cart-icon" />
-          <p className="cart-items">{cartStore.totalItems} item(s)</p>
-          <p className="cart-price">${cartStore.totalPrice}</p>
+      <div className={styles.header_cart}>
+        <Link to="/cart" className={styles.header__cart} aria-label="Shopping Cart" >
+          <div className="flex">
+            <CartImg className={styles.cart_icon} />
+            <p className={styles.cart_items}>{cartStore.totalItems}</p>
+          </div>
+          <div className={styles.cart_price}>{cartStore.totalPrice}₽</div>
         </Link>
       </div>
    </header>

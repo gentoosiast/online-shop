@@ -3,9 +3,11 @@ import { LoaderFunctionArgs, Link, useLoaderData, useNavigate, useParams } from 
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
+import ReactStars from 'react-stars';
 import { Image } from './Image';
-import { IItem } from "../types/items";
 import { fetchData } from '../fetchData';
+import { IItem } from "../types/items";
+
 import catPlaceholder from '../assets/cat-placeholder.svg';
 
 const fetchItem = async (id: string) => {
@@ -50,10 +52,10 @@ export const ItemDetails = observer(() => {
 
   const [mainImgIdx, setMainImgIdx] = useState(0);
   return (
-    <div className="border p-5 rounded flex flex-col items-center m-auto">
+    <div className="p-5 flex flex-col m-auto ">
       {item &&
         <>
-          <div className="p-5 flex justify-evenly items-center gap-1">
+          <div className="p-5 flex justify-start gap-1">
             <Link to="/"><span className='breadcrumb'>store</span></Link>
             <span className="breadcrumb-separator">/</span>
             <Link to={`/?categories=${item.category}`}><span className='breadcrumb'>{item.category}</span></Link>
@@ -62,14 +64,13 @@ export const ItemDetails = observer(() => {
             <span className="breadcrumb-separator">/</span>
             <span>{item.title}</span>
           </div>
-          <div className="border p-5 rounded flex flex-col gap-5 items-center m-auto">
-            <div className="font-bold text-6xl">{item.title}</div>
-            <div className="flex flex-row gap-5">
-              <div className="all-images flex gap-4 items-center">
-                <div className="aside-images flex flex-col gap-2">
+          <div className="p-5 flex flex-col gap-5 items-center m-auto">
+            <div className="flex mobile-1: flex-col laptop:flex-row gap-5">
+              <div className="photos flex gap-2 items-center flex-none shrink-0 mobile-1:flex-col tablet:flex-row">
+                <div className="all-pics flex mobile-1:flex-row tablet:flex-col gap-1 ">
                   {
                     item.images.map((img, i) =>
-                      <div key={i} className={`card-image w-24 h-24 cursor-pointer border-2 ${img === item.images[mainImgIdx] ? 'border-blue-600' : 'border-transparent'}`}
+                      <div key={i} className={`card-image w-20 h-20 rounded cursor-pointer border-2 ${img === item.images[mainImgIdx] ? 'border-green-500' : 'border-transparent'}`}
                         onClick={() => setMainImgIdx(i)}>
                         <Image className="card-image-img" src={img} alt={item.title} />
                         <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
@@ -77,40 +78,48 @@ export const ItemDetails = observer(() => {
                     )
                   }
                 </div>
-                <div className="main-image card-image w-72 h-72">
+                <div className="main-pic card-image w-96 h-96">
                   <Image className="card-image-img" src={item.images[mainImgIdx]} alt={item.title} />
                   <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
                 </div>
               </div>
               <div className="details flex flex-col gap-2">
+                <div className="font-bold text-3xl">{item.title}</div>
+                <div className='price-rating flex border-b border-green-600 pb-4 justify-between'>
+                  <div className='flex gap-3 items-center'>
+                    <p className="font-bold text-2xl text-green-600 ">{item.price}₽</p>
+                    <p className='bg-red-700 text-white rounded-md px-2 py-1'>-{item.discountPercentage}%</p>
+                  </div>
+                  <div className='flex items-center gap-2'>
+                    <ReactStars
+                      count={5}
+                      value={Math.round(item.rating * 10) / 10}
+                      size={24}
+                      color1 = {'#cfd8dc'}
+                      color2={'#f57c00'}
+                      // onChange={ratingChanged}
+                      />
+                    <span className="text-lg">Рейтинг:</span>
+                    <span>{item.rating}</span>
+                </div>
+                </div>
                 <div>
-                  <p className="font-bold text-lg">Description:</p>
+                  <p className="font-bold">Описание:</p>
                   <p>{item.description}</p>
                 </div>
                 <div>
-                  <p className="font-bold text-lg">Discount:</p>
-                  <p>{item.discountPercentage}%</p>
+                  <span className="text-gray-500">Категория: </span>
+                  <span>{item.category}</span>
                 </div>
                 <div>
-                  <p className="font-bold text-lg">Rating:</p>
-                  <p>{item.rating}</p>
+                  <span className="text-gray-500">Бренд: </span>
+                  <span>{item.brand}</span>
                 </div>
                 <div>
-                  <p className="font-bold text-lg">Stock:</p>
-                  <p>{item.stock}</p>
+                  <span className="text-gray-500">В наличии: </span>
+                  <span>{item.stock} шт.</span>
                 </div>
-                <div>
-                  <p className="font-bold text-lg">Brand:</p>
-                  <p>{item.brand}</p>
-                </div>
-                <div>
-                  <p className="font-bold text-lg">Category:</p>
-                  <p>{item.category}</p>
-                </div>
-              </div>
-              <div className="addtocart flex flex-col justify-center items-center gap-10">
-                <p className="font-bold text-5xl">${item.price}</p>
-                <div className="flex flex-col gap-2">
+                <div className="buttons flex gap-2 pt-4 mobile-1:flex-col tablet:flex-row">
                   <button
                     className={`button ${cartStore.isInCart(item.id) ? 'button-delete' : 'button-add'}`}
                     onClick={() => {
@@ -120,7 +129,7 @@ export const ItemDetails = observer(() => {
                         cartStore.addItem(item);
                       }
                     }}>
-                    {cartStore.isInCart(item.id) ? 'remove from cart' : 'add to cart'}
+                    {cartStore.isInCart(item.id) ? 'Удалить из корзины' : 'Добавить в корзину'}
                   </button>
                   <button className='button button-buy' aria-label='Add item to the cart and proceed to filling in order details'
                     onClick={() => {
@@ -129,7 +138,7 @@ export const ItemDetails = observer(() => {
                       }
                       navigate('/cart', { state: { isModalOpen: true } });
                     }}>
-                    buy now
+                    Купить
                   </button>
                 </div>
               </div>

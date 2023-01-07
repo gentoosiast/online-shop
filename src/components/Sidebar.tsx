@@ -7,7 +7,9 @@ import { InitialItemsStats, FilteredItemsStats } from '../types/items';
 import '../css/main.css';
 import '../css/rc-slider.css';
 import styles from '../css/sidebar.module.css';
-
+import { Checkbox } from "@material-tailwind/react";
+import saleImg from '../assets/sale.png';
+import superSaleImg from '../assets/super_sale.png';
 interface ISidebarProps {
   initialItemsStats: InitialItemsStats;
   filteredItemsStats: FilteredItemsStats;
@@ -67,54 +69,54 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
   }
 
   return (
-    <div className='w-fit'>
-      <div>
-        <button className='button button-add' onClick={handleReset}>Reset filters</button>
-        <button className={ (isCopied) ? 'button button-delete' : 'button button-add'}
+    <div className='w-80 text-base'>
+      <div className='w-80 flex flex-col gap-3'>
+        <button className={styles.buttonReset} onClick={handleReset}>Сбросить фильтры</button>
+        <button className={ (isCopied) ? styles.buttonCopied : styles.buttonCopy}
         onClick={()=>{navigator.clipboard.writeText(location.href).then(() => {
           handleCopy();
           }, () => console.log('failed to copy'));
         }}>
-          {(isCopied) ? 'Link copied!' : 'Copy link'}
+          {(isCopied) ? 'Скопирована!' : 'Скопировать ссылку'}
           </button>
       </div>
       <div className={styles.box}>
-        <h3 className={styles.h3}>Category</h3>
-        <fieldset className={styles.items}>
+        <h3 className={styles.h3}>Категория</h3>
+        <fieldset className={styles.items_category}>
           {initialItemsStats.categories.map((category, i) =>
-          <div key={i} className={`${filteredItemsStats.categoryCounts.get(category) ? styles.item : styles.itemOpacity}`} >
-            <label htmlFor={'1'+i.toString()} className={styles.label}>
-            <input type='checkbox' id={'1'+i.toString()} className={styles.checkbox}
-              onChange={() => handleClick('categories', category)}
-              checked={isChecked('categories', category)}
-            />
-            {category}</label>
-            <span>({filteredItemsStats.categoryCounts.get(category) ?? 0})</span>/
-            <span>({initialItemsStats.categoryCounts.get(category) ?? 0})</span>
+            <div key={i} className={`${filteredItemsStats.categoryCounts.get(category) ? styles.item : styles.itemOpacity}`} >
+              <Checkbox color="green" label={category} id={'1'+i.toString()}
+                onChange={() => handleClick('categories', category)}
+                checked={isChecked('categories', category)}
+              />
+              <div>
+                <span>({filteredItemsStats.categoryCounts.get(category) ?? 0})</span>/
+                <span>({initialItemsStats.categoryCounts.get(category) ?? 0})</span>
+             </div>
             </div>
           )}
         </fieldset>
       </div>
       <div className={styles.box}>
-        <h3 className={styles.h3}>Brand</h3>
-        <fieldset  className={styles.items}>
+        <h3 className={styles.h3}>Бренд</h3>
+        <fieldset  className={styles.items_brand}>
           {initialItemsStats.brands.map((brand, i) =>
             <div key={i} className={`${filteredItemsStats.brandCounts.get(brand) ? styles.item : styles.itemOpacity}`}>
-            <label htmlFor={'2'+i.toString()} className={styles.label}>
-            <input type='checkbox' id={'2'+i.toString()} className={styles.checkbox}
-              onChange={() => handleClick('brands', brand)}
-              checked = {isChecked('brands', brand)}
-            />
-            {brand}</label>
-            <span>({filteredItemsStats.brandCounts.get(brand) ?? 0})</span>/
-            <span>({initialItemsStats.brandCounts.get(brand) ?? 0})</span>
+              <Checkbox color="green" label={brand} id={'2'+i.toString()}
+                  onChange={() => handleClick('brands', brand)}
+                  checked={isChecked('brands', brand)}
+                />
+              <div>
+                <span>({filteredItemsStats.brandCounts.get(brand) ?? 0})</span>/
+                <span>({initialItemsStats.brandCounts.get(brand) ?? 0})</span>
+              </div>
             </div>
           )}
         </fieldset>
       </div>
       <div className={styles.box}>
-        <h3 className={styles.h3}>Price</h3>
-        {filteredItemsStats.total === 0 && <div  className="text-2xl">not found</div>}
+        <h3 className={styles.h3}>Цена, ₽</h3>
+        {filteredItemsStats.total === 0 && <div  className={styles.not_found}>не найдено</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <Slider
@@ -138,8 +140,8 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
         </div>
       </div>
       <div className={styles.box}>
-        <h3 className={styles.h3}>Stock</h3>
-        {filteredItemsStats.total === 0 && <div className="text-2xl">not found</div>}
+        <h3 className={styles.h3}>На складе, шт.</h3>
+        {filteredItemsStats.total === 0 && <div className={styles.not_found}>не найдено</div>}
         <div className='slider'>
           <div className={styles.sliderContainer}>
             <Slider
@@ -161,6 +163,11 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
             </div>}
           </div>
       </div>
+      </div>
+      <div className={styles.box}>
+        <img src={superSaleImg} alt="saleAdd" className='relative top-28 left-4'/>
+        <p className={styles.sale}>скидки до 30%</p>
+        <img src={saleImg} alt="saleAdd" className='rounded-md'/>
       </div>
     </div>
   )

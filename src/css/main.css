@@ -1,10 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply overflow-y-scroll
+}
+body::-webkit-scrollbar {
+  width: 20px;
+  height: 20px;
+}
+body::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  background: #f7f4ed;
+}
+body::-webkit-scrollbar-thumb {
+  background: #a5d6a7;
+  border-radius: 100vh;
+  border: 3px solid #f6f7ed;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #4caf50;
+}
+
 @layer components {
   #root {
-    @apply flex flex-col justify-between min-h-screen;
+    @apply m-auto text-base  font-ubuntu mobile-1:px-0 tablet-big:px-20
   }
 
   .backdrop {
@@ -12,9 +34,12 @@
   }
 
   .order-form {
-    @apply max-w-2xl m-auto p-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-100 z-20;
+    @apply max-w-2xl m-auto p-4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-100 z-20 box-border;
   }
 
+  .order-form input {
+    @apply w-full
+  }
   .form-fieldset {
     @apply mb-5;
   }
@@ -64,7 +89,7 @@
   }
 
   .submit-button {
-    @apply text-center p-2 bg-green-600 w-full text-gray-50 disabled:bg-slate-400;
+    @apply text-center p-2 bg-green-600 w-full text-gray-50 disabled:bg-gray-400;
   }
 
   .feather {
@@ -72,19 +97,19 @@
   }
 
   .cart-icon {
-    @apply stroke-slate-600 hover:stroke-green-700;
+    @apply stroke-gray-600 hover:stroke-green-700;
   }
 
   .footer {
-    @apply w-full mt-10 px-20 py-5 flex justify-between items-center bg-slate-100
+    @apply w-full mt-10 px-20 py-5 flex justify-between items-center bg-gray-100
   }
 
   .item-card {
-    @apply border p-5 rounded flex flex-col items-center w-48 transition duration-300 hover:-translate-y-1 hover:shadow-md;
+    @apply border p-5 rounded flex flex-col items-center transition duration-300 hover:shadow-md;
   }
 
   .card-image {
-    @apply relative flex justify-center items-center bg-transparent overflow-hidden rounded-sm;
+    @apply relative flex justify-center items-center bg-transparent overflow-hidden;
   }
 
   .card-image-img {
@@ -112,7 +137,7 @@
   }
 
   .button {
-    @apply px-4 py-2 w-48 border rounded transition-colors duration-300 text-center;
+    @apply px-4 py-2 w-48 border rounded-md transition-colors duration-300 text-center;
   }
 
   .button-add {
@@ -120,18 +145,54 @@
   }
 
   .button-delete {
-    @apply bg-red-500 text-gray-50 border-red-700 hover:bg-red-400 hover:border-red-600;
+    @apply bg-orange-800 text-gray-50 border-orange-800 hover:bg-orange-500 hover:border-orange-700;
   }
 
   .button-buy {
-    @apply text-gray-50 bg-cyan-600 border-cyan-700 hover:bg-cyan-500 hover:border-cyan-600;
+    @apply text-green-500 bg-white border-green-700 hover:bg-gray-50 hover:text-green-800 hover:border-green-900;
   }
 
   .button-details {
-    @apply text-gray-50 bg-zinc-500 hover:bg-zinc-400 border-zinc-600 hover:border-zinc-500;
+    @apply text-gray-50 bg-gray-500 hover:bg-gray-400 border-gray-600 hover:border-gray-500;
   }
 
-  .shopping-cart-icon {
-    @apply hover:text-green-700 transition duration-300;
+  .filterPage {
+    @apply flex flex-col gap-2
   }
+
+  .filterBar {
+    @apply flex justify-center items-center gap-10
+  }
+
+  .selectInput {
+    font-size: 14px;
+    display: block;
+    color: rgb(97, 97, 97);
+    line-height: 1.5;
+    padding: .6em 1.4em .5em .8em; width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border: 1px solid rgb(193, 193, 193);
+    border-radius: .4em;
+     -moz-appearance: none;
+     -webkit-appearance: none;
+     appearance: none;
+    outline-color: rgb(0, 171, 0);
+    }
+     .select-css::-ms-expand { display: none; }
+     .select-css:hover { border-color: #888; }
+     .select-css:focus { border-color: #aaa;
+     box-shadow: 0 0 1px 3px rgba(59, 252, 75, 0.7);
+     box-shadow: 0 0 0 3px -moz-mac-focusring;
+    /* color: #222; */
+     outline: none;
+    }
+     .select-css option { font-weight:normal; }
+     *[dir="rtl"] .select-css, :root:lang(ar) .select-css, :root:lang(iw) .select-css {
+    background-position: left .7em top 50%, 0 0;
+    padding: .6em .8em .5em 1.4em;
+    }
 }
+
+

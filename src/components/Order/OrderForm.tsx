@@ -106,21 +106,24 @@ export const OrderForm = (props: IOrderFormProps) => {
 
     fullName: {
       value: '',
-      label: 'Full Name:',
+      // label: 'Full Name:',
+      label: 'Фамилия Имя:',
       isValid: false,
       validator: validators.fullName,
     },
 
     phone: {
       value: '+',
-      label: 'Phone:',
+      // label: 'Phone:',
+      label: 'Телефон:',
       isValid: false,
       validator: validators.phone,
     },
 
     address: {
       value: '',
-      label: 'Shipping address:',
+      // label: 'Shipping address:',
+      label: 'Адрес доставки:',
       isValid: false,
       validator: validators.address,
     },
@@ -139,7 +142,8 @@ export const OrderForm = (props: IOrderFormProps) => {
         separator: ' ',
       },
       maxLength: 16,
-      label: 'Card number:',
+      // label: 'Card number:',
+      label: 'Номер карты:',
       isValid: false,
       validator: validators.cardNumber,
     },
@@ -257,7 +261,7 @@ export const OrderForm = (props: IOrderFormProps) => {
   return (
     <form className='order-form' autoComplete='off' onSubmit={handleSubmit}>
       <fieldset className='form-fieldset'>
-        <legend className='form-legend'>Personal Details</legend>
+        <legend className='form-legend'>Персональная информация</legend>
         <div className='form-field'>
           <label className='form-label' htmlFor='order-fullName'>{formState.fullName.label}</label>
           <input type="text" className={getClassName('fullName')} id="order-fullName" name="fullName" value={formState.fullName.value}
@@ -288,7 +292,7 @@ export const OrderForm = (props: IOrderFormProps) => {
         </div>
       </fieldset>
       <fieldset className='form-fieldset'>
-        <legend className='form-legend'>Credit Card Information</legend>
+        <legend className='form-legend'>Данные кредитной карты</legend>
         <div className='form-field'>
           <label className='form-label' htmlFor='order-card-number'>{formState.cardNumber.label}</label>
           <input type="text" className={getClassName('cardNumber')} id="order-card-number" name="cardNumber" placeholder="3 - AmEx; 4 - VISA; 5 - MasterCard"
@@ -302,7 +306,7 @@ export const OrderForm = (props: IOrderFormProps) => {
             style={{backgroundImage: `url(${formState.global.cardImage})`}}></div>
           <div className='form-field'>
             <label className='form-label' htmlFor='order-card-expiration'>{formState.cardExpiration.label}</label>
-            <input type="text" className={getClassName('cardExpiration')} id="order-card-expiration" name="cardExpiration" placeholder="mm / yy"
+            <input type="text" className={getClassName('cardExpiration')} id="order-card-expiration" name="cardExpiration" placeholder="мм / гг"
               value={formState.cardExpiration.value}
               onChange={handleChange} onBlur={handleBlur} onKeyDown={handleKeydownOnlyNumbers} />
           </div>
@@ -323,9 +327,9 @@ export const OrderForm = (props: IOrderFormProps) => {
       </fieldset>
       {isFormSubmitted &&
         <div className="form-field">
-          <p className="form-alert form-alert-success" role="alert">Order Successful. Thank you so much for your order</p>
+          <p className="form-alert form-alert-success" role="alert">Оплата прошла успешно. Спасибо за заказ.</p>
         </div>}
-      <button className='submit-button' type="submit" disabled={!isFormValid()}>Order</button>
+      <button className='submit-button' type="submit" disabled={!isFormValid()}>Заказать</button>
     </form>
   );
 };

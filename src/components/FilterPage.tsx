@@ -2,15 +2,17 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Form, useSearchParams, useLoaderData } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
+import { Input } from "@material-tailwind/react";
+import { fetchData } from '../fetchData';
+import { ItemCard } from './ItemCard';
+import { Sidebar } from './Sidebar';
 import { IItem, InitialItemsStats, FilteredItemsStats } from '../types/items';
 import { ItemCardSize } from '../types/ItemCardSize';
 import { SortOption } from '../types/SortOption';
 import { SliderValue, isSliderValue } from '../types/SliderValue';
 import { IFilters, ValueDivider } from '../types/filters';
-import { fetchData } from '../fetchData';
-import { ItemCard } from './ItemCard';
-import { Sidebar } from './Sidebar';
-import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import Grid4 from "../assets/grid4.svg?component";
+import Grid9 from "../assets/grid9.svg?component";
 
 type SortFn = (itemA: IItem, itemB: IItem) => number;
 interface ISortFnObj {
@@ -322,26 +324,26 @@ export const FilterPage = () => {
         onFilterChange={(filterType, value) => handleFilterChange(filterType, value)}
         onReset={() => onReset()}
       />
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-center items-center gap-10">
+      <div className='filterPage'>
+        <div className="filterBar">
           <div>
-            <select name="sort" value={sortOption} onChange={(event) => {
+            <select name="sort"  className='selectInput' value={sortOption} onChange={(event) => {
               if (isSortOption(event.target.value)) {
                 searchParams.set('sort', event.target.value);
                 setSearchParams(searchParams);
               }
             }}>
-              <option value="price-ASC">Sort by price (ascending)</option>
-              <option value="price-DESC">Sort by price (descending)</option>
-              <option value="rating-ASC">Sort by rating (ascending)</option>
-              <option value="rating-DESC">Sort by rating (descending)</option>
-              <option value="discount-ASC">Sort by discount (ascending)</option>
-              <option value="discount-DESC">Sort by discount (descending)</option>
+              <option value="price-ASC">по цене ↑</option>
+              <option value="price-DESC">по цене ↓</option>
+              <option value="rating-ASC">по рейтингу ↑</option>
+              <option value="rating-DESC">по рейтингу ↓</option>
+              <option value="discount-ASC">по скидке ↑</option>
+              <option value="discount-DESC">по скидке ↓</option>
             </select>
           </div>
-          <div>Found: {filteredItemsStats.total} item(s)</div>
+          <div>Найдено: {filteredItemsStats.total} шт.</div>
           <Form id="search-form" role="search" autoComplete="off">
-            <input id="q" className="form-input" name="q" type='search' placeholder="I'm looking for..."
+            <Input id="q" className="form-input" name="q" type='search' label="Я ищу..." color='green'
               value={searchQuery} aria-label="Search items"
               onChange={(event) => {
                 event.preventDefault();
@@ -356,9 +358,7 @@ export const FilterPage = () => {
                 setSearchParams(searchParams);
               }
             }>
-              <svg className={`feather list-icon border-2 ${cardSize === "Small" ? 'border-slate-700': 'border-transparent'}`}>
-                <use href={`${featherSprite}#list`} />
-              </svg>
+              <Grid9 className={`${cardSize === "Small" ? 'fill-green-500': ''}`}/>
             </button>
             <button
               onClick={() => {
@@ -366,15 +366,13 @@ export const FilterPage = () => {
                 setSearchParams(searchParams);
               }
             }>
-              <svg className={`feather grid-icon border-2 ${cardSize === "Large" ? 'border-slate-700' : 'border-transparent'}`}>
-                <use href={`${featherSprite}#grid`} />
-              </svg>
+              <Grid4 className={`${cardSize === "Large" ? 'fill-green-500': ''}`}/>
             </button>
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-5">
           {filteredItems.length > 0 && filteredItems.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
-          {filteredItems.length === 0 && <div className="text-5xl">No products found</div>}
+          {filteredItems.length === 0 && <div className="text-xl py-10">По Вашему запросу ничего не найдено.</div>}
         </div>
       </div>
     </div>
