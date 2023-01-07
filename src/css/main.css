@@ -105,7 +105,7 @@ body::-webkit-scrollbar-thumb:hover {
   }
 
   .item-card {
-    @apply border p-5 rounded flex flex-col items-center transition duration-300 hover:shadow-md;
+    @apply border p-5 rounded flex flex-col items-center transition duration-300 hover:shadow-md cursor-pointer;
   }
 
   .card-image {
