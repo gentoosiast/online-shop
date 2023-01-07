@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
+import { Input } from "@material-tailwind/react";
 import { cartStore } from '../storage/cart.store';
 import { CartItem} from '../types/cart';
 import { ItemCardCart } from './ItemCardCart';
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
 import styles from '../css/cart.module.css';
-import { Input } from "@material-tailwind/react";
 
 
 const nextLabelNode = (<svg className="feather next-page"><use href={`${featherSprite}#chevron-right`} /></svg>);
@@ -31,7 +31,6 @@ const ItemsToShow = ({ currentItems, itemOffset }: IItemsToShowProps) => {
 export const PaginatedItems = () => {
   const items = Array.from(cartStore.items.values())
   const [searchParams, setSearchParams] = useSearchParams();
-
   const limitParam = searchParams.get("limit");
   let initialItemsPerPage = 3;
   if (limitParam) {
@@ -53,13 +52,32 @@ export const PaginatedItems = () => {
 
   const [pageOffset, setPageOffset] = useState(initialPage);
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
+  const [itemsPerPageInput, setItemsPerPageInput] = useState(itemsPerPage.toString());
+  if (initialItemsPerPage !== itemsPerPage) {
+    setItemsPerPage(initialItemsPerPage);
+  }
+
   const [itemOffset, setItemOffset] = useState(pageOffset * itemsPerPage);
+  if (initialPage !== pageOffset) {
+    setPageOffset(initialPage);
+    setItemOffset(initialPage * itemsPerPage);
+  }
+
+  // last item on the page deleted
+  useEffect(() => {
+    const endPage = Math.ceil(items.length / itemsPerPage);
+    if (pageParam && parseInt(pageParam, 10) > endPage) {
+      searchParams.set("page", (endPage).toString());
+      setSearchParams(searchParams);
+    }
+  });
 
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = items.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(items.length / itemsPerPage);
 
   const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setItemsPerPageInput(e.target.value);
     const newItemsPerPage = parseInt(e.target.value, 10);
     if (!Number.isNaN(newItemsPerPage) && newItemsPerPage > 0) {
       setItemsPerPage(newItemsPerPage);
@@ -73,6 +91,13 @@ export const PaginatedItems = () => {
       setItemOffset(newPageOffset * newItemsPerPage);
       searchParams.set("limit", e.target.value);
       setSearchParams(searchParams);
+    }
+  }
+
+  const handleItemsPerPageBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = parseInt(e.target.value, 10);
+    if (Number.isNaN(inputValue) || inputValue <= 0) {
+      setItemsPerPageInput(itemsPerPage.toString());
     }
   }
 
@@ -91,7 +116,7 @@ export const PaginatedItems = () => {
           {/* <label htmlFor="itemsPerPage">Товаров на странице:</label> */}
           <Input type='number' className='form-input' id='itemsPerPage'
           label="Товаров на странице:" color='green'
-            value={itemsPerPage} onChange={handleItemsPerPageChange}
+            value={itemsPerPageInput} onChange={handleItemsPerPageChange} onBlur={handleItemsPerPageBlur}
           />
         </div>
         <div className="flex px-8 p-3 border-b border-green-500">

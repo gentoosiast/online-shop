@@ -1,4 +1,4 @@
-import { IItem } from "./IItem";
+import { IItem } from "./items";
 
 export interface CartItem {
   item: IItem;

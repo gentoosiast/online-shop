@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Form, useSearchParams, useLoaderData } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
-import { IItem } from '../types/IItem';
-import { ItemCardSize } from '../types/ItemCardSize';
-import { SortOption } from '../types/SortOption';
-import { IFilters, ISliderFilters } from '../types/filters';
+import { useDebouncedCallback } from 'use-debounce';
+import { Input } from "@material-tailwind/react";
 import { fetchData } from '../fetchData';
 import { ItemCard } from './ItemCard';
 import { Sidebar } from './Sidebar';
-// import featherSprite from 'feather-icons/dist/feather-sprite.svg';
-import { Input } from "@material-tailwind/react";
+import { IItem, InitialItemsStats, FilteredItemsStats } from '../types/items';
+import { ItemCardSize } from '../types/ItemCardSize';
+import { SortOption } from '../types/SortOption';
+import { SliderValue, isSliderValue } from '../types/SliderValue';
+import { IFilters, ValueDivider } from '../types/filters';
 import Grid4 from "../assets/grid4.svg?component";
 import Grid9 from "../assets/grid9.svg?component";
-// import { Select, Option } from "@material-tailwind/react";
-// import type { SelectProps } from "@material-tailwind/react";
 
 type SortFn = (itemA: IItem, itemB: IItem) => number;
 interface ISortFnObj {
@@ -98,106 +97,220 @@ export const FilterPage = () => {
     staleTime: 1000 * 60 * 5,
   });
 
+  const debounceSearchField = useDebouncedCallback(
+    (searchValue: string) => {
+      if (searchValue.length > 0) {
+        searchParams.set('q', searchValue);
+      } else {
+        searchParams.delete('q');
+      }
+      setSearchParams(searchParams);
+    }, 800
+  );
+
   const defaultCardSize = 'Small';
   const cardSearchParam = searchParams.get('card') ?? '';
-  const initialCardSize = isItemCardSize(cardSearchParam) ? cardSearchParam : defaultCardSize;
-  const [cardSize, setCardSize] = useState<ItemCardSize>(initialCardSize);
+  const cardSize = isItemCardSize(cardSearchParam) ? cardSearchParam : defaultCardSize;
 
   const defaultSortParam = 'rating-DESC';
   const sortSearchParam = searchParams.get('sort') ?? '';
-  const initialSortOption = isSortOption(sortSearchParam) ? sortSearchParam : defaultSortParam;
+  const sortOption = isSortOption(sortSearchParam) ? sortSearchParam : defaultSortParam;
 
-  const [sortOption, setSortOption] = useState(initialSortOption);
-
-  const initialSearchQuery = searchParams.get('q') ?? '';
-  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
-
-  const initialFilters: IFilters = {
-    categories: [...new Set(items.map(item => item.category))],
-    brands: [...new Set(items.map(item => item.brand))],
-    price: [Math.min(...items.map(item => item.price)), Math.max(...items.map(item => item.price))],
-    stock: [Math.min(...items.map(item => item.stock)), Math.max(...items.map(item => item.stock))],
-  }
-
-  const categorySearchParam = searchParams.get('categories');
-  const brandSearchParam = searchParams.get('brands');
-  const priceSearchParam = searchParams.get('price');
-  const stockSearchParam = searchParams.get('stock');
-
-  const initialCalcFilters: IFilters = {
-    categories: categorySearchParam ? categorySearchParam.split('↕') : [],
-    brands: brandSearchParam ? brandSearchParam.split('↕') : [],
-    price: priceSearchParam ? priceSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
-    stock: stockSearchParam ? stockSearchParam.split('↕').map(el => parseInt(el, 10)) : [],
-  }
-
-  const priceMoved = Boolean(priceSearchParam);
-  const stockMoved = Boolean(stockSearchParam);
-  const considerSliders = (initialCalcFilters.categories.length + initialCalcFilters.brands.length === 0);
-  const [calcFilters, setCalcFilters] = useState<IFilters>(initialCalcFilters);
-  const [customSliders, setCustomSliders] = useState<ISliderFilters>({price: initialCalcFilters.price, stock: initialCalcFilters.stock})
-  const [isUserFiltered, setIsUserFiltered] = useState({price: priceMoved && considerSliders, stock: stockMoved && considerSliders});
-
-  const onFilterClick = (filterType: keyof IFilters, filterBox?: string, sliderValue?: number[]) => {
-    if ((filterType === 'categories' || filterType === 'brands') && filterBox !== undefined) {
-      if (calcFilters[filterType].includes(filterBox)) {
-        if (calcFilters.categories.length + calcFilters.brands.length === 1) {
-          setIsUserFiltered({price: Boolean(customSliders.price.length), stock: Boolean(customSliders.stock.length)});
-          setCalcFilters(prev => ({ ...prev, [filterType]: [], price: customSliders.price, stock: customSliders.stock}));
-        } else {
-          setCalcFilters(prev => ({ ...prev, [filterType]: [...prev[filterType].filter(el => el !== filterBox)]}));
-        }
-      } else {
-        setCalcFilters(prev => ({ ...prev, [filterType]: [...prev[filterType], filterBox]}));
-        setIsUserFiltered({price: false, stock: false});
-      }
-    }
-
-    if ((filterType === 'price' || filterType === 'stock') && sliderValue !== undefined) {
-      setCalcFilters(prev => ({ ...prev, [filterType]: sliderValue}));
-      setCustomSliders(prev => ({ ...prev, [filterType]: sliderValue}));
-      setIsUserFiltered(prev => ({ ...prev, [filterType]: true}));
-    }
-  }
-
+  const searchQueryParam = searchParams.get('q') ?? '';
+  const [searchQuery, setSearchQuery] = useState(searchQueryParam);
   useEffect(() => {
-    Object.entries(calcFilters).forEach(([filterType, value]) => {
-      if (!(Array.isArray(value))) {
-        return;
-      }
-      if (value.length > 0) {
-        searchParams.set(`${filterType}`, `${value.join('↕')}`);
-      } else {
-        searchParams.delete(filterType);
-      }
-      setSearchParams(searchParams);
-    })
-  }, [calcFilters, searchParams, setSearchParams]);
+    setSearchQuery(searchQueryParam);
+  }, [searchQueryParam]);
 
-  const onReset = () => {
-    setCalcFilters({
+  const calculateInitialItemsStats = (items: IItem[]): InitialItemsStats => {
+    const stats: InitialItemsStats = {
       categories: [],
       brands: [],
-      price: [],
-      stock: [],
+      categoryCounts: new Map(),
+      brandCounts: new Map(),
+      priceValues: {},
+      stockValues: {},
+      price: [Infinity, -Infinity],
+      stock: [Infinity, -Infinity],
+    };
+
+    items.forEach((item) => {
+      if (!stats.categories.includes(item.category)) {
+        stats.categories.push(item.category);
+      }
+
+      if (!stats.brands.includes(item.brand)) {
+        stats.brands.push(item.brand);
+      }
+
+      if (!(item.price in stats.priceValues)) {
+        stats.priceValues[item.price] = {
+          style: { display: 'none' },
+          label: `${item.price}`,
+        };
+      }
+
+      if (!(item.stock in stats.stockValues)) {
+        stats.stockValues[item.stock] = {
+          style: { display: 'none' },
+          label: `${item.stock}`,
+        };
+      }
+
+      const categoryCount = stats.categoryCounts.get(item.category) ?? 0;
+      const brandCount = stats.brandCounts.get(item.brand) ?? 0;
+      stats.categoryCounts.set(item.category, categoryCount + 1);
+      stats.brandCounts.set(item.brand, brandCount + 1);
+
+      if (item.price < stats.price[0]) {
+        stats.price[0] = item.price;
+      }
+
+      if (item.price > stats.price[1]) {
+        stats.price[1] = item.price;
+      }
+
+      if (item.stock < stats.stock[0]) {
+        stats.stock[0] = item.stock;
+      }
+
+      if (item.stock > stats.stock[1]) {
+        stats.stock[1] = item.stock;
+      }
     });
-    setIsUserFiltered({price: false, stock: false});
-    Array.from(searchParams.keys()).forEach((key) => {
-      searchParams.delete(key);
-    });
-    setSearchParams(searchParams);
-    setSearchQuery('');
-    setSortOption(defaultSortParam);
-    setCardSize(defaultCardSize);
+
+    stats.categories.sort();
+    stats.brands.sort();
+    // stats.priceValues.sort((a, b) => a - b);
+    // stats.stockValues.sort((a, b) => a - b);
+
+    return stats;
   }
 
-  const itemsToRender = items
-    .filter((item) => calcFilters.categories.length > 0 ? calcFilters.categories.some((category) => category === item.category) : true)
-    .filter((item) => calcFilters.brands.length > 0 ? calcFilters.brands.some((brand) => brand === item.brand) : true)
-    .filter((item) => calcFilters.price.length > 0 ? item.price >= calcFilters.price[0] && item.price <= calcFilters.price[1] : true)
-    .filter((item) => calcFilters.stock.length > 0 ? item.stock >= calcFilters.stock[0] && item.stock <= calcFilters.stock[1] : true)
+  const initialItemsStats = useMemo(() => calculateInitialItemsStats(items), [items]);
+
+  const calculateFiltersFromSearchParams = (searchParams: URLSearchParams): IFilters => {
+    const filters: IFilters = {
+      categories: [],
+      brands: [],
+      price: null,
+      stock: null,
+    };
+
+    const categorySearchParam = searchParams.get('categories');
+    const brandSearchParam = searchParams.get('brands');
+    const priceSearchParam = searchParams.get('price');
+    const stockSearchParam = searchParams.get('stock');
+
+    if (categorySearchParam) {
+      const categories = categorySearchParam.split(ValueDivider);
+      categories.forEach((category) => {
+        if (!filters.categories.includes(category) && initialItemsStats.categories.includes(category))
+          filters.categories.push(category);
+      });
+    }
+
+    if (brandSearchParam) {
+      const brands = brandSearchParam.split(ValueDivider);
+      brands.forEach((brand) => {
+        if (!filters.brands.includes(brand) && initialItemsStats.brands.includes(brand))
+          filters.brands.push(brand);
+      });
+    }
+
+    if (priceSearchParam) {
+      const price = priceSearchParam.split(ValueDivider).map(el => parseInt(el, 10));
+      if (isSliderValue(price)) {
+        filters.price = price;
+      }
+    }
+
+    if (stockSearchParam) {
+      const stock = stockSearchParam.split(ValueDivider).map(el => parseInt(el, 10));
+      if (isSliderValue(stock)) {
+        filters.stock = stock;
+      }
+    }
+
+    return filters;
+  }
+
+  const filters: IFilters = calculateFiltersFromSearchParams(searchParams);
+
+  const updateSearchParams = (filterType: keyof IFilters, filterValue: string[] | SliderValue) => {
+    if (filterValue.length > 0) {
+      searchParams.set(filterType, `${filterValue.join(ValueDivider)}`);
+    } else {
+      searchParams.delete(filterType);
+    }
+    setSearchParams(searchParams);
+  }
+
+  const handleFilterChange = (filterType: keyof IFilters, filterValue: string | SliderValue) => {
+    if ((filterType === 'categories' || filterType === 'brands') && typeof filterValue === 'string') {
+      if (filters[filterType].includes(filterValue)) { // uncheck checkobox
+        const newFilterTypeValue = filters[filterType].filter((value) => value !== filterValue);
+        updateSearchParams(filterType, newFilterTypeValue);
+      } else {
+        updateSearchParams(filterType, [...filters[filterType], filterValue]);
+      }
+    }
+
+    if ((filterType === 'price' || filterType === 'stock') && isSliderValue(filterValue)) {
+      updateSearchParams(filterType, filterValue);
+    }
+  }
+
+  const onReset = () => {
+    setSearchParams({});
+  }
+
+  const filteredItems = useMemo(() => ([...items])
+    .filter((item) => filters.categories.length > 0 ? filters.categories.some((category) => category === item.category) : true)
+    .filter((item) => filters.brands.length > 0 ? filters.brands.some((brand) => brand === item.brand) : true)
+    .filter((item) => filters.price ? item.price >= filters.price[0] && item.price <= filters.price[1] : true)
+    .filter((item) => filters.stock ? item.stock >= filters.stock[0] && item.stock <= filters.stock[1] : true)
     .filter((item) => searchItemFields(item, searchQuery))
     .sort(sortFuncs[sortOption])
+  , [filters, items, sortOption, searchQuery]);
+
+
+  const calculateFilteredItemsStats = (items: IItem[]): FilteredItemsStats => {
+    const stats: FilteredItemsStats = {
+      total: items.length,
+      categoryCounts: new Map(),
+      brandCounts: new Map(),
+      price: [Infinity, -Infinity],
+      stock: [Infinity, -Infinity],
+    };
+
+    items.forEach((item) => {
+      const categoryCount = stats.categoryCounts.get(item.category) ?? 0;
+      const brandCount = stats.brandCounts.get(item.brand) ?? 0;
+      stats.categoryCounts.set(item.category, categoryCount + 1);
+      stats.brandCounts.set(item.brand, brandCount + 1);
+
+      if (item.price < stats.price[0]) {
+        stats.price[0] = item.price;
+      }
+
+      if (item.price > stats.price[1]) {
+        stats.price[1] = item.price;
+      }
+
+      if (item.stock < stats.stock[0]) {
+        stats.stock[0] = item.stock;
+      }
+
+      if (item.stock > stats.stock[1]) {
+        stats.stock[1] = item.stock;
+      }
+    });
+
+    return stats;
+  }
+
+  const filteredItemsStats = useMemo(() => calculateFilteredItemsStats(filteredItems), [filteredItems]);
 
   if (isLoading || isFetching) {
     return (
@@ -207,19 +320,15 @@ export const FilterPage = () => {
 
   return (
     <div className='flex'>
-      <Sidebar items={items} onCheck={(filterType, value) => onFilterClick(filterType, value)}
-        filters={initialFilters} itemsToRender={itemsToRender}
-        onReset={() => onReset()} onSliderChange={(filterType, value) => onFilterClick(filterType, '', value)}
-        priceLimits={isUserFiltered.price ? calcFilters.price : []}
-        stockLimits={isUserFiltered.stock ? calcFilters.stock : []}
-        customFilters={calcFilters}
+      <Sidebar initialItemsStats={initialItemsStats} filteredItemsStats={filteredItemsStats} filters={filters}
+        onFilterChange={(filterType, value) => handleFilterChange(filterType, value)}
+        onReset={() => onReset()}
       />
       <div className='filterPage'>
         <div className="filterBar">
           <div>
             <select name="sort"  className='selectInput' value={sortOption} onChange={(event) => {
               if (isSortOption(event.target.value)) {
-                setSortOption(event.target.value);
                 searchParams.set('sort', event.target.value);
                 setSearchParams(searchParams);
               }
@@ -231,37 +340,15 @@ export const FilterPage = () => {
               <option value="discount-ASC">по скидке ↑</option>
               <option value="discount-DESC">по скидке ↓</option>
             </select>
-            {/* <Select label="Сортировать по:"
-            value={sortOption}
-            onChange={(value) => {
-              if (isSortOption(value)) {
-                setSortOption(value);
-                searchParams.set('sort', value);
-                setSearchParams(searchParams);
-              }
-            }}
-            >
-              <Option value="price-ASC">Sort by price (ascending)</Option>
-              <Option value="price-DESC">Sort by price (descending)</Option>
-              <Option value="rating-ASC">Sort by rating (ascending)</Option>
-              <Option value="rating-DESC">Sort by rating (ascending)</Option>
-              <Option value="discount-ASC">Sort by discount (ascending)</Option>
-              <Option value="discount-DESC">Sort by discount (descending)</Option>
-          </Select> */}
           </div>
-          <div>Найдено: {itemsToRender.length} шт.</div>
+          <div>Найдено: {filteredItemsStats.total} шт.</div>
           <Form id="search-form" role="search" autoComplete="off">
             <Input id="q" className="form-input" name="q" type='search' label="Я ищу..." color='green'
               value={searchQuery} aria-label="Search items"
               onChange={(event) => {
                 event.preventDefault();
                 setSearchQuery(event.target.value);
-                if (event.target.value.length > 0) {
-                  searchParams.set('q', event.target.value);
-                } else {
-                  searchParams.delete('q');
-                }
-                setSearchParams(searchParams);
+                debounceSearchField(event.target.value);
               }} />
           </Form>
           <div className="flex gap-2">
@@ -269,7 +356,6 @@ export const FilterPage = () => {
               onClick={() => {
                 searchParams.set('card', 'Small');
                 setSearchParams(searchParams);
-                setCardSize("Small");
               }
             }>
               <Grid9 className={`${cardSize === "Small" ? 'fill-green-500': ''}`}/>
@@ -278,7 +364,6 @@ export const FilterPage = () => {
               onClick={() => {
                 searchParams.set('card', 'Large');
                 setSearchParams(searchParams);
-                setCardSize("Large");
               }
             }>
               <Grid4 className={`${cardSize === "Large" ? 'fill-green-500': ''}`}/>
@@ -286,8 +371,8 @@ export const FilterPage = () => {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-5">
-          {itemsToRender.length > 0 && itemsToRender.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
-          {itemsToRender.length === 0 && <div className="text-xl py-10">По Вашему запросу ничего не найдено.</div>}
+          {filteredItems.length > 0 && filteredItems.map(item => <ItemCard key={item.id} item={item} size={cardSize} />)}
+          {filteredItems.length === 0 && <div className="text-xl py-10">По Вашему запросу ничего не найдено.</div>}
         </div>
       </div>
     </div>

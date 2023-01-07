@@ -24,8 +24,6 @@ body::-webkit-scrollbar-thumb:hover {
   background: #4caf50;
 }
 
-
-
 @layer components {
   #root {
     @apply m-auto text-base  font-ubuntu mobile-1:px-0 tablet-big:px-20
@@ -110,7 +108,31 @@ body::-webkit-scrollbar-thumb:hover {
     @apply border p-5 rounded flex flex-col items-center transition duration-300 hover:shadow-md;
   }
 
+  .card-image {
+    @apply relative flex justify-center items-center bg-transparent overflow-hidden;
+  }
+
+  .card-image-img {
+    @apply relative w-full h-full object-contain opacity-0 transition-opacity duration-500;
+  }
+
+  .card-image-img.image-loaded {
+    @apply opacity-100;
+  }
+
+  .card-image-placeholder {
+    @apply absolute w-full h-full object-contain left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 transition-opacity duration-500;
+  }
+
+  .image-loaded ~ .card-image-placeholder {
+    @apply opacity-0;
+  }
+
   .breadcrumb {
+    @apply hover:underline underline-offset-4 decoration-dashed;
+  }
+
+  .breadcrumb-separator {
     @apply text-gray-400;
   }
 

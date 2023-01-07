@@ -4,7 +4,7 @@ const withMT = require("@material-tailwind/react/utils/withMT");
 
 module.exports = withMT({
   content: ["./src/**/*.{html,ts,tsx,js,jsx}"],
-  safelist: ["sliderTrack-1"],
+  safelist: [],
   theme: {
     screens: {
       'mobile-1': '320px',

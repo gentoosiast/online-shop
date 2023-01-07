@@ -46,28 +46,6 @@
   @apply w-72 flex flex-col m-auto;
 }
 
-.slider {
-  @apply flex items-center rounded-sm h-6 bg-transparent;
-}
-
-:global {
-  .sliderTrack {
-    @apply h-2 rounded-sm border bg-gradient-to-br from-gray-300 to-gray-300;
-  }
-
-  .sliderTrack-1 {
-    @apply h-2 rounded-sm border bg-gradient-to-br from-green-200 to-green-200;
-  }
-}
-
-.sliderThumb {
-  @apply cursor-grab w-4 h-4 rounded-full bg-green-500 outline-none
-}
-
-.sliderThumbActive {
-  @apply bg-green-700
-}
-
 .sliderText {
   @apply flex justify-between text-sm;
 }

@@ -1,13 +1,15 @@
 import React from "react"
 import { Link } from "react-router-dom";
-import { IItem } from "../types/IItem"
 import { cartStore } from "../storage/cart.store"
 import { observer } from 'mobx-react-lite';
-import featherSprite from 'feather-icons/dist/feather-sprite.svg';
-import styles from '../css/cart.module.css';
-import DeleteImg from "../assets/Delete.svg?component";
 import { Tooltip } from 'react-tooltip';
+import { Image } from './Image';
+import { IItem } from "../types/items"
+import featherSprite from 'feather-icons/dist/feather-sprite.svg';
+import DeleteImg from "../assets/Delete.svg?component";
+import catPlaceholder from '../assets/cat-placeholder.svg';
 import 'react-tooltip/dist/react-tooltip.css';
+import styles from '../css/cart.module.css';
 
 interface IItemCardCart {
   number: number
@@ -21,7 +23,10 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
       <div className="flex justify-between items-center gap-4">
         <div className="w-6">{number}</div>
         <Link to={`/item/${item.id}`} aria-label={`Open details page for ${item.title}`}>
-          <img src={item.images[0]} className="w-32" alt={item.title}/>
+          <div className="card-image w-32 h-32">
+            <Image className="card-image-img" src={item.images[0]} alt={item.title} />
+            <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
+          </div>
         </Link>
         <div className="descr p-2 w-80">
           <p className="font-bold h-auto">{item.title}</p>

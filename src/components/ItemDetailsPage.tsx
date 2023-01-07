@@ -3,10 +3,12 @@ import { LoaderFunctionArgs, Link, useLoaderData, useNavigate, useParams } from 
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
-import { IItem } from "../types/IItem";
-import { fetchData } from '../fetchData';
 import ReactStars from 'react-stars';
+import { Image } from './Image';
+import { fetchData } from '../fetchData';
+import { IItem } from "../types/items";
 
+import catPlaceholder from '../assets/cat-placeholder.svg';
 
 const fetchItem = async (id: string) => {
   // TODO
@@ -54,12 +56,12 @@ export const ItemDetails = observer(() => {
       {item &&
         <>
           <div className="p-5 flex justify-start gap-1">
-            <Link to="/"><span>store</span></Link>
-            <span className="breadcrumb">/</span>
-            <span>{item.category}</span>
-            <span className="breadcrumb">/</span>
-            <span>{item.brand}</span>
-            <span className="breadcrumb">/</span>
+            <Link to="/"><span className='breadcrumb'>store</span></Link>
+            <span className="breadcrumb-separator">/</span>
+            <Link to={`/?categories=${item.category}`}><span className='breadcrumb'>{item.category}</span></Link>
+            <span className="breadcrumb-separator">/</span>
+            <Link to={`/?brands=${item.brand}`}><span className='breadcrumb'>{item.brand}</span></Link>
+            <span className="breadcrumb-separator">/</span>
             <span>{item.title}</span>
           </div>
           <div className="p-5 flex flex-col gap-5 items-center m-auto">
@@ -67,16 +69,18 @@ export const ItemDetails = observer(() => {
               <div className="photos flex gap-2 items-center flex-none shrink-0 mobile-1:flex-col tablet:flex-row">
                 <div className="all-pics flex mobile-1:flex-row tablet:flex-col gap-1 ">
                   {
-                    // TODO: images from different URLs can be duplicates
                     item.images.map((img, i) =>
-                      <img key={i} src={img} className={`w-20 rounded cursor-pointer border-2
-                        ${img === item.images[mainImgIdx] ? "border-green-500": "border-transparent"}`} alt={item.title}
-                        onClick = {() => setMainImgIdx(i)}
-                      ></img>)
+                      <div key={i} className={`card-image w-20 h-20 rounded cursor-pointer border-2 ${img === item.images[mainImgIdx] ? 'border-green-500' : 'border-transparent'}`}
+                        onClick={() => setMainImgIdx(i)}>
+                        <Image className="card-image-img" src={img} alt={item.title} />
+                        <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
+                      </div>
+                    )
                   }
                 </div>
-                <div className="main-pic">
-                  <img src={item.images[mainImgIdx]} className="w-96 rounded" alt={item.title}/>
+                <div className="main-pic card-image w-96 h-96">
+                  <Image className="card-image-img" src={item.images[mainImgIdx]} alt={item.title} />
+                  <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
                 </div>
               </div>
               <div className="details flex flex-col gap-2">

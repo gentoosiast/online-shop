@@ -2,15 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
-import { IItem } from "../types/IItem";
+import { Tooltip } from 'react-tooltip';
+import { Image } from './Image';
+import { IItem } from "../types/items";
 import { ItemCardSize } from '../types/ItemCardSize';
-// import CartPlus from "../assets/cart_plus.svg?component"
-// import CartMinus from "../assets/cart_minus.svg?component"
 import cartPlus from "../assets/cart_plus.png";
 import cartMinus from "../assets/cart_minus.png"
-import styles from '../css/card.module.css';
+import catPlaceholder from '../assets/cat-placeholder.svg';
 import infoImg from "../assets/info.svg"
-import { Tooltip } from 'react-tooltip';
+import styles from '../css/card.module.css';
 import 'react-tooltip/dist/react-tooltip.css';
 
 interface IItemsCardProps {
@@ -27,8 +27,9 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
             <div className={styles.title}>
               <p className="">{item.title}</p>
             </div>
-            <div className={styles.mainImg}>
-              <img src={item.images[0]} className='max-h-48 w-40 m-auto' alt={item.title}/>
+            <div className={`card-image ${styles.mainImg}`}>
+              <Image className="card-image-img" src={item.images[0]} alt={item.title}/>
+              <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
             </div>
             <div className='flex justify-between font-bold w-40'>
               <span className="text-green-600">{item.price} ₽</span>
@@ -64,8 +65,9 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
           <div className={styles.titleLarge}>
               <p className="">{item.title}</p>
           </div>
-          <div className={styles.mainImgLarge}>
-              <img src={item.images[0]} className='max-h-80 w-80 m-auto' alt={item.title}/>
+          <div className={`card-image ${styles.mainImgLarge}`}>
+            <Image className='card-image-img' src={item.images[0]} alt={item.title} />
+            <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
           </div>
           <div className='text-sm'>
             <div className='flex justify-between font-bold w-64 text-lg'>
