@@ -98,7 +98,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: [/node_modules/, /\.module\.css$/],
+        exclude: [/\.module\.css$/],
         use: [
           devMode === "production"
             ? MiniCSSExtractPlugin.loader

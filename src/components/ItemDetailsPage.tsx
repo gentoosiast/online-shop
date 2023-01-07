@@ -4,7 +4,7 @@ import { useQuery, QueryClient } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import { Image } from './Image';
-import { IItem } from "../types/IItem";
+import { IItem } from "../types/items";
 import { fetchData } from '../fetchData';
 import catPlaceholder from '../assets/cat-placeholder.svg';
 
