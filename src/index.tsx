@@ -12,6 +12,7 @@ import { ErrorPage } from './components/ErrorPage';
 import { FilterPage, loader as filterLoader } from './components/FilterPage';
 import { ItemDetails, loader as itemDetailsLoader } from './components/ItemDetailsPage';
 import { Cart } from './components/Cart';
+import { info } from './information';
 
 const rootDiv = document.getElementById("root");
 if (!rootDiv) {
@@ -60,3 +61,6 @@ root.render(
     </QueryClientProvider>
   </React.StrictMode>
 );
+
+
+info();
