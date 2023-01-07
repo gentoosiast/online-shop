@@ -26,21 +26,20 @@ interface IMark {
   label: string;
 }
 
-export interface InitialItemsStats {
-  categories: string[],
-  brands: string[],
-  categoryCounts: Map<string, number>,
-  brandCounts: Map<string, number>,
-  priceValues: Record<number, IMark>,
-  stockValues: Record<number, IMark>,
-  price: SliderValue,
-  stock: SliderValue,
+interface IItemStats {
+  categoryCounts: Map<string, number>;
+  brandCounts: Map<string, number>;
+  price: SliderValue;
+  stock: SliderValue;
 }
 
-export interface FilteredItemsStats {
-  total: number,
-  categoryCounts: Map<string, number>,
-  brandCounts: Map<string, number>,
-  price: SliderValue,
-  stock: SliderValue,
+export interface InitialItemsStats extends IItemStats {
+  categories: string[],
+  brands: string[],
+  priceValues: Record<number, IMark>,
+  stockValues: Record<number, IMark>,
+}
+
+export interface FilteredItemsStats extends IItemStats {
+  total: number;
 }
