@@ -3,7 +3,8 @@ import { LoaderFunctionArgs, Link, useLoaderData, useNavigate, useParams } from 
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
-import ReactStars from 'react-stars';
+import { Rating } from '@smastrom/react-rating'
+import '@smastrom/react-rating/style.css'
 import { Image } from './Image';
 import { fetchData } from '../fetchData';
 import { IItem } from "../types/items";
@@ -91,14 +92,11 @@ export const ItemDetails = observer(() => {
                     <p className='bg-red-700 text-white rounded-md px-2 py-1'>-{item.discountPercentage}%</p>
                   </div>
                   <div className='flex items-center gap-2'>
-                    <ReactStars
-                      count={5}
-                      value={Math.round(item.rating * 10) / 10}
-                      size={24}
-                      color1 = {'#cfd8dc'}
-                      color2={'#f57c00'}
-                      // onChange={ratingChanged}
-                      />
+                    <Rating
+                      value={item.rating}
+                      readOnly={true}
+                      style={{ maxWidth: 100 }}
+                    />
                     <span className="text-lg">Рейтинг:</span>
                     <span>{item.rating}</span>
                 </div>
