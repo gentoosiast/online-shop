@@ -57,7 +57,7 @@ export const ItemDetails = observer(() => {
       {item &&
         <>
           <div className="p-5 flex justify-start gap-1">
-            <Link to="/"><span className='breadcrumb'>store</span></Link>
+            <Link to="/"><span className='breadcrumb text-orange-800 decoration-orange-600 font-bold'>RedCat</span></Link>
             <span className="breadcrumb-separator">/</span>
             <Link to={`/?categories=${item.category}`}><span className='breadcrumb'>{item.category}</span></Link>
             <span className="breadcrumb-separator">/</span>
@@ -71,17 +71,17 @@ export const ItemDetails = observer(() => {
                 <div className="all-pics flex mobile-1:flex-row tablet:flex-col gap-1 ">
                   {
                     item.images.map((img, i) =>
-                      <div key={i} className={`card-image w-20 h-20 rounded cursor-pointer border-2 ${img === item.images[mainImgIdx] ? 'border-green-500' : 'border-transparent'}`}
+                      <div key={i} className={`card-image w-20 h-20 rounded cursor-pointer transition-transform duration-150 hover:scale-105 border-2 ${img === item.images[mainImgIdx] ? 'border-green-500' : 'border-transparent'}`}
                         onClick={() => setMainImgIdx(i)}>
-                        <Image className="card-image-img" src={img} alt={item.title} />
-                        <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
+                        <Image className="card-image-img" src={img} alt={`Изображение товара ${item.title}`} />
+                        <img className="card-image-placeholder" src={catPlaceholder} alt="" />
                       </div>
                     )
                   }
                 </div>
                 <div className="main-pic card-image w-96 h-96">
-                  <Image className="card-image-img" src={item.images[mainImgIdx]} alt={item.title} />
-                  <img className="card-image-placeholder" src={catPlaceholder} alt="cat placeholder" />
+                  <Image className="card-image-img" src={item.images[mainImgIdx]} alt={`Увеличенное изображение товара ${item.title}`} />
+                  <img className="card-image-placeholder" src={catPlaceholder} alt="" />
                 </div>
               </div>
               <div className="details flex flex-col gap-2">
@@ -129,7 +129,7 @@ export const ItemDetails = observer(() => {
                     }}>
                     {cartStore.isInCart(item.id) ? 'Удалить из корзины' : 'Добавить в корзину'}
                   </button>
-                  <button className='button button-buy' aria-label='Add item to the cart and proceed to filling in order details'
+                  <button className='button button-buy' aria-label='Перейти к оформлению покупки данного товара'
                     onClick={() => {
                       if (!cartStore.isInCart(item.id)) {
                         cartStore.addItem(item);

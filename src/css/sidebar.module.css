@@ -9,17 +9,21 @@
 .items_category {
   @apply p-2
 }
+
 .items_brand {
   @apply h-60 overflow-y-scroll p-2
 }
+
 .items_brand::-webkit-scrollbar {
   width: 15px;
   height: 20px;
 }
+
 .items_brand::-webkit-scrollbar-track {
   border-radius: 100vh;
   background: #f7f4ed;
 }
+
 .items_brand::-webkit-scrollbar-thumb {
   background: #a5d6a7;
   border-radius: 100vh;
@@ -54,15 +58,15 @@
 }
 
 .buttonReset {
-  @apply underline underline-offset-4 decoration-dashed text-gray-500 hover:text-black
+  @apply w-fit underline underline-offset-4 decoration-dashed text-gray-500 hover:text-black transition-colors duration-300
 }
 
 .buttonCopied {
-  @apply underline underline-offset-4  text-orange-700
+  @apply w-fit underline underline-offset-4  text-orange-700
 }
 
 .buttonCopy {
-  @apply underline underline-offset-4 text-green-600 hover:text-green-900
+  @apply w-fit underline underline-offset-4 text-green-600 hover:text-green-900 transition-colors duration-300
 }
 
 .sale {

@@ -1,0 +1,11 @@
+.gridButtonActive {
+  @apply pointer-events-none;
+}
+
+.gridIcon {
+  @apply fill-gray-800 hover:fill-gray-600 transition-colors duration-300;
+}
+
+.gridIconActive {
+  @apply fill-green-500;
+}

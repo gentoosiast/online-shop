@@ -302,7 +302,7 @@ export const OrderForm = (props: IOrderFormProps) => {
             <p className='form-alert form-alert-error' role='alert'>{formState.global.errors['cardNumber']}</p>}
         </div>
         <div className='form-card-row'>
-          <div className='form-card-image' role="img" aria-label="image representing type of the credit card"
+          <div className='form-card-image' role="img" aria-label="Иллюстрация кредитной карты"
             style={{backgroundImage: `url(${formState.global.cardImage})`}}></div>
           <div className='form-field'>
             <label className='form-label' htmlFor='order-card-expiration'>{formState.cardExpiration.label}</label>

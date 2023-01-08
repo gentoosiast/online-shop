@@ -76,24 +76,24 @@ export const Cart = observer(() => {
           </div>
           {(cartStore.totalPrice !== cartStore.finalPrice) &&
             <div className={styles.totalPrice}>
-              <p>Цена (с учетом промокодов): </p>
+              <p>Цена (с учетом промокодов):</p>
               <p className="text-green-500">{cartStore.finalPrice} ₽</p>
               </div>
           }
           <div className="flex justify-between">
-            <p>Товары, </p>
+            <p>Товары</p>
             <p>{cartStore.totalItems} шт.</p>
           </div>
           {(cartStore.totalPrice !== cartStore.finalPrice) &&
           <div className=''>
-            <p className="font-bold pb-4">Примененные промокоды: </p>
+            <p className="font-bold pb-4">Примененные промокоды:</p>
             <div className="flex flex-col gap-3">
               { Array.from(cartStore.promos).map((promo) =>
                 <div key={promo} className="flex justify-between items-center text-green-500">
                   <p>{cartStore.showPromo(promo)}</p>
-                  <button className='button button-buy'
+                  <button className='button button-delete'
                     onClick={() => cartStore.removePromo(promo)}>
-                      удалить
+                      Удалить
                   </button>
                 </div>)
               }
@@ -128,7 +128,7 @@ export const Cart = observer(() => {
       {(cartStore.totalItems === 0) &&
         <div className="text-center">
           <p className="text-center text-bold text-3xl ">Корзина пуста</p>
-          <img src={catCart} alt="cat cart" className={styles.cat}/>
+          <img src={catCart} alt="Иллюстрация с недовольным котиком в корзине" className={styles.cat}/>
           <Link to="/" >
           <button className='button button-buy mb-20'>За покупками
           </button>
