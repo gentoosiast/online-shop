@@ -21,7 +21,7 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
     <>
       {size === "Small" &&
         <Link to={`/item/${item.id}`} aria-label='Item Details'>
-          <div className={`item-card flex flex-col w-48`}>
+          <div className={`${styles.itemCard} flex flex-col w-48`}>
             <div className={styles.title}>
               <p className="">{item.title}</p>
             </div>
@@ -60,7 +60,7 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
 
       {size === "Large" &&
         <Link to={`/item/${item.id}`} aria-label='Подробная информация о товаре'>
-          <div className={`flex flex-col gap-2 item-card w-80`}>
+          <div className={`${styles.itemCard} flex flex-col gap-2 w-80`}>
             <div className={styles.titleLarge}>
               <p className="">{item.title}</p>
             </div>

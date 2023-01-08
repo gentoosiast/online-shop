@@ -1,3 +1,7 @@
+.itemCard {
+  @apply border p-5 rounded flex flex-col items-center transition duration-300 hover:shadow-md cursor-pointer;
+}
+
 .cartAdd {
   @apply fill-green-600 hover:fill-green-400 transition-colors duration-300;
 }
@@ -19,11 +23,16 @@
 }
 
 .mainImg {
-  @apply h-48 w-40 flex
+  @apply h-48 w-40 flex transition-transform duration-300
 }
 
 .mainImgLarge {
-  @apply h-80 w-64 flex
+  @apply h-80 w-64 flex transition-transform duration-300
+}
+
+.itemCard:hover .mainImg,
+.itemCard:hover .mainImgLarge {
+  @apply scale-105
 }
 
 .title {

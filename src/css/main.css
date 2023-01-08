@@ -107,10 +107,6 @@ body::-webkit-scrollbar-thumb:hover {
     @apply w-full mt-10 px-20 py-5 flex justify-between items-center bg-gray-100
   }
 
-  .item-card {
-    @apply border p-5 rounded flex flex-col items-center transition duration-300 hover:shadow-md cursor-pointer;
-  }
-
   .card-image {
     @apply relative flex justify-center items-center bg-transparent overflow-hidden;
   }
