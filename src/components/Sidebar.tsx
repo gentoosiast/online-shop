@@ -8,7 +8,7 @@ import '../css/main.css';
 import '../css/rc-slider.css';
 import styles from '../css/sidebar.module.css';
 import { Checkbox } from "@material-tailwind/react";
-import saleImg from '../assets/sale.png';
+import saleImg from '../assets/sale.webp';
 import superSaleImg from '../assets/super_sale.png';
 interface ISidebarProps {
   initialItemsStats: InitialItemsStats;
@@ -70,14 +70,14 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
 
   return (
     <div className='w-80 text-base'>
-      <div className='w-80 flex flex-col gap-3'>
+      <div className='w-80 flex flex-col items-center gap-3'>
         <button className={styles.buttonReset} onClick={handleReset}>Сбросить фильтры</button>
-        <button className={ (isCopied) ? styles.buttonCopied : styles.buttonCopy}
-        onClick={()=>{navigator.clipboard.writeText(location.href).then(() => {
-          handleCopy();
-          }, () => console.log('failed to copy'));
-        }}>
-          {(isCopied) ? 'Скопирована!' : 'Скопировать ссылку'}
+        <button className={isCopied ? styles.buttonCopied : styles.buttonCopy}
+          onClick={()=>{navigator.clipboard.writeText(location.href).then(() => {
+            handleCopy();
+            }, () => console.log('failed to copy'));
+          }}>
+            {(isCopied) ? 'Скопирована!' : 'Скопировать ссылку'}
           </button>
       </div>
       <div className={styles.box}>
@@ -90,8 +90,8 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
                 checked={isChecked('categories', category)}
               />
               <div>
-                <span>({filteredItemsStats.categoryCounts.get(category) ?? 0})</span>/
-                <span>({initialItemsStats.categoryCounts.get(category) ?? 0})</span>
+                <span>({filteredItemsStats.categoryCounts.get(category) ?? 0}</span>/
+                <span>{initialItemsStats.categoryCounts.get(category) ?? 0})</span>
              </div>
             </div>
           )}
@@ -107,8 +107,8 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
                   checked={isChecked('brands', brand)}
                 />
               <div>
-                <span>({filteredItemsStats.brandCounts.get(brand) ?? 0})</span>/
-                <span>({initialItemsStats.brandCounts.get(brand) ?? 0})</span>
+                <span>({filteredItemsStats.brandCounts.get(brand) ?? 0}</span>/
+                <span>{initialItemsStats.brandCounts.get(brand) ?? 0})</span>
               </div>
             </div>
           )}
@@ -165,9 +165,9 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
       </div>
       </div>
       <div className={styles.box}>
-        <img src={superSaleImg} alt="saleAdd" className='relative top-28 left-4'/>
+        <img src={superSaleImg} alt="" className='relative top-28 left-4'/>
         <p className={styles.sale}>скидки до 30%</p>
-        <img src={saleImg} alt="saleAdd" className='rounded-md'/>
+        <img src={saleImg} alt="Фото милого котика" className='rounded-md'/>
       </div>
     </div>
   )
