@@ -6,15 +6,14 @@ import { cartStore } from '../storage/cart.store';
 import { Rating } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
 import { Image } from './Image';
+import { API_ROOT } from '../environment';
 import { fetchData } from '../fetchData';
 import { IItem } from "../types/items";
 
 import catPlaceholder from '../assets/cat-placeholder.svg';
 
 const fetchItem = async (id: string) => {
-  // TODO
-  // const endpoint = `https://online-store-backend-production.up.railway.app/products/${id}`;
-  const endpoint = `http://localhost:8000/products/${id}`;
+  const endpoint = `${API_ROOT ?? 'http://localhost:8000'}/products/${id}`;
   try {
     const data = await fetchData<IItem>(endpoint);
     return data;
