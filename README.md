@@ -1,6 +1,6 @@
 # Online Shop (Rolling Scopes School 2022Q3)
 
-![screenshot] ![localhost_5333 (1)](https://user-images.githubusercontent.com/87668845/211217859-46902f0d-b85d-48c1-a045-30986e487222.png)
+![screenshot](https://user-images.githubusercontent.com/87668845/211217859-46902f0d-b85d-48c1-a045-30986e487222.png)
 
 
 Team project by [sinastya](https://github.com/sinastya/) and [gentoosiast](https://github.com/gentoosiast/)
@@ -14,7 +14,7 @@ Team project by [sinastya](https://github.com/sinastya/) and [gentoosiast](https
 
 <https://github.com/rolling-scopes-school/tasks/tree/master/tasks/online-store-team>
 
-## Submittion Date / Deadline Date
+## Submission Date / Deadline Date
 
 08.01.2023 / 10.01.2023
 
