@@ -14,6 +14,7 @@ import { IFilters, ValueDivider } from '../types/filters';
 import Grid4Icon from "../assets/grid4.svg?component";
 import Grid9Icon from "../assets/grid9.svg?component";
 import styles from "../css/filterpage.module.css";
+import { ScrollToTop } from './Scroll'
 
 type SortFn = (itemA: IItem, itemB: IItem) => number;
 interface ISortFnObj {
@@ -380,6 +381,7 @@ export const FilterPage = () => {
           {filteredItems.length === 0 && <div className="text-xl py-10">По Вашему запросу ничего не найдено.</div>}
         </div>
       </div>
+      <ScrollToTop/>
     </div>
   )
 }

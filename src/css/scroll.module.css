@@ -1,0 +1,11 @@
+.visible {
+  @apply opacity-100
+}
+
+.invisible {
+  @apply opacity-0
+}
+
+.svgFeather {
+ @apply bg-green-400 rounded-full text-white w-[32px] h-[32px] stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round] fill-none hover:bg-green-600 transition-opacity
+}
