@@ -40,6 +40,7 @@
   position:absolute;
   left: 0;
   top: 0;
+  transition: opacity 0.2s linear;
 }
 
 .logo1 {
@@ -64,8 +65,9 @@
 .cart_price {
   @apply w-2 hover:text-gray-500 transition duration-300 hidden tablet-big:block
 }
+
 .cart_icon {
-  @apply h-6 tablet-big:h-8 hover:fill-gray-500 transition duration-300
+  @apply h-6 tablet-big:h-8 fill-blue-gray-700 hover:fill-blue-gray-500 transition-colors duration-300
 }
 
 .media {
@@ -75,6 +77,7 @@
 .link_shop_footer {
   @apply mobile-1:hidden laptop:flex items-center cursor-pointer mobile-1:w-full laptop:w-1/4 mr-8 gap-3 hover:text-gray-700 transition duration-300
 }
+
 .link_shop_footer1 {
   @apply flex items-center cursor-pointer mobile-1:w-full laptop:w-1/5 mr-8 gap-3 hover:text-gray-700 transition duration-300
 }
