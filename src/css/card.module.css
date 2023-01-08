@@ -23,11 +23,16 @@
 }
 
 .mainImg {
-  @apply h-48 w-40 flex
+  @apply h-48 w-40 flex transition-transform duration-300
 }
 
 .mainImgLarge {
-  @apply h-80 w-64 flex
+  @apply h-80 w-64 flex transition-transform duration-300
+}
+
+.itemCard:hover .mainImg,
+.itemCard:hover .mainImgLarge {
+  @apply scale-105
 }
 
 .title {
@@ -36,9 +41,4 @@
 
 .titleLarge {
   @apply text-base
-}
-
-.itemCard:hover .title,
-.itemCard:hover .titleLarge {
-  @apply text-orange-900 transition-colors duration-300;
 }
