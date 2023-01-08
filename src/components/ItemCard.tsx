@@ -50,11 +50,9 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
                   {cartStore.isInCart(item.id) && <CartRemoveIcon className={styles.cartRemove}/>}
                   {!cartStore.isInCart(item.id) && <CartAddIcon className={styles.cartAdd}/>}
               </button>
-            <Link
-              to={`/item/${item.id}`}className='' aria-label='Подробная информация о товаре'
-              >
+              <button aria-label='Подробная информация о товаре'>
                 <InfoIcon className={styles.info} />
-            </Link>
+              </button>
             </div>
           </div>
         </Link>
@@ -106,12 +104,9 @@ export const ItemCard = observer(({item, size}: IItemsCardProps) => {
                   {cartStore.isInCart(item.id) && <CartRemoveIcon className={styles.cartRemove}/>}
                   {!cartStore.isInCart(item.id) && <CartAddIcon className={styles.cartAdd}/>}
               </button>
-
-              <Link
-                to={`/item/${item.id}`}className='' aria-label='Подробная информация о товаре'
-                >
-                  <InfoIcon className={styles.info} />
-              </Link>
+              <button aria-label='Подробная информация о товаре'>
+                <InfoIcon className={styles.info} />
+              </button>
             </div>
           </div>
         </Link>
