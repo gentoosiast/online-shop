@@ -3,6 +3,7 @@ import { Form, useSearchParams, useLoaderData } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
 import { Input } from "@material-tailwind/react";
+import { API_ROOT } from '../environment';
 import { fetchData } from '../fetchData';
 import { ItemCard } from './ItemCard';
 import { Sidebar } from './Sidebar';
@@ -60,10 +61,7 @@ const isSortOption = (value: string): value is SortOption => {
 }
 
 const fetchItems = async () => {
-  // TODO
-  // const endpoint = 'https://online-store-backend-production.up.railway.app/products/';
-  // TODO 2: probably IItemsDto is no longer needed
-  const endpoint = 'http://localhost:8000/products/';
+  const endpoint = `${API_ROOT ?? 'http://localhost:8000'}/products/`;
   try {
     const data = await fetchData<IItem[]>(endpoint);
     return data;

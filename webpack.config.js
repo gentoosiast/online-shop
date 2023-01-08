@@ -2,6 +2,7 @@ const devMode =
   process.env.NODE_ENV === "production" ? "production" : "development";
 const path = require("path");
 const CSSMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const Dotenv = require('dotenv-webpack');
 const ESLintPlugin = require("eslint-webpack-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
@@ -74,6 +75,9 @@ module.exports = {
           status: 200
         }
       ]
+    }),
+    new Dotenv({
+      path: `./.env.${devMode === 'production' ? 'production' : 'development'}`
     })
   ],
   module: {
