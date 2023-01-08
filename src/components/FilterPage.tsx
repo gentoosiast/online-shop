@@ -11,10 +11,10 @@ import { ItemCardSize } from '../types/ItemCardSize';
 import { SortOption } from '../types/SortOption';
 import { SliderValue, isSliderValue } from '../types/SliderValue';
 import { IFilters, ValueDivider } from '../types/filters';
-import Grid4 from "../assets/grid4.svg?component";
-import Grid9 from "../assets/grid9.svg?component";
+import Grid4Icon from "../assets/grid4.svg?component";
+import Grid9Icon from "../assets/grid9.svg?component";
+import styles from "../css/filterpage.module.css";
 import { ScrollToTop } from './Scroll'
-
 
 type SortFn = (itemA: IItem, itemB: IItem) => number;
 interface ISortFnObj {
@@ -343,10 +343,10 @@ export const FilterPage = () => {
               <option value="discount-DESC">по скидке ↓</option>
             </select>
           </div>
-          <div>Найдено: {filteredItemsStats.total} шт.</div>
+          <div className='w-36'>Найдено: {filteredItemsStats.total} шт.</div>
           <Form id="search-form" role="search" autoComplete="off">
             <Input id="q" className="form-input" name="q" type='search' label="Я ищу..." color='green'
-              value={searchQuery} aria-label="Search items"
+              value={searchQuery} aria-label="Поиск по товарам"
               onChange={(event) => {
                 event.preventDefault();
                 setSearchQuery(event.target.value);
@@ -355,20 +355,24 @@ export const FilterPage = () => {
           </Form>
           <div className="flex gap-2">
             <button
+              className={cardSize === "Small" ? styles.gridButtonActive : ''}
+              aria-label="Переключиться на маленькие карточки товаров"
               onClick={() => {
                 searchParams.set('card', 'Small');
                 setSearchParams(searchParams);
               }
             }>
-              <Grid9 className={`${cardSize === "Small" ? 'fill-green-500': ''}`}/>
+              <Grid9Icon className={cardSize === "Small" ? styles.gridIconActive : styles.gridIcon } />
             </button>
             <button
+              className={cardSize === "Large" ? styles.gridButtonActive : ''}
+              aria-label="Переключиться на большие карточки товаров"
               onClick={() => {
                 searchParams.set('card', 'Large');
                 setSearchParams(searchParams);
               }
             }>
-              <Grid4 className={`${cardSize === "Large" ? 'fill-green-500': ''}`}/>
+              <Grid4Icon className={cardSize === "Large" ? styles.gridIconActive : styles.gridIcon } />
             </button>
           </div>
         </div>

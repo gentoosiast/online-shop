@@ -113,9 +113,8 @@ export const PaginatedItems = () => {
     <>
       <div>
         <div className='w-20 pb-4'>
-          {/* <label htmlFor="itemsPerPage">Товаров на странице:</label> */}
           <Input type='number' className='form-input' id='itemsPerPage'
-          label="Товаров на странице:" color='green'
+            label="Товаров на странице:" color='green'
             value={itemsPerPageInput} onChange={handleItemsPerPageChange} onBlur={handleItemsPerPageBlur}
           />
         </div>
@@ -129,22 +128,24 @@ export const PaginatedItems = () => {
       </div>
       <ItemsToShow currentItems={currentItems} itemOffset={itemOffset} />
       <ReactPaginate
+        containerClassName={styles.Pagination__container}
         breakLabel="..."
-        nextLabel={nextLabelNode}
+        breakClassName={styles.Pagination__page__item}
+        breakLinkClassName={styles.Pagination__page__link}
         onPageChange={handlePageClick}
         pageRangeDisplayed={3}
         pageCount={pageCount}
         previousLabel={prevLabelNode}
-        containerClassName={styles.Pagination__container}
-        activeClassName={styles.Pagination__active}
-        activeLinkClassName = {styles.Pagination__active__link}
-        nextLinkClassName=""
-        previousLinkClassName=""
-        pageClassName={styles.Pagination__page}
-        nextClassName={styles.Pagination__next}
-        previousClassName={styles.Pagination__prev}
+        nextLabel={nextLabelNode}
+        pageClassName={styles.Pagination__page__item}
+        pageLinkClassName={styles.Pagination__page__link}
         disabledClassName = {styles.Pagination__disabled}
-        disabledLinkClassName = {styles.Pagination__disabled__link}
+        previousClassName={styles.Pagination__page__item}
+        nextClassName={styles.Pagination__page__item}
+        previousLinkClassName={styles.Pagination__page__chevron__link}
+        nextLinkClassName={styles.Pagination__page__chevron__link}
+        disabledLinkClassName = {styles.Pagination__chevron__disabled__link}
+        activeClassName={styles.active}
         forcePage={pageOffset}
       />
     </>

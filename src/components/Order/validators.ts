@@ -1,3 +1,5 @@
+import { isValidEmail } from 'js-email-validation';
+
 const checkWordsLength = (value: string, numWords: number, wordLength: number) => {
   const words = value.trim().split(' ').filter((word) => word !== '');
 
@@ -27,7 +29,7 @@ export const validators = {
   },
 
   email: (value: string) => {
-    if (!/[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+    if (!isValidEmail(value)) {
       return "Должен быть введен действительный email";
     }
     return null;

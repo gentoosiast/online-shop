@@ -1,6 +1,6 @@
 import React from 'react';
-import rsLogo from '../assets/rslogo-light-bg.svg';
 import styles from '../css/header.module.css';
+import rsLogo from '../assets/rslogo-light-bg.svg';
 import CatIcon1 from '../assets/cat_walk_icon_.png';
 import CatIcon2 from '../assets/cat_icon.png';
 import email from '../assets/message.png';
@@ -46,34 +46,34 @@ export const Footer = () => {
         <div className='col4 mobile-1:w-fit laptop:w-1/5 shrink-0'>
           <p className='font-bold pb-2'>Мы в соцсетях</p>
           <div className='flex justify-between'>
-            <div className={styles.media}><img src={fb} alt="fb" className='m-auto'/></div>
-            <div className={styles.media}><img src={ig} alt="ig" className='m-auto'/></div>
-            <div className={styles.media}><img src={tw} alt="tw" className='m-auto'/></div>
-            <div className={styles.media}><img src={ut} alt="ut" className='m-auto'/></div>
-            <div className={styles.media}><img src={li} alt="li" className='m-auto'/></div>
+            <div className={styles.media}><img src={fb} alt="Иконка Facebook" className='m-auto'/></div>
+            <div className={styles.media}><img src={ig} alt="Иконка Instagram" className='m-auto'/></div>
+            <div className={styles.media}><img src={tw} alt="Иконка Twitter" className='m-auto'/></div>
+            <div className={styles.media}><img src={ut} alt="Иконка YouTube" className='m-auto'/></div>
+            <div className={styles.media}><img src={li} alt="Иконка LinkedIn" className='m-auto'/></div>
           </div>
           <p className='font-bold pt-8 pb-2'>Мы принимаем к оплате</p>
-          <div className=''><img src={cards} alt="cards" className=''/></div>
+          <div className=''><img src={cards} alt="Изображения различных кредитных карт" className=''/></div>
         </div>
       </div>
       <div className='footer2 mobile-1:hidden laptop:flex justify-between items-center bg-green-50 p-4 border-t border-b flex-row'>
         <div className='flex items-center mobile-1:w-full laptop:w-1/5'>
           <div className={styles.logo_footer}>
-            <img src={CatIcon1} alt="Online Shop Logo" className={styles.logo1}/>
-            <img src={CatIcon2} alt="Online Shop Logo" className={styles.logo2}/>
+            <img src={CatIcon1} alt="Иконка с лого магазина - версия 1" className={styles.logo1}/>
+            <img src={CatIcon2} alt="Иконка с лого магазина - версия 2" className={styles.logo2}/>
           </div>
-          <h2 className='text-orange-800 pl-2'>RedCat</h2>
+          <h2 className='text-orange-800 pl-2 select-none'>RedCat</h2>
         </div>
         <div  className={styles.link_shop_footer}>
-          <img src={location} alt="location" className='' />
+          <img src={location} alt="Иконка, обозначающая географическое местоположение" className='' />
           <h2>просп. Независимости, 11, Минск</h2>
         </div>
         <div  className={styles.link_shop_footer}>
-          <img src={email} alt="email" className='' />
+          <img src={email} alt="Иконка, обозначающая email-адрес" className='' />
           <h2>contact@redcat.com</h2>
         </div>
         <div className={styles.link_shop_footer1}>
-          <img src={phone} alt="phone" className='' />
+          <img src={phone} alt="Иконка, обозначающая номер телефона" className='' />
           <h2 className=''>+375 (17) 209-90-62</h2>
         </div>
       </div>
@@ -86,9 +86,9 @@ export const Footer = () => {
             @sinastya
           </a>
         {/* </div> */}
-        <div className='w-1/4 text-gray-700 text-sm'>@2023</div>
+        <div className='w-1/4 text-gray-700 text-sm'>©2023</div>
         <a href = 'https://rs.school/js/' target = "_blank" className='footer-rsschool w-1/5'>
-          <img src= {rsLogo} alt="github" className={styles.rs}/>
+          <img src= {rsLogo} alt="Иконка с логотипом RS School" className={styles.rs}/>
         </a>
       </div>
     </footer>
