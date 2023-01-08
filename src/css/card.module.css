@@ -1,3 +1,7 @@
+.itemCard {
+  @apply border p-5 rounded flex flex-col items-center transition duration-300 hover:shadow-md cursor-pointer;
+}
+
 .cartAdd {
   @apply fill-green-600 hover:fill-green-400 transition-colors duration-300;
 }
@@ -32,4 +36,9 @@
 
 .titleLarge {
   @apply text-base
+}
+
+.itemCard:hover .title,
+.itemCard:hover .titleLarge {
+  @apply text-orange-900 transition-colors duration-300;
 }
