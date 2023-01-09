@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Slider from 'rc-slider';
+import { Checkbox } from "@material-tailwind/react";
 import { useDebouncedCallback } from 'use-debounce';
 import { IFilters, ICheckboxFilters, ISliderFilters, SliderValue, isSliderValue } from '../types/filters';
 import { InitialItemsStats, FilteredItemsStats } from '../types/items';
 import '../css/main.css';
 import '../css/rc-slider.css';
 import styles from '../css/sidebar.module.css';
-import { Checkbox } from "@material-tailwind/react";
 import saleImg from '../assets/sale.webp';
 import superSaleImg from '../assets/super_sale.png';
 

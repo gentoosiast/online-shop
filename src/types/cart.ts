@@ -1,7 +1,7 @@
 import { IItem, isIItem } from "./items";
 
 export interface CartItem {
-  item: IItem;
+  readonly item: IItem;
   quantity: number;
 }
 

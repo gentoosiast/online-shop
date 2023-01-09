@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { cartStore } from "../storage/cart.store"
 import { observer } from 'mobx-react-lite';
 import { Image } from './Image';
-import { IItem } from "../types/items"
+import { IItem } from "../types/items";
 import featherSprite from 'feather-icons/dist/feather-sprite.svg';
 import ThrashIcon from "../assets/Delete.svg?component";
 import catPlaceholder from '../assets/cat-placeholder.svg';
