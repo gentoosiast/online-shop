@@ -4,18 +4,20 @@ import { useQuery, QueryClient } from '@tanstack/react-query';
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import { Rating } from '@smastrom/react-rating'
-import '@smastrom/react-rating/style.css'
-import { Image } from './Image';
-import { API_ROOT } from '../environment';
-import { fetchData } from '../fetchData';
-import { IItem } from "../types/items";
-
+import { Image } from '../components/Image';
+import { API_ROOT } from '../utils/environment';
+import { fetchData } from '../utils/fetchData';
+import { IItem, isIItem } from "../types/items";
 import catPlaceholder from '../assets/cat-placeholder.svg';
+import '@smastrom/react-rating/style.css'
 
 const fetchItem = async (id: string) => {
-  const endpoint = `${API_ROOT ?? 'http://localhost:8000'}/products/${id}`;
+  const endpoint = `${API_ROOT}/products/${id}`;
   try {
     const data = await fetchData<IItem>(endpoint);
+    if (!isIItem(data)) {
+      throw new Error("Malformed data was received from an API response");
+    }
     return data;
   } catch(e) {
     throw new Error(e instanceof Error ? e.message : "fetchItem: Some error occured");
@@ -41,6 +43,8 @@ export const loader =
 export const ItemDetails = observer(() => {
   const navigate = useNavigate();
   const params = useParams();
+    // NOTE: use of this type assertion recommended by author of React-Query
+    // https://tkdodo.eu/blog/react-query-meets-react-router#a-typescript-tip
     const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof loader>>
   >

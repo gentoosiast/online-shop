@@ -3,12 +3,11 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { observer } from 'mobx-react-lite';
 import { cartStore } from '../storage/cart.store';
 import '../css/main.css';
-import { PaginatedItems } from "./Pagination";
-import { OrderForm } from "./Order/OrderForm";
+import { PaginatedItems } from "../components/Pagination";
+import { OrderForm } from "../components/OrderForm";
 import styles from '../css/cart.module.css';
 import { Input } from "@material-tailwind/react";
 import catCart from "../assets/cart_cat.png"
-
 
 export const Cart = observer(() => {
   const location = useLocation();

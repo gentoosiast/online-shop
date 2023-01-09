@@ -52,7 +52,6 @@ export const validators = {
     const year = 2000 + parseInt(value.slice(2));
     const cardDate = new Date(year, month, 1);
     cardDate.setMonth(cardDate.getMonth() + 1);
-    console.log('cardDate', cardDate);
     const currentDate = new Date();
 
     if (currentDate > cardDate) {
