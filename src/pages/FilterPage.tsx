@@ -3,19 +3,16 @@ import { Form, useSearchParams, useLoaderData } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
 import { Input } from "@material-tailwind/react";
-import { API_ROOT } from '../environment';
-import { fetchData } from '../fetchData';
-import { ItemCard } from './ItemCard';
-import { Sidebar } from './Sidebar';
-import { IItem, InitialItemsStats, FilteredItemsStats } from '../types/items';
-import { ItemCardSize } from '../types/ItemCardSize';
-import { SortOption } from '../types/SortOption';
-import { SliderValue, isSliderValue } from '../types/SliderValue';
-import { IFilters, ValueDivider } from '../types/filters';
+import { API_ROOT } from '../utils/environment';
+import { fetchData } from '../utils/fetchData';
+import { ItemCard } from '../components/ItemCard';
+import { Sidebar } from '../components/Sidebar';
+import { IItem, isIItem, InitialItemsStats, FilteredItemsStats, ItemCardSize, isItemCardSize } from '../types/items';
+import { IFilters, ValueDivider, SliderValue, isSliderValue, SortOption, isSortOption } from '../types/filters';
 import Grid4Icon from "../assets/grid4.svg?component";
 import Grid9Icon from "../assets/grid9.svg?component";
 import styles from "../css/filterpage.module.css";
-import { ScrollToTop } from './Scroll'
+import { ScrollToTop } from '../components/Scroll'
 
 type SortFn = (itemA: IItem, itemB: IItem) => number;
 interface ISortFnObj {
@@ -50,21 +47,11 @@ const sortFuncs: ISortFnObj  = {
   'discount-DESC': (itemA, itemB) => itemB.discountPercentage - itemA.discountPercentage,
 };
 
-const isItemCardSize = (value: string): value is ItemCardSize => {
-  return value === 'Small' || value === 'Large';
-}
-
-const isSortOption = (value: string): value is SortOption => {
-  const options = ["price-ASC", "price-DESC", "rating-ASC", "rating-DESC", "discount-ASC", "discount-DESC"];
-
-  return options.includes(value);
-}
-
 const fetchItems = async () => {
-  const endpoint = `${API_ROOT ?? 'http://localhost:8000'}/products/`;
+  const endpoint = `${API_ROOT}/products/`;
   try {
     const data = await fetchData<IItem[]>(endpoint);
-    return data;
+    return data.filter((item) => isIItem(item));
   } catch(e) {
     throw new Error(e instanceof Error ? e.message : "fetchItems: Some unknown error occured");
   }
@@ -88,10 +75,12 @@ export const loader =
 
 export const FilterPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  // NOTE: use of this type assertion recommended by author of React-Query
+  // https://tkdodo.eu/blog/react-query-meets-react-router#a-typescript-tip
   const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof loader>>
   >
-  const { data: items, isLoading, isFetching } = useQuery({
+  const { data: items } = useQuery({
     ...itemsQuery(),
     initialData,
     staleTime: 1000 * 60 * 5,
@@ -108,11 +97,11 @@ export const FilterPage = () => {
     }, 800
   );
 
-  const defaultCardSize = 'Small';
+  const defaultCardSize: ItemCardSize = 'Small';
   const cardSearchParam = searchParams.get('card') ?? '';
   const cardSize = isItemCardSize(cardSearchParam) ? cardSearchParam : defaultCardSize;
 
-  const defaultSortParam = 'rating-DESC';
+  const defaultSortParam: SortOption = 'rating-DESC';
   const sortSearchParam = searchParams.get('sort') ?? '';
   const sortOption = isSortOption(sortSearchParam) ? sortSearchParam : defaultSortParam;
 
@@ -181,8 +170,6 @@ export const FilterPage = () => {
 
     stats.categories.sort();
     stats.brands.sort();
-    // stats.priceValues.sort((a, b) => a - b);
-    // stats.stockValues.sort((a, b) => a - b);
 
     return stats;
   }
@@ -311,12 +298,6 @@ export const FilterPage = () => {
   }
 
   const filteredItemsStats = useMemo(() => calculateFilteredItemsStats(filteredItems), [filteredItems]);
-
-  if (isLoading || isFetching) {
-    return (
-      <div className="preloader">Loading</div>
-    );
-  }
 
   return (
     <div className='flex'>

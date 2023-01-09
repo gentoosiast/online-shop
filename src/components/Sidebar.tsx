@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Slider from 'rc-slider';``
+import Slider from 'rc-slider';
 import { useDebouncedCallback } from 'use-debounce';
-import { SliderValue, isSliderValue } from '../types/SliderValue';
-import { IFilters, ICheckboxFilters, ISliderFilters } from '../types/filters';
+import { IFilters, ICheckboxFilters, ISliderFilters, SliderValue, isSliderValue } from '../types/filters';
 import { InitialItemsStats, FilteredItemsStats } from '../types/items';
 import '../css/main.css';
 import '../css/rc-slider.css';
@@ -10,6 +9,7 @@ import styles from '../css/sidebar.module.css';
 import { Checkbox } from "@material-tailwind/react";
 import saleImg from '../assets/sale.webp';
 import superSaleImg from '../assets/super_sale.png';
+
 interface ISidebarProps {
   initialItemsStats: InitialItemsStats;
   filteredItemsStats: FilteredItemsStats;
@@ -85,7 +85,7 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
         <fieldset className={styles.items_category}>
           {initialItemsStats.categories.map((category, i) =>
             <div key={i} className={`${filteredItemsStats.categoryCounts.get(category) ? styles.item : styles.itemOpacity}`} >
-              <Checkbox color="green" label={category} id={'1'+i.toString()}
+              <Checkbox color="green" label={category}
                 onChange={() => handleClick('categories', category)}
                 checked={isChecked('categories', category)}
               />
@@ -102,7 +102,7 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
         <fieldset  className={styles.items_brand}>
           {initialItemsStats.brands.map((brand, i) =>
             <div key={i} className={`${filteredItemsStats.brandCounts.get(brand) ? styles.item : styles.itemOpacity}`}>
-              <Checkbox color="green" label={brand} id={'2'+i.toString()}
+              <Checkbox color="green" label={brand}
                   onChange={() => handleClick('brands', brand)}
                   checked={isChecked('brands', brand)}
                 />
@@ -133,8 +133,8 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
               }}
             />
             {filteredItemsStats.total > 0 && <div className={styles.sliderText}>
-              <span className={styles.sliderMin}>{`$${price[0]}`}</span>
-              <span className={styles.sliderMax}>{`$${price[1]}`}</span>
+              <span className={styles.sliderMin}>{`${price[0]}`}</span>
+              <span className={styles.sliderMax}>{`${price[1]}`}</span>
             </div>}
           </div>
         </div>

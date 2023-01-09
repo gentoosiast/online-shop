@@ -68,7 +68,7 @@ export const ItemCardCart = observer(({number, item, amount}: IItemCardCart) => 
         </div>
         <button  className="flex" type="button"
           onClick = {() => cartStore.removeAllItems(item.id)}>
-          <ThrashIcon className={styles.delete_logo} id={item.id.toString()}/>
+          <ThrashIcon className={styles.delete_logo} />
         </button>
       </div>
     </div>

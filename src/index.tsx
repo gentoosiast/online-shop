@@ -6,13 +6,12 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Root } from './components/Root';
-import { ErrorPage } from './components/ErrorPage';
-import { FilterPage, loader as filterLoader } from './components/FilterPage';
-import { ItemDetails, loader as itemDetailsLoader } from './components/ItemDetailsPage';
-import { Cart } from './components/Cart';
-import { info } from './information';
+import { Root } from './pages/Root';
+import { ErrorPage } from './pages/ErrorPage';
+import { FilterPage, loader as filterLoader } from './pages/FilterPage';
+import { ItemDetails, loader as itemDetailsLoader } from './pages/ItemDetailsPage';
+import { Cart } from './pages/CartPage';
+import { info } from './utils/information';
 
 const rootDiv = document.getElementById("root");
 if (!rootDiv) {

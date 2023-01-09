@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../css/header.module.css';
+import styles from '../css/header-footer.module.css';
 import rsLogo from '../assets/rslogo-light-bg.svg';
 import CatIcon1 from '../assets/cat_walk_icon_.png';
 import CatIcon2 from '../assets/cat_icon.png';
