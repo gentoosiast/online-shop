@@ -1,9 +1,9 @@
+import React, { useReducer, useState } from 'react';
+import { validators } from '../utils/validators'
 import cardDefaultImg from '../assets/card-default.svg';
 import cardVISAImg from '../assets/card-visa.svg';
 import cardMasterCardImg from '../assets/card-mastercard.svg';
 import cardAmExImg from '../assets/card-amex.svg';
-import React, { useReducer, useState } from 'react';
-import { validators } from '../utils/validators'
 
 interface ISegment {
   quantity: number;

@@ -1,6 +1,6 @@
 import { makeObservable, observable, action, computed, autorun } from 'mobx';
 import { PersistentStorage } from './persistentStorage';
-import { IItem, } from '../types/items';
+import { IItem } from '../types/items';
 import { CartItems, isCartEntries } from '../types/cart';
 
 const availablePromos = new Map([['NOWAR', 15], ['RSSCHOOL', 5], ['NEWYEAR', 10]]);
