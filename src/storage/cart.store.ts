@@ -21,7 +21,7 @@ const validateStoragePromos = (promos: unknown): string[] => {
   return validatedPromos;
 }
 
-class CartStore {
+export class CartStore {
   items: CartItems;
   promos: Set<string>;
   storage: PersistentStorage;

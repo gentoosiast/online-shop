@@ -11,5 +11,6 @@
     "sourceMap": true,
     "moduleResolution": "node",
   },
-  "files": ["src/index.tsx", "module.d.ts"]
+  "files": ["src/index.tsx", "module.d.ts"],
+  "include": ["src/__tests__/**/*"]
 }
