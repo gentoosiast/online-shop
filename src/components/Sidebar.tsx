@@ -85,7 +85,7 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
         <fieldset className={styles.items_category}>
           {initialItemsStats.categories.map((category, i) =>
             <div key={i} className={`${filteredItemsStats.categoryCounts.get(category) ? styles.item : styles.itemOpacity}`} >
-              <Checkbox color="green" label={category}
+              <Checkbox color="green" label={category} id={'category-checkbox-'+i.toString()}
                 onChange={() => handleClick('categories', category)}
                 checked={isChecked('categories', category)}
               />
@@ -102,7 +102,7 @@ export const Sidebar = ({initialItemsStats, filteredItemsStats, filters, onFilte
         <fieldset  className={styles.items_brand}>
           {initialItemsStats.brands.map((brand, i) =>
             <div key={i} className={`${filteredItemsStats.brandCounts.get(brand) ? styles.item : styles.itemOpacity}`}>
-              <Checkbox color="green" label={brand}
+              <Checkbox color="green" label={brand} id={'brand-checkbox-'+i.toString()}
                   onChange={() => handleClick('brands', brand)}
                   checked={isChecked('brands', brand)}
                 />
